@@ -58,7 +58,102 @@ A more elegant way is to use git submodule. Hence, you can keep up with latest i
 
 <p>Then, import the needed classes:</p>
 
-<p><code>from qgissettingmanager import settingmanager</code></p>
+<p><code>from qgissettingmanager import *</code></p>
+
+<h2>The main setting class</h2>
+
+<p>All your settings will be saved in a single class, which will subclass SettingManager.</p>
+
+<p><code>class MySettings(SettingManager):
+    def __init__(self):
+        SettingManager.__init__(self, myPluginName)
+        self.addSetting("myVariable", "bool", "global", True)</code></p>
+
+<p>You add as many settings as you want using <em>addSetting</em> method:</p>
+
+<p><code>addSetting(name, settingType, scope, defaultValue, options={})</code></p>
+
+<ul>
+<li>name: the name of the setting</li>
+<li>settingType: bool, string, color, integer or double</li>
+<li>scope: global or project</li>
+<li>defaultValue: the default value of the setting (type must corrsepond)</li>
+<li>options: a dictionary of options</li>
+</ul><p>Options are related to the type of setting</p>
+
+<ul>
+<li>comboMode: data (default) or text. Used for combo boxes for strings. It determines if the setting value correspond to the text in the combo box or to its <a href="http://qt-project.org/doc/qt-4.8/qcombobox.html#itemData">data</a>
+</li>
+</ul><h2>Access the settings</h2>
+
+<p>Instantiate your settings class in your current class:</p>
+
+<p><code>import MySettings
+self.settings = MySettings()</code></p>
+
+<p>The settings are easily accessed using the <em>value</em> and <em>setValue</em> methods:</p>
+
+<p><code>myVariable = self.settings.value("myVariable")
+self.settings.setValue("myVariable", False)</code></p>
+
+<h2>Associates widgets in dialogs to settings</h2>
+
+<p>You can associate a setting to a defined widget. The first thing is to name the widget exactly as the setting name.
+Then, your dialog class subclass the <em>SettingDialog</em> class:</p>
+
+<p><code>class MyDialog(QDialog, Ui_myDialog, SettingDialog):
+    def __init__(self):
+        QDialog.__init__(self)
+        self.setupUi(self)
+        self.settings = MySettings()
+        SettingDialog.__init__(self, self.settings)</code></p>
+
+<p>Hence, must dialog is shown, all widgets which are named as some setting will be set to the corresponding value. On dialog acceptance, the setting will be set according to their widget.</p>
+
+<p>You can have a different behavior using <em>SettingDialog</em> parameters:</p>
+
+<p><code>SettingDialog(settingManager, setValuesOnDialogAccepted=True, setValueOnWidgetUpdate=False)</code></p>
+
+<ul>
+<li>setValuesOnDialogAccepted: if True, settings values are set when dialog is accepted;</li>
+<li>setValueOnWidgetUpdate: if True, settings are set as soon as the widgets is modified.</li>
+</ul><p>Be warned that <em>SettingDialog</em> uses <em>showEvent</em> method. Therefore, if you redefine it in <em>MyDialog</em> class, you have to call:</p>
+
+<p><code>def showEvent(self, e):
+    settingDialog.showEvent(self, e)</code></p>
+
+<h2>Possible widgets:</h2>
+
+<p>The widgets are automatically detected by the manager. If the type of widget is not handled, an error is raised.</p>
+
+<h3>Strings</h3>
+
+<ul>
+<li>QLineEdit</li>
+<li>QComboBox (can be set using the itemData or the text, see options above)</li>
+<li>QButtonGroup (the setting is set as the checked widget text in the button group)</li>
+</ul><h3>Booleans</h3>
+
+<ul>
+<li>QCheckBox</li>
+<li>Any checkable widget (groupbox, etc.)</li>
+</ul><h3>Colors</h3>
+
+<ul>
+<li>Any widget but labels or pushbuttons are recommended (it uses QGIS <a href="http://qgis.org/api/classQgsColorButton.html">color button</a>)</li>
+</ul><h3>Integers</h3>
+
+<ul>
+<li>QLineEdit</li>
+<li>QSpinBox</li>
+<li>QSlider</li>
+<li>QComboBox (setting is set as the combo box index)</li>
+</ul><h3>Doubles</h3>
+
+<ul>
+<li>QLineEdit</li>
+<li>QDoubleSpinBox</li>
+</ul><p>New types of widget are easily added, if one is missing, do not hesitate to <a href="https://github.com/3nids/qgissettingmanager/issues">ask</a></p>
       </section>
       <footer>
         <p>Project maintained by <a href="https://github.com/3nids">3nids</a></p>
