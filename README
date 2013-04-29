@@ -1,0 +1,19 @@
+# About
+
+Easily manage the settings in your [QGIS](http://www.qgis.org) plugin.
+
+This module can:
+* manage different types of variables (bool, string, color, integer, double)
+* read and write in QGIS settings or in the project settings
+* can set and get values of widgets in dialogs
+
+## Installing the module
+
+To use this module you can easily copy the files and put them in your project.
+A more elegant way is to use git submodule. Hence, you can keep up with latest improvements. In you plugin directory, do
+
+`git submodule add git://github.com/3nids/qgissettingmanager.git`
+
+Then, import the needed classes:
+
+`from qgissettingmanager import settingmanager`
