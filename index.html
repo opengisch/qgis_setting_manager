@@ -54,24 +54,28 @@
 <p>To use this module you can easily copy the files and put them in your project.
 A more elegant way is to use git submodule. Hence, you can keep up with latest improvements. In you plugin directory, do</p>
 
-<p><code>git submodule add git://github.com/3nids/qgissettingmanager.git</code></p>
+<pre><code>git submodule add git://github.com/3nids/qgissettingmanager.git
+</code></pre>
 
 <p>Then, import the needed classes:</p>
 
-<p><code>from qgissettingmanager import *</code></p>
+<pre><code>from qgissettingmanager import *
+</code></pre>
 
 <h2>The main setting class</h2>
 
 <p>All your settings will be saved in a single class, which will subclass SettingManager.</p>
 
-<p><code>class MySettings(SettingManager):
+<pre><code>class MySettings(SettingManager):
     def __init__(self):
         SettingManager.__init__(self, myPluginName)
-        self.addSetting("myVariable", "bool", "global", True)</code></p>
+        self.addSetting("myVariable", "bool", "global", True)
+</code></pre>
 
 <p>You add as many settings as you want using <em>addSetting</em> method:</p>
 
-<p><code>addSetting(name, settingType, scope, defaultValue, options={})</code></p>
+<pre><code>addSetting(name, settingType, scope, defaultValue, options={})
+</code></pre>
 
 <ul>
 <li>name: the name of the setting</li>
@@ -88,39 +92,44 @@ A more elegant way is to use git submodule. Hence, you can keep up with latest i
 
 <p>Instantiate your settings class in your current class:</p>
 
-<p><code>import MySettings
-self.settings = MySettings()</code></p>
+<pre><code>import MySettings
+self.settings = MySettings()
+</code></pre>
 
 <p>The settings are easily accessed using the <em>value</em> and <em>setValue</em> methods:</p>
 
-<p><code>myVariable = self.settings.value("myVariable")
-self.settings.setValue("myVariable", False)</code></p>
+<pre><code>myVariable = self.settings.value("myVariable")
+self.settings.setValue("myVariable", False)
+</code></pre>
 
 <h2>Associates widgets in dialogs to settings</h2>
 
 <p>You can associate a setting to a defined widget. The first thing is to name the widget exactly as the setting name.
 Then, your dialog class subclass the <em>SettingDialog</em> class:</p>
 
-<p><code>class MyDialog(QDialog, Ui_myDialog, SettingDialog):
+<pre><code>class MyDialog(QDialog, Ui_myDialog, SettingDialog):
     def __init__(self):
         QDialog.__init__(self)
         self.setupUi(self)
         self.settings = MySettings()
-        SettingDialog.__init__(self, self.settings)</code></p>
+        SettingDialog.__init__(self, self.settings)
+</code></pre>
 
 <p>Hence, must dialog is shown, all widgets which are named as some setting will be set to the corresponding value. On dialog acceptance, the setting will be set according to their widget.</p>
 
 <p>You can have a different behavior using <em>SettingDialog</em> parameters:</p>
 
-<p><code>SettingDialog(settingManager, setValuesOnDialogAccepted=True, setValueOnWidgetUpdate=False)</code></p>
+<pre><code>SettingDialog(settingManager, setValuesOnDialogAccepted=True, setValueOnWidgetUpdate=False)
+</code></pre>
 
 <ul>
 <li>setValuesOnDialogAccepted: if True, settings values are set when dialog is accepted;</li>
 <li>setValueOnWidgetUpdate: if True, settings are set as soon as the widgets is modified.</li>
 </ul><p>Be warned that <em>SettingDialog</em> uses <em>showEvent</em> method. Therefore, if you redefine it in <em>MyDialog</em> class, you have to call:</p>
 
-<p><code>def showEvent(self, e):
-    settingDialog.showEvent(self, e)</code></p>
+<pre><code>def showEvent(self, e):
+    settingDialog.showEvent(self, e)
+</code></pre>
 
 <h2>Possible widgets:</h2>
 
@@ -153,7 +162,7 @@ Then, your dialog class subclass the <em>SettingDialog</em> class:</p>
 <ul>
 <li>QLineEdit</li>
 <li>QDoubleSpinBox</li>
-</ul><p>New types of widget are easily added, if one is missing, do not hesitate to <a href="https://github.com/3nids/qgissettingmanager/issues">ask</a></p>
+</ul><p>New types of widget are easily added, if one is missing, do not hesitate to <a href="https://github.com/3nids/qgissettingmanager/issues">ask</a>!</p>
       </section>
       <footer>
         <p>Project maintained by <a href="https://github.com/3nids">3nids</a></p>
