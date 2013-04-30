@@ -96,13 +96,15 @@ A more elegant way is to use git submodule. Hence, you can keep up with latest i
 self.settings = MySettings()
 </code></pre>
 
-<p>The settings are easily accessed using the <em>value</em> and <em>setValue</em> methods:</p>
+<p>The settings are easily accessed using the <code>value</code> and <code>setValue</code> methods:</p>
 
 <pre><code>myVariable = self.settings.value("myVariable")
 self.settings.setValue("myVariable", False)
 </code></pre>
 
 <h2>Associates widgets in dialogs to settings</h2>
+
+<h3>Qcuik start</h3>
 
 <p>You can associate a setting to a defined widget. The first thing is to name the widget exactly as the setting name.
 Then, your dialog class subclass the <em>SettingDialog</em> class:</p>
@@ -117,6 +119,8 @@ Then, your dialog class subclass the <em>SettingDialog</em> class:</p>
 
 <p>Hence, must dialog is shown, all widgets which are named as some setting will be set to the corresponding value. On dialog acceptance, the setting will be set according to their widget.</p>
 
+<h3>Settings' update behavior</h3>
+
 <p>You can have a different behavior using <em>SettingDialog</em> parameters:</p>
 
 <pre><code>SettingDialog(settingManager, setValuesOnDialogAccepted=True, setValueOnWidgetUpdate=False)
@@ -125,23 +129,31 @@ Then, your dialog class subclass the <em>SettingDialog</em> class:</p>
 <ul>
 <li>setValuesOnDialogAccepted: if True, settings values are set when dialog is accepted;</li>
 <li>setValueOnWidgetUpdate: if True, settings are set as soon as the widgets is modified.</li>
-</ul><p>Be warned that <em>SettingDialog</em> uses <em>showEvent</em> method. Therefore, if you redefine it in <em>MyDialog</em> class, you have to call:</p>
+</ul><h3>Check something before updating the settings</h3>
+
+<p>You can override the <code>SettingDialog.onBeforeAcceptDialog()</code> method to check your settings.
+Settings will be saved only if method returns <code>True</code>.</p>
+
+<h3>Using showEvent</h3>
+
+<p>Be warned that <code>SettingDialog</code> implements <code>showEvent</code> method. Therefore, if you redefine it in your dialog class, you have to write:</p>
 
 <pre><code>def showEvent(self, e):
     settingDialog.showEvent(self, e)
+    # do your own stuff
 </code></pre>
 
-<h2>Possible widgets:</h2>
+<h3>Possible widgets</h3>
 
 <p>The widgets are automatically detected by the manager. If the type of widget is not handled, an error is raised.</p>
 
-<h3>Strings</h3>
+<p><strong>Strings</strong></p>
 
 <ul>
 <li>QLineEdit</li>
 <li>QComboBox (can be set using the itemData or the text, see options above)</li>
 <li>QButtonGroup (the setting is set as the checked widget text in the button group)</li>
-</ul><h3>Booleans</h3>
+</ul><p><strong>Booleans</strong></p>
 
 <ul>
 <li>QCheckBox</li>
@@ -150,14 +162,14 @@ Then, your dialog class subclass the <em>SettingDialog</em> class:</p>
 
 <ul>
 <li>Any widget but labels or pushbuttons are recommended (it uses QGIS <a href="http://qgis.org/api/classQgsColorButton.html">color button</a>)</li>
-</ul><h3>Integers</h3>
+</ul><p><strong>Integers</strong></p>
 
 <ul>
 <li>QLineEdit</li>
 <li>QSpinBox</li>
 <li>QSlider</li>
 <li>QComboBox (setting is set as the combo box index)</li>
-</ul><h3>Doubles</h3>
+</ul><p><strong>Doubles</strong></p>
 
 <ul>
 <li>QLineEdit</li>
