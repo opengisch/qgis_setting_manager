@@ -57,7 +57,7 @@ import MySettings
 self.settings = MySettings()
 ```
 
-The settings are easily accessed using the _value_ and _setValue_ methods:
+The settings are easily accessed using the `value` and `setValue` methods:
 
 ```
 myVariable = self.settings.value("myVariable")
@@ -66,8 +66,10 @@ self.settings.setValue("myVariable", False)
 
 ## Associates widgets in dialogs to settings
 
+### Qcuik start
+
 You can associate a setting to a defined widget. The first thing is to name the widget exactly as the setting name.
-Then, your dialog class subclass the _SettingDialog_ class:
+Then, your dialog class subclass the `SettingDialog` class:
 
 ```
 class MyDialog(QDialog, Ui_myDialog, SettingDialog):
@@ -80,45 +82,55 @@ class MyDialog(QDialog, Ui_myDialog, SettingDialog):
 
 Hence, must dialog is shown, all widgets which are named as some setting will be set to the corresponding value. On dialog acceptance, the setting will be set according to their widget.
 
-You can have a different behavior using _SettingDialog_ parameters:
+### Settings' update behavior
+
+You can have a different behavior using `SettingDialog` parameters:
 
 ```
 SettingDialog(settingManager, setValuesOnDialogAccepted=True, setValueOnWidgetUpdate=False)
 ```
 
-* setValuesOnDialogAccepted: if True, settings values are set when dialog is accepted;
-* setValueOnWidgetUpdate: if True, settings are set as soon as the widgets is modified.
+* setValuesOnDialogAccepted: if `True`, settings values are set when dialog is accepted;
+* setValueOnWidgetUpdate: if `True`, settings are set as soon as the widgets is modified.
 
-Be warned that _SettingDialog_ uses _showEvent_ method. Therefore, if you redefine it in _MyDialog_ class, you have to call:
+### Check something before updating the settings
+
+You can override the `SettingDialog.onBeforeAcceptDialog()` method to check your settings.
+Settings will be saved only if method returns `True`.
+
+### Using showEvent
+
+Be warned that `SettingDialog` implements `showEvent` method. Therefore, if you redefine it in your dialog class, you have to write:
 
 ```
 def showEvent(self, e):
     settingDialog.showEvent(self, e)
+    # do your own stuff
 ```
     
-## Possible widgets:
+### Possible widgets
 
 The widgets are automatically detected by the manager. If the type of widget is not handled, an error is raised.
 
-### Strings
+**Strings**
 * QLineEdit
 * QComboBox (can be set using the itemData or the text, see options above)
 * QButtonGroup (the setting is set as the checked widget text in the button group)
 
-### Booleans
+**Booleans**
 * QCheckBox
 * Any checkable widget (groupbox, etc.)
 
 ### Colors
 * Any widget but labels or pushbuttons are recommended (it uses QGIS [color button](http://qgis.org/api/classQgsColorButton.html))
 
-### Integers
+**Integers**
 * QLineEdit
 * QSpinBox
 * QSlider
 * QComboBox (setting is set as the combo box index)
 
-### Doubles
+**Doubles**
 * QLineEdit
 * QDoubleSpinBox
 
