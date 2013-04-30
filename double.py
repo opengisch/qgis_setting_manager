@@ -30,19 +30,14 @@ class Double(Setting):
 
     def setWidget(self, widget):
         if type(self.widget) == QLineEdit:
-            signal = SIGNAL("textChanged(QString)")
-            widgetSetMethod = widget.setText
-            widgetGetMethod = lambda: widget.text().toDouble()[0]
+            self.signal = SIGNAL("textChanged(QString)")
+            self.widgetSetMethod = widget.setText
+            self.widgetGetMethod = lambda: widget.text().toDouble()[0]
         elif type(self.widget) == QDoubleSpinBox:
-            signal = SIGNAL("valueChanged(double)")
-            widgetSetMethod = widget.setValue
-            widgetGetMethod = widget.value
+            self.signal = SIGNAL("valueChanged(double)")
+            self.widgetSetMethod = widget.setValue
+            self.widgetGetMethod = widget.value
         else:
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
         self.widget = widget
-        self.signal = signal
-        self.widgetSetMethod = widgetSetMethod
-        self.widgetGetMethod = widgetGetMethod
-
-

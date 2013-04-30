@@ -32,30 +32,26 @@ class String(Setting):
 
     def setWidget(self, widget):
         if type(widget) == QLineEdit:
-            signal = SIGNAL("textChanged(QString)")
-            widgetSetMethod = widget.setText
-            widgetGetMethod = widget.text
+            self.signal = SIGNAL("textChanged(QString)")
+            self.widgetSetMethod = widget.setText
+            self.widgetGetMethod = widget.text
         elif type(widget) == QButtonGroup:
-            signal = SIGNAL("buttonClicked(int)")
-            widgetSetMethod = self.setButtonGroup
-            widgetGetMethod = self.getButtonGroup
+            self.signal = SIGNAL("buttonClicked(int)")
+            self.widgetSetMethod = self.setButtonGroup
+            self.widgetGetMethod = self.getButtonGroup
         elif type(widget) == QComboBox:
-            signal = SIGNAL("activated(int)")
+            self.signal = SIGNAL("activated(int)")
             comboMode = self.options.get("comboMode", "data")
             if comboMode == 'data':
-                widgetSetMethod = lambda(value): self.widget.setCurrentIndex(widget.findData(value))
-                widgetGetMethod = lambda: widget.itemData(widget.currentIndex()).toString()
+                self.widgetSetMethod = lambda(value): self.widget.setCurrentIndex(widget.findData(value))
+                self.widgetGetMethod = lambda: widget.itemData(widget.currentIndex()).toString()
             elif comboMode == 'text':
-                widgetSetMethod = lambda(value): self.widget.setCurrentIndex(widget.findText(value))
-                widgetGetMethod = widget.currentText
+                self.widgetSetMethod = lambda(value): self.widget.setCurrentIndex(widget.findText(value))
+                self.widgetGetMethod = widget.currentText
         else:
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
         self.widget = widget
-        self.signal = signal
-        self.widgetSetMethod = widgetSetMethod
-        self.widgetGetMethod = widgetGetMethod
-
 
     def setButtonGroup(self, value):
         # for checkboxes

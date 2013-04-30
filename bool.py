@@ -30,21 +30,10 @@ class Bool(Setting):
 
     def setWidget(self, widget):
         if type(widget) == QCheckBox or (hasattr(widget, "isCheckable") and self.widget.isCheckable()):
-            signal = SIGNAL("clicked()")
-            widgetSetMethod = widget.setChecked
-            widgetGetMethod = widget.isChecked
+            self.signal = SIGNAL("clicked()")
+            self.widgetSetMethod = widget.setChecked
+            self.widgetGetMethod = widget.isChecked
         else:
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
         self.widget = widget
-        self.signal = signal
-        self.widgetSetMethod = widgetSetMethod
-        self.widgetGetMethod = widgetGetMethod
-
-
-
-
-
-
-        
-

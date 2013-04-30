@@ -31,21 +31,19 @@ class Integer(Setting):
 
     def setWidget(self, widget):
         if type(self.widget) == QLineEdit:
-            signal = SIGNAL("textChanged(QString)")
-            widgetSetMethod = widget.setText()
-            widgetGetMethod = lambda: widget.text().toInt()[0]
+            self.signal = SIGNAL("textChanged(QString)")
+            self.widgetSetMethod = widget.setText()
+            self.widgetGetMethod = lambda: widget.text().toInt()[0]
         elif type(self.widget) in (QSpinBox, QSlider):
-            signal = SIGNAL("valueChanged(int)")
-            widgetSetMethod = widget.setValue
-            widgetGetMethod = widget.value
+            self.signal = SIGNAL("valueChanged(int)")
+            self.widgetSetMethod = widget.setValue
+            self.widgetGetMethod = widget.value
         elif type(self.widget) == QComboBox:
-            signal = SIGNAL("activated(int)")
-            widgetSetMethod = widget.setCurrentIndex
-            widgetGetMethod = widget.currentIndex
+            self.signal = SIGNAL("activated(int)")
+            self.widgetSetMethod = widget.setCurrentIndex
+            self.widgetGetMethod = widget.currentIndex
         else:
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
         self.widget = widget
-        self.signal = signal
-        self.widgetSetMethod = widgetSetMethod
-        self.widgetGetMethod = widgetGetMethod
+
