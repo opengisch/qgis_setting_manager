@@ -25,7 +25,7 @@ class Double(Setting):
                          setGlobal, setProject, getGlobal, getProject)
         
     def check(self, value):
-        if type(value)!=int and type(value) != float:
+        if type(value) != int and type(value) != float:
             raise NameError("Setting %s must be a double." % self.name)
 
     def setWidget(self, widget):
