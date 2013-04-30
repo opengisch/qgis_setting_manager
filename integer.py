@@ -30,15 +30,15 @@ class Integer(Setting):
             raise NameError("Setting %s must be an integer." % self.name)
 
     def setWidget(self, widget):
-        if type(self.widget) == QLineEdit:
+        if type(widget) == QLineEdit:
             self.signal = SIGNAL("textChanged(QString)")
             self.widgetSetMethod = widget.setText()
             self.widgetGetMethod = lambda: widget.text().toInt()[0]
-        elif type(self.widget) in (QSpinBox, QSlider):
+        elif type(widget) in (QSpinBox, QSlider):
             self.signal = SIGNAL("valueChanged(int)")
             self.widgetSetMethod = widget.setValue
             self.widgetGetMethod = widget.value
-        elif type(self.widget) == QComboBox:
+        elif type(widget) == QComboBox:
             self.signal = SIGNAL("activated(int)")
             self.widgetSetMethod = widget.setCurrentIndex
             self.widgetGetMethod = widget.currentIndex

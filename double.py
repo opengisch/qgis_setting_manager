@@ -29,11 +29,11 @@ class Double(Setting):
             raise NameError("Setting %s must be a double." % self.name)
 
     def setWidget(self, widget):
-        if type(self.widget) == QLineEdit:
+        if type(widget) == QLineEdit:
             self.signal = SIGNAL("textChanged(QString)")
             self.widgetSetMethod = widget.setText
             self.widgetGetMethod = lambda: widget.text().toDouble()[0]
-        elif type(self.widget) == QDoubleSpinBox:
+        elif type(widget) == QDoubleSpinBox:
             self.signal = SIGNAL("valueChanged(double)")
             self.widgetSetMethod = widget.setValue
             self.widgetGetMethod = widget.value
