@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Qgissettingmanager by 3nids</title>
+    <title>Qgis Setting Manager by 3nids</title>
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -17,7 +17,7 @@
   <body>
 
       <header>
-        <h1>Qgissettingmanager</h1>
+        <h1>Qgis Setting Manager</h1>
         <p>QGIS setting manager is a python module to easily manage read/write settings and set/get corresponding widgets.</p>
       </header>
 
@@ -107,7 +107,7 @@ self.settings.setValue("myVariable", False)
 <h3>Qcuik start</h3>
 
 <p>You can associate a setting to a defined widget. The first thing is to name the widget exactly as the setting name.
-Then, your dialog class subclass the <em>SettingDialog</em> class:</p>
+Then, your dialog class subclass the <code>SettingDialog</code> class:</p>
 
 <pre><code>class MyDialog(QDialog, Ui_myDialog, SettingDialog):
     def __init__(self):
@@ -121,14 +121,14 @@ Then, your dialog class subclass the <em>SettingDialog</em> class:</p>
 
 <h3>Settings' update behavior</h3>
 
-<p>You can have a different behavior using <em>SettingDialog</em> parameters:</p>
+<p>You can have a different behavior using <code>SettingDialog</code> parameters:</p>
 
 <pre><code>SettingDialog(settingManager, setValuesOnDialogAccepted=True, setValueOnWidgetUpdate=False)
 </code></pre>
 
 <ul>
-<li>setValuesOnDialogAccepted: if True, settings values are set when dialog is accepted;</li>
-<li>setValueOnWidgetUpdate: if True, settings are set as soon as the widgets is modified.</li>
+<li>setValuesOnDialogAccepted: if <code>True</code>, settings values are set when dialog is accepted;</li>
+<li>setValueOnWidgetUpdate: if <code>True</code>, settings are set as soon as the widgets is modified.</li>
 </ul><h3>Check something before updating the settings</h3>
 
 <p>You can override the <code>SettingDialog.onBeforeAcceptDialog()</code> method to check your settings.
