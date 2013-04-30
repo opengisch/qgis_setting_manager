@@ -51,7 +51,7 @@ class Setting(QObject):
         settingValue = self.getValue()
         self.widgetSetMethod(settingValue)
 
-    def setValueFromWidget(self, i=0):
+    def setValueFromWidget(self, dummy):
         if self.widget is None:
             return
         widgetValue = self.widgetGetMethod()
