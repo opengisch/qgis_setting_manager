@@ -66,7 +66,7 @@ self.settings.setValue("myVariable", False)
 
 ## Match settings with widgets of a dialog
 
-### Qcuik start
+### Quick start
 
 You can associate a setting to a defined widget in a dialog (or a dockable window). The first point is to **name the widget as the setting name**.
 Then, your dialog class subclasses the `SettingDialog` class:
@@ -123,7 +123,7 @@ The widgets are automatically detected by the manager. If the type of widget is 
 * QCheckBox
 * Any checkable widget (groupbox, etc.)
 
-### Colors
+**Colors**
 * Any widget but labels or pushbuttons are recommended (it uses QGIS [color button](http://qgis.org/api/classQgsColorButton.html))
 
 **Integers**
@@ -137,7 +137,7 @@ The widgets are automatically detected by the manager. If the type of widget is 
 * QDoubleSpinBox
 
 **Stringlist**
-* QListWidget (checks items having their text in the list)
-* QButtonGroup (checks items having their name in the list)
+* QListWidget (checks items having their _text_ in the list)
+* QButtonGroup (checks items having their _name_ in the list)
 
 New types of widget are easily added, if one is missing, do not hesitate to [ask](https://github.com/3nids/qgissettingmanager/issues)!
