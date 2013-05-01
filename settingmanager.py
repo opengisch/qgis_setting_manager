@@ -10,9 +10,10 @@ from string import String
 from integer import Integer
 from color import Color
 from double import Double
+from stringlist import Stringlist
 
 # possible types
-valueTypes = ("string", "double", "integer", "bool", "color")
+valueTypes = ("string", "double", "integer", "bool", "color", "stringlist")
 
 
 class SettingManager():
@@ -30,7 +31,7 @@ class SettingManager():
         SettingClass = globals()[settingType[0].upper() + settingType[1:].lower()]
         setting = SettingClass(self.pluginName, name, scope, defaultValue, options)
         self.settings.append(setting)
-          
+
     def setting(self, name):
         for setting in self.settings:
             if setting.name == name:

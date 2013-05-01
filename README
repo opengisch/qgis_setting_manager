@@ -18,7 +18,7 @@ git submodule add git://github.com/3nids/qgissettingmanager.git
 
 Then, import the needed classes:
 
-```
+```python
 from qgissettingmanager import *
 ```
 
@@ -26,7 +26,7 @@ from qgissettingmanager import *
 
 All your settings will be saved in a single class, which will subclass SettingManager.
 
-```
+```python
 class MySettings(SettingManager):
     def __init__(self):
         SettingManager.__init__(self, myPluginName)
@@ -35,43 +35,43 @@ class MySettings(SettingManager):
     
 You add as many settings as you want using _addSetting_ method:
 
-```
+```python
 addSetting(name, settingType, scope, defaultValue, options={})
 ```
 
-* name: the name of the setting
-* settingType: bool, string, color, integer or double
-* scope: global or project
-* defaultValue: the default value of the setting (type must corrsepond)
-* options: a dictionary of options
+* **name**: the name of the setting
+* **settingType**: bool, string, color, integer or double
+* **scope**: global or project
+* **defaultValue**: the default value of the setting (type must corrsepond)
+* **options**: a dictionary of options
 
 Options are related to the type of setting
-* comboMode: data (default) or text. Used for combo boxes for strings. It determines if the setting value correspond to the text in the combo box or to its [data](http://qt-project.org/doc/qt-4.8/qcombobox.html#itemData)
+* **comboMode**: data (default) or text. Used for combo boxes for strings. It determines if the setting value correspond to the text in the combo box or to its [data](http://qt-project.org/doc/qt-4.8/qcombobox.html#itemData)
 
 ## Access the settings
 
 Instantiate your settings class in your current class:
 
-```
+```python
 import MySettings
 self.settings = MySettings()
 ```
 
 The settings are easily accessed using the `value` and `setValue` methods:
 
-```
+```python
 myVariable = self.settings.value("myVariable")
 self.settings.setValue("myVariable", False)
 ```
 
-## Associates widgets in dialogs to settings
+## Match settings with widgets of a dialog
 
 ### Qcuik start
 
-You can associate a setting to a defined widget. The first thing is to name the widget exactly as the setting name.
-Then, your dialog class subclass the `SettingDialog` class:
+You can associate a setting to a defined widget in a dialog (or a dockable window). The first point is to **name the widget as the setting name**.
+Then, your dialog class subclasses the `SettingDialog` class:
 
-```
+```python
 class MyDialog(QDialog, Ui_myDialog, SettingDialog):
     def __init__(self):
         QDialog.__init__(self)
@@ -81,6 +81,8 @@ class MyDialog(QDialog, Ui_myDialog, SettingDialog):
 ```
 
 Hence, must dialog is shown, all widgets which are named as some setting will be set to the corresponding value. On dialog acceptance, the setting will be set according to their widget.
+
+To control which setting has been associated to a widget, you can write in your class `print self.widgetList()`.
 
 ### Settings' update behavior
 
@@ -102,7 +104,7 @@ Settings will be saved only if method returns `True`.
 
 Be warned that `SettingDialog` implements `showEvent` method. Therefore, if you redefine it in your dialog class, you have to write:
 
-```
+```python
 def showEvent(self, e):
     settingDialog.showEvent(self, e)
     # do your own stuff
@@ -133,5 +135,9 @@ The widgets are automatically detected by the manager. If the type of widget is 
 **Doubles**
 * QLineEdit
 * QDoubleSpinBox
+
+**Stringlist**
+* QListWidget (checks items having their text in the list)
+* QButtonGroup (checks items having their name in the list)
 
 New types of widget are easily added, if one is missing, do not hesitate to [ask](https://github.com/3nids/qgissettingmanager/issues)!

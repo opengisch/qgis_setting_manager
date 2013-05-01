@@ -6,3 +6,4 @@ from color import Color
 from double import Double
 from integer import Integer
 from string import String
+from stringlist import Stringlist
