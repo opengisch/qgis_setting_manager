@@ -22,6 +22,12 @@ class SettingDialog():
     def onBeforeAcceptDialog(self):
         return True
 
+    def widgetList(self):
+        wl = []
+        for setting in self._settings:
+            wl.append(setting.name)
+        return wl
+
     def acceptDialog(self):
         if self.onBeforeAcceptDialog():
             self.setValuesFromWidgets()
