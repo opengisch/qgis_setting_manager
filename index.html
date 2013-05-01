@@ -18,7 +18,7 @@
 
       <header>
         <h1>QGIS Setting Manager</h1>
-        <p>QGIS setting manager is a python module to easily manage read/write settings and set/get corresponding widgets.</p>
+        <p>QGIS setting manager is a python module to easily manage read/write settings and set/get corresponding widgets in a plugin.</p>
       </header>
 
       <div id="banner">
@@ -166,7 +166,7 @@ Settings will be saved only if method returns <code>True</code>.</p>
 <ul>
 <li>QCheckBox</li>
 <li>Any checkable widget (groupbox, etc.)</li>
-</ul><h3>Colors</h3>
+</ul><p><strong>Colors</strong></p>
 
 <ul>
 <li>Any widget but labels or pushbuttons are recommended (it uses QGIS <a href="http://qgis.org/api/classQgsColorButton.html">color button</a>)</li>
@@ -185,8 +185,8 @@ Settings will be saved only if method returns <code>True</code>.</p>
 </ul><p><strong>Stringlist</strong></p>
 
 <ul>
-<li>QListWidget (checks items having their text in the list)</li>
-<li>QButtonGroup (checks items having their name in the list)</li>
+<li>QListWidget (checks items having their <em>text</em> in the list)</li>
+<li>QButtonGroup (checks items having their <em>name</em> in the list)</li>
 </ul><p>New types of widget are easily added, if one is missing, do not hesitate to <a href="https://github.com/3nids/qgissettingmanager/issues">ask</a>!</p>
       </section>
       <footer>
