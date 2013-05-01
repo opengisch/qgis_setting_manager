@@ -1,20 +1,22 @@
-from PyQt4.QtGui import QDialog
+from PyQt4.QtGui import QDialog, QWidget
 
 
 class SettingDialog():
     def __init__(self, settingManager, setValuesOnDialogAccepted=True, setValueOnWidgetUpdate=False):
-        if not isinstance(self, QDialog):
-            raise NameError("PluginSettingsDialog should be instantiated as QDialog first.")
-        if setValuesOnDialogAccepted:
+        if isinstance(self, QDialog) and setValuesOnDialogAccepted:
             self.accepted.connect(self.acceptDialog)
 
         self._settings = []
         for setting in settingManager.settings:
-            if hasattr(self, setting.name):
-                setting.setWidget(getattr(self, setting.name))
+            widget = self.findChild(QWidget, setting.name)
+            if widget:
+                setting.setWidget(widget)
                 if setValueOnWidgetUpdate:
                     setting.setValueOnWidgetUpdateSignal()
                 self._settings.append(setting)
+
+        # just in case the widget has no showEvent
+        self.setWidgetsFromValues()
 
     """
     you can override this method in the PluginSettings subclass
