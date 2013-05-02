@@ -10,7 +10,7 @@ from PyQt4.QtCore import QSettings, SIGNAL
 from PyQt4.QtGui import QLineEdit, QSpinBox, QSlider, QComboBox
 from qgis.core import QgsProject
 
-from setting import Setting
+from ..setting import Setting
 
 
 class Integer(Setting):

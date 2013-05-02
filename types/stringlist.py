@@ -3,7 +3,7 @@ from PyQt4.QtCore import QSettings, SIGNAL, QStringList, Qt
 from PyQt4.QtGui import QListWidget, QButtonGroup, QListWidgetItem
 from qgis.core import QgsProject
 
-from setting import Setting
+from ..setting import Setting
 
 
 class Stringlist(Setting):

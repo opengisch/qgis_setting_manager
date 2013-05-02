@@ -9,7 +9,7 @@ from PyQt4.QtCore import QSettings, SIGNAL
 from PyQt4.QtGui import QCheckBox
 from qgis.core import QgsProject
 
-from setting import Setting
+from ..setting import Setting
 
 
 class Bool(Setting):

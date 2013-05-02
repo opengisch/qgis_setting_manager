@@ -4,13 +4,7 @@ Denis Rouzaud
 denis.rouzaud@gmail.com
 http://3nids.github.io/qgissettingmanager/
 """
-
-import Bool
-import Integer
-import Color
-import Double
-import Stringlist
-import String
+from types import *
 
 # possible types
 valueTypes = ("string", "double", "integer", "bool", "color", "stringlist")

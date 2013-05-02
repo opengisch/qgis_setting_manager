@@ -11,7 +11,7 @@ from PyQt4.QtCore import QSettings, SIGNAL, QString
 from PyQt4.QtGui import QLineEdit, QButtonGroup, QComboBox
 from qgis.core import QgsProject
 
-from setting import Setting
+from ..setting import Setting
 
 
 class String(Setting):

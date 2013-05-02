@@ -9,7 +9,7 @@ from PyQt4.QtCore import QSettings, SIGNAL
 from PyQt4.QtGui import QLineEdit, QDoubleSpinBox
 from qgis.core import QgsProject
 
-from setting import Setting
+from ..setting import Setting
 
 
 class Double(Setting):

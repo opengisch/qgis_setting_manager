@@ -12,7 +12,7 @@ from PyQt4.QtGui import QColor
 from qgis.core import QgsProject
 from qgis.gui import QgsColorButton
 
-from setting import Setting
+from ..setting import Setting
 
 
 class Color(Setting):
