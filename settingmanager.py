@@ -2,15 +2,15 @@
 Custom settings for QGIS plugin
 Denis Rouzaud
 denis.rouzaud@gmail.com
-Feb. 2013
+http://3nids.github.io/qgissettingmanager/
 """
 
-from bool import Bool
-from string import String
-from integer import Integer
-from color import Color
-from double import Double
-from stringlist import Stringlist
+import Bool
+import Integer
+import Color
+import Double
+import Stringlist
+import String
 
 # possible types
 valueTypes = ("string", "double", "integer", "bool", "color", "stringlist")
