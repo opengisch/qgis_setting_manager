@@ -26,7 +26,7 @@ class Color(Setting):
                                                                      QStringList(["%u" % value.red(),
                                                                                   "%u" % value.green(),
                                                                                   "%u" % value.blue()]))
-        getGlobal = lambda: self.list2color(QSettings(pluginName, pluginName).value(name, defaultValue).toList())
+        getGlobal = lambda: self.list2color(QSettings(pluginName, pluginName).value(name, defaultValue).toStringList())
         getProject = lambda: self.list2color(QgsProject.instance().readListEntry(pluginName, name, defaultValue))
 
         Setting.__init__(self, pluginName, name, scope, defaultValue, options,
@@ -39,7 +39,7 @@ class Color(Setting):
     def setWidget(self, widget):
         txt = self.options.get("dialogTitle", "")
         self.widget = QgsColorButton(widget, txt)
-        self.signal = SIGNAL("colorChanged(color)") # TODO: check if signal is working
+        self.signal = SIGNAL("colorChanged(color)")  # TODO: check if signal is working
         self.widgetSetMethod = self.widget.setColor
         self.widgetGetMethod = self.widget.color
 
