@@ -19,11 +19,11 @@ class Setting(QObject):
 
         self.check(defaultValue)
 
-    """
-    This method shall be overriden in type subclasses
-    to check the validity of the value
-    """
     def check(self, value):
+        """
+        This method shall be overriden in type subclasses
+        to check the validity of the value
+        """
         return True
 
     def setValue(self, value):

@@ -18,10 +18,10 @@ class SettingDialog():
         # just in case the widget has no showEvent
         self.setWidgetsFromValues()
 
-    """
-    you can override this method in the PluginSettings subclass
-    """
     def onBeforeAcceptDialog(self):
+        """
+        you can override this method in the PluginSettings subclass
+        """
         return True
 
     def widgetList(self):
