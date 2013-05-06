@@ -87,13 +87,7 @@ A more elegant way is to use git submodule. Hence, you can keep up with latest i
 <li>
 <strong>defaultValue</strong>: the default value of the setting (type must corrsepond)</li>
 <li>
-<strong>options</strong>: a dictionary of options</li>
-</ul><p>Options are related to the type of setting</p>
-
-<ul>
-<li>
-<strong>comboMode</strong>: data (default) or text. Used for combo boxes for strings. It determines if the setting value correspond to the text in the combo box or to its <a href="http://qt-project.org/doc/qt-4.8/qcombobox.html#itemData">data</a>
-</li>
+<strong>options</strong>: a dictionary of options (see possible widgets)</li>
 </ul><h2>Access the settings</h2>
 
 <p>Instantiate your settings class in your current class:</p>
@@ -110,7 +104,7 @@ A more elegant way is to use git submodule. Hence, you can keep up with latest i
 
 <h2>Match settings with widgets of a dialog</h2>
 
-<h3>Qcuik start</h3>
+<h3>Quick start</h3>
 
 <p>You can associate a setting to a defined widget in a dialog (or a dockable window). The first point is to <strong>name the widget as the setting name</strong>.
 Then, your dialog class subclasses the <code>SettingDialog</code> class:</p>
@@ -159,7 +153,7 @@ Settings will be saved only if method returns <code>True</code>.</p>
 
 <ul>
 <li>QLineEdit</li>
-<li>QComboBox (can be set using the itemData or the text, see options above)</li>
+<li>QComboBox (setting can be defined as the current item text or <a href="http://qt-project.org/doc/qt-4.8/qcombobox.html#itemData">data</a>: specify option <em>comboMode</em> as <em>data</em> (default) or <em>text</em>)</li>
 <li>QButtonGroup (the setting is set as the checked widget text in the button group)</li>
 </ul><p><strong>Booleans</strong></p>
 
@@ -169,7 +163,7 @@ Settings will be saved only if method returns <code>True</code>.</p>
 </ul><p><strong>Colors</strong></p>
 
 <ul>
-<li>Any widget but labels or pushbuttons are recommended (it uses QGIS <a href="http://qgis.org/api/classQgsColorButton.html">color button</a>)</li>
+<li>Any widget but labels or pushbuttons are recommended (it uses QGIS <a href="http://qgis.org/api/classQgsColorButton.html">color button</a>). Use option <em>dialogTitle</em> to set the dialog title.</li>
 </ul><p><strong>Integers</strong></p>
 
 <ul>
