@@ -53,24 +53,13 @@
 </li>
 <li>automatically <strong>write settings from widgets of a dialog</strong>
 </li>
-</ul><h2>Installing the module</h2>
-
-<p>To use this module you can easily copy the files and put them in your project.
-A more elegant way is to use git submodule. Hence, you can keep up with latest improvements. In you plugin directory, do</p>
-
-<pre><code>git submodule add git://github.com/3nids/qgissettingmanager.git
-</code></pre>
-
-<p>Then, import the needed classes:</p>
-
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">qgissettingmanager</span> <span class="kn">import</span> <span class="o">*</span>
-</pre></div>
-
-<h2>The main setting class</h2>
+</ul><h2>The main setting class</h2>
 
 <p>All your settings will be saved in a single class, which will subclass SettingManager.</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">MySettings</span><span class="p">(</span><span class="n">SettingManager</span><span class="p">):</span>
+<div class="highlight"><pre><span class="kn">from</span> <span class="nn">qgissettingmanager</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">class</span> <span class="nc">MySettings</span><span class="p">(</span><span class="n">SettingManager</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">SettingManager</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">myPluginName</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">addSetting</span><span class="p">(</span><span class="s">"myVariable"</span><span class="p">,</span> <span class="s">"bool"</span><span class="p">,</span> <span class="s">"global"</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
@@ -186,6 +175,16 @@ Settings will be saved only if method returns <code>True</code>.</p>
 <li>QListWidget (checks items having their <em>text</em> in the list)</li>
 <li>QButtonGroup (checks items having their <em>name</em> in the list)</li>
 </ul><p>New types of widget are easily added, if one is missing, do not hesitate to <a href="https://github.com/3nids/qgissettingmanager/issues">ask</a>!</p>
+
+<h2>Using git submodules</h2>
+
+<p>To use this module, you can easily copy the files and put them in your project.
+A more elegant way is to use git submodule. Hence, you can keep up with latest improvements. In you plugin directory, do</p>
+
+<pre><code>git submodule add git://github.com/3nids/qgissettingmanager.git
+</code></pre>
+
+<p>A folder <em>qgissettingmanager</em> will be added to your plugin directory. However, git only references the module, and you can <code>git pull</code> in this folder to get the last changes.</p>
       </section>
       <footer>
         <p>Project maintained by <a href="https://github.com/3nids">3nids</a></p>
