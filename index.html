@@ -74,13 +74,15 @@
 <li>
 <strong>name</strong>: the name of the setting</li>
 <li>
-<strong>settingType</strong>: bool, string, color, integer or double</li>
+<strong>settingType</strong>: <em>bool</em>, <em>string</em>, <em>color</em>, <em>integer</em>, <em>double</em> or <em>stringlist</em>
+</li>
 <li>
-<strong>scope</strong>: global or project</li>
+<strong>scope</strong>: <em>global</em> or <em>project</em>
+</li>
 <li>
 <strong>defaultValue</strong>: the default value of the setting (type must corrsepond)</li>
 <li>
-<strong>options</strong>: a dictionary of options (see possible widgets)</li>
+<strong>options</strong>: a dictionary of options for widgets (see <a href="#possiblewidgets">possible widgets</a>)</li>
 </ul><h2>Access the settings</h2>
 
 <p>Instantiate your settings class in your current class:</p>
@@ -139,6 +141,8 @@ Settings will be saved only if method returns <code>True</code>.</p>
 </pre></div>
 
 <h3>Possible widgets</h3>
+
+<p><a name="possiblewidgets"></a></p>
 
 <p>The widgets are automatically detected by the manager. If the type of widget is not handled, an error is raised.</p>
 
