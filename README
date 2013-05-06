@@ -3,9 +3,9 @@
 Easily manage the settings in your [QGIS](http://www.qgis.org) plugin.
 
 This module can:
-* manage different types of variables (bool, string, color, integer, double)
+* manage different types of variables (bool, string, color, integer, double, stringlist)
 * read and write in QGIS settings or in the project settings
-* can set and get values of widgets in dialogs
+* can set and get values of widgets in a GUI
 
 ## Installing the module
 
@@ -43,10 +43,7 @@ addSetting(name, settingType, scope, defaultValue, options={})
 * **settingType**: bool, string, color, integer or double
 * **scope**: global or project
 * **defaultValue**: the default value of the setting (type must corrsepond)
-* **options**: a dictionary of options
-
-Options are related to the type of setting
-* **comboMode**: data (default) or text. Used for combo boxes for strings. It determines if the setting value correspond to the text in the combo box or to its [data](http://qt-project.org/doc/qt-4.8/qcombobox.html#itemData)
+* **options**: a dictionary of options (see possible widgets)
 
 ## Access the settings
 
@@ -116,7 +113,7 @@ The widgets are automatically detected by the manager. If the type of widget is 
 
 **Strings**
 * QLineEdit
-* QComboBox (can be set using the itemData or the text, see options above)
+* QComboBox (setting can be defined as the current item text or [data](http://qt-project.org/doc/qt-4.8/qcombobox.html#itemData): specify option _comboMode_ as _data_ (default) or _text_)
 * QButtonGroup (the setting is set as the checked widget text in the button group)
 
 **Booleans**
@@ -124,7 +121,7 @@ The widgets are automatically detected by the manager. If the type of widget is 
 * Any checkable widget (groupbox, etc.)
 
 **Colors**
-* Any widget but labels or pushbuttons are recommended (it uses QGIS [color button](http://qgis.org/api/classQgsColorButton.html))
+* Any widget but labels or pushbuttons are recommended (it uses QGIS [color button](http://qgis.org/api/classQgsColorButton.html)). Use option _dialogTitle_ to set the dialog title.
 
 **Integers**
 * QLineEdit
