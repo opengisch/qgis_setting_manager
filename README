@@ -3,30 +3,19 @@
 Easily manage the settings in your [QGIS](http://www.qgis.org) plugin.
 
 This module can:
-* manage different types of variables (bool, string, color, integer, double, stringlist)
-* read and write in QGIS settings or in the project settings
-* can set and get values of widgets in a GUI
+* manage **different types of settings** (bool, string, color, integer, double, stringlist)
+* **read and write settings** in QGIS application or in the QGIS project
+* automatically **set widgets from corresponding setting**
+* automatically **write settings from widgets of a dialog**
 
-## Installing the module
-
-To use this module you can easily copy the files and put them in your project.
-A more elegant way is to use git submodule. Hence, you can keep up with latest improvements. In you plugin directory, do
-
-```
-git submodule add git://github.com/3nids/qgissettingmanager.git
-```
-
-Then, import the needed classes:
-
-```python
-from qgissettingmanager import *
-```
 
 ## The main setting class
 
 All your settings will be saved in a single class, which will subclass SettingManager.
 
 ```python
+from qgissettingmanager import *
+
 class MySettings(SettingManager):
     def __init__(self):
         SettingManager.__init__(self, myPluginName)
@@ -40,10 +29,10 @@ addSetting(name, settingType, scope, defaultValue, options={})
 ```
 
 * **name**: the name of the setting
-* **settingType**: bool, string, color, integer or double
-* **scope**: global or project
+* **settingType**: _bool_, _string_, _color_, _integer_, _double_ or _stringlist_
+* **scope**: _global_ or _project_
 * **defaultValue**: the default value of the setting (type must corrsepond)
-* **options**: a dictionary of options (see possible widgets)
+* **options**: a dictionary of options for widgets (see [possible widgets](#possiblewidgets))
 
 ## Access the settings
 
@@ -106,35 +95,56 @@ def showEvent(self, e):
     settingDialog.showEvent(self, e)
     # do your own stuff
 ```
-    
+
+
+<a name="possiblewidgets"/>
 ### Possible widgets
 
 The widgets are automatically detected by the manager. If the type of widget is not handled, an error is raised.
 
 **Strings**
+
 * QLineEdit
 * QComboBox (setting can be defined as the current item text or [data](http://qt-project.org/doc/qt-4.8/qcombobox.html#itemData): specify option _comboMode_ as _data_ (default) or _text_)
 * QButtonGroup (the setting is set as the checked widget text in the button group)
 
 **Booleans**
+
 * QCheckBox
 * Any checkable widget (groupbox, etc.)
 
 **Colors**
+
 * Any widget but labels or pushbuttons are recommended (it uses QGIS [color button](http://qgis.org/api/classQgsColorButton.html)). Use option _dialogTitle_ to set the dialog title.
 
 **Integers**
+
 * QLineEdit
 * QSpinBox
 * QSlider
 * QComboBox (setting is set as the combo box index)
 
 **Doubles**
+
 * QLineEdit
 * QDoubleSpinBox
 
 **Stringlist**
+
 * QListWidget (checks items having their _text_ in the list)
 * QButtonGroup (checks items having their _name_ in the list)
 
 New types of widget are easily added, if one is missing, do not hesitate to [ask](https://github.com/3nids/qgissettingmanager/issues)!
+
+
+
+## Using git submodules
+
+To use this module, you can easily copy the files and put them in your project.
+A more elegant way is to use git submodule. Hence, you can keep up with latest improvements. In you plugin directory, do
+
+```
+git submodule add git://github.com/3nids/qgissettingmanager.git
+```
+
+A folder _qgissettingmanager_ will be added to your plugin directory. However, git only references the module, and you can `git pull` in this folder to get the last changes.
