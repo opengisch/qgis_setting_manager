@@ -1,5 +1,7 @@
 from PyQt4.QtGui import QDialog, QWidget
 
+from settingmanager import Debug
+
 
 class SettingDialog():
     def __init__(self, settingManager, setValuesOnDialogAccepted=True, setValueOnWidgetUpdate=False):
@@ -9,13 +11,18 @@ class SettingDialog():
         self._settings = []
         for setting in settingManager.settings:
             widget = self.findChild(QWidget, setting.name)
-            if widget:
+            if widget is not None:
+                if Debug:
+                    print "Widget found: %s" % setting.name
                 setting.setWidget(widget)
                 if setValueOnWidgetUpdate:
                     setting.setValueOnWidgetUpdateSignal()
                 self._settings.append(setting)
 
-        # just in case the widget has no showEvent
+        # in case the widget has no showEvent
+        self.setWidgetsFromValues()
+
+    def showEvent(self, e):
         self.setWidgetsFromValues()
 
     def onBeforeAcceptDialog(self):
@@ -33,9 +40,6 @@ class SettingDialog():
     def acceptDialog(self):
         if self.onBeforeAcceptDialog():
             self.setValuesFromWidgets()
-
-    def showEvent(self, e):
-        self.setWidgetsFromValues()
 
     def setValuesFromWidgets(self):
         for setting in self._settings:

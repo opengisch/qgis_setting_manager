@@ -6,6 +6,9 @@ http://3nids.github.io/qgissettingmanager/
 """
 from types import *
 
+# to print info
+Debug = False
+
 # possible types
 valueTypes = ("string", "double", "integer", "bool", "color", "stringlist")
 
