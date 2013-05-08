@@ -141,7 +141,7 @@ New types of widget are easily added, if one is missing, do not hesitate to [ask
 ## Using git submodules
 
 To use this module, you can easily copy the files and put them in your project.
-A more elegant way is to use git submodule. Hence, you can keep up with latest improvements. In you plugin directory, do
+A more elegant way is to use [git submodule](http://git-scm.com/book/en/Git-Tools-Submodules). Hence, you can keep up with latest improvements. In you plugin directory, do
 
 ```
 git submodule add git://github.com/3nids/qgissettingmanager.git
