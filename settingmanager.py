@@ -6,7 +6,7 @@ http://3nids.github.io/qgissettingmanager/
 """
 from types import *
 
-# to print info
+# to print debug info
 Debug = False
 
 # possible types
