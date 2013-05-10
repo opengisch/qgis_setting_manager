@@ -68,7 +68,7 @@ class MyDialog(QDialog, Ui_myDialog, SettingDialog):
 
 Hence, must dialog is shown, all widgets which are named as some setting will be set to the corresponding value. On dialog acceptance, the setting will be set according to their widget.
 
-To control which setting has been associated to a widget, you can write in your class `print self.widgetList()`.
+To control which setting has been associated to a widget, you can write `print self.widgetList()`.
 
 ### Settings' update behavior
 
