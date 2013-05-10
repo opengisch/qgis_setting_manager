@@ -74,7 +74,7 @@ To control which setting has been associated to a widget, you can write in your 
 
 You can have a different behavior using `SettingDialog` parameters:
 
-```
+```python
 SettingDialog(settingManager, setValuesOnDialogAccepted=True, setValueOnWidgetUpdate=False)
 ```
 
