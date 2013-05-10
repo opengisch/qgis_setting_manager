@@ -120,8 +120,8 @@ Then, your dialog class subclasses the <code>SettingDialog</code> class:</p>
 
 <p>You can have a different behavior using <code>SettingDialog</code> parameters:</p>
 
-<pre><code>SettingDialog(settingManager, setValuesOnDialogAccepted=True, setValueOnWidgetUpdate=False)
-</code></pre>
+<div class="highlight"><pre><span class="n">SettingDialog</span><span class="p">(</span><span class="n">settingManager</span><span class="p">,</span> <span class="n">setValuesOnDialogAccepted</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">setValueOnWidgetUpdate</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+</pre></div>
 
 <ul>
 <li>setValuesOnDialogAccepted: if <code>True</code>, settings values are set when dialog is accepted;</li>
@@ -183,7 +183,7 @@ Settings will be saved only if method returns <code>True</code>.</p>
 <h2>Using git submodules</h2>
 
 <p>To use this module, you can easily copy the files and put them in your project.
-A more elegant way is to use git submodule. Hence, you can keep up with latest improvements. In you plugin directory, do</p>
+A more elegant way is to use <a href="http://git-scm.com/book/en/Git-Tools-Submodules">git submodule</a>. Hence, you can keep up with latest improvements. In you plugin directory, do</p>
 
 <pre><code>git submodule add git://github.com/3nids/qgissettingmanager.git
 </code></pre>
