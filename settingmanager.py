@@ -21,9 +21,9 @@ class SettingManager():
     def addSetting(self, name, settingType, scope, defaultValue, options={}):
         if self.setting(name) is not None:
             raise NameError("%s already exist in settings." % name)
-        if settingType not in valueTypes:
+        if settingType.lower() not in valueTypes:
             raise NameError("Wrong type %s" % settingType)
-        if scope not in ("global", "project"):
+        if scope.lower() not in ("global", "project"):
             raise NameError("%s is not a valid scope. Must be project or global." % scope)
         SettingClass = globals()[settingType[0].upper() + settingType[1:].lower()]
         setting = SettingClass(self.pluginName, name, scope, defaultValue, options)
