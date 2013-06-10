@@ -30,7 +30,7 @@
 # options:
 # comboMode: can be data or text. It defines if setting is found directly in combobox text or rather in the userData.
 
-from PyQt4.QtCore import QSettings, SIGNAL, QString
+from PyQt4.QtCore import QSettings
 from PyQt4.QtGui import QLineEdit, QButtonGroup, QComboBox
 from qgis.core import QgsProject
 
@@ -43,31 +43,32 @@ class String(Setting):
 
         setGlobal = lambda(value): QSettings(pluginName, pluginName).setValue(name, value)
         setProject = lambda(value): QgsProject.instance().writeEntry(pluginName, name, value)
-        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue).toString()
+        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue, type=str)
         getProject = lambda: QgsProject.instance().readEntry(pluginName, name, defaultValue)[0]
 
         Setting.__init__(self, pluginName, name, scope, defaultValue, options,
                          setGlobal, setProject, getGlobal, getProject)
 
     def check(self, value):
-        if type(value) != str and type(value) != QString:
+        if type(value) != str and type(value) != unicode:
+            print type(value)
             raise NameError("Setting %s must be a string." % self.name)
 
     def setWidget(self, widget):
         if type(widget) == QLineEdit:
-            self.signal = SIGNAL("textChanged(QString)")
+            self.signal = "textChanged"
             self.widgetSetMethod = widget.setText
             self.widgetGetMethod = widget.text
         elif type(widget) == QButtonGroup:
-            self.signal = SIGNAL("buttonClicked(int)")
+            self.signal = "buttonClicked"
             self.widgetSetMethod = self.setButtonGroup
             self.widgetGetMethod = self.getButtonGroup
         elif type(widget) == QComboBox:
-            self.signal = SIGNAL("activated(int)")
+            self.signal = "activated"
             comboMode = self.options.get("comboMode", "data")
             if comboMode == 'data':
                 self.widgetSetMethod = lambda(value): self.widget.setCurrentIndex(widget.findData(value))
-                self.widgetGetMethod = lambda: widget.itemData(widget.currentIndex()).toString()
+                self.widgetGetMethod = lambda: widget.itemData(widget.currentIndex())
             elif comboMode == 'text':
                 self.widgetSetMethod = lambda(value): self.widget.setCurrentIndex(widget.findText(value))
                 self.widgetGetMethod = widget.currentText

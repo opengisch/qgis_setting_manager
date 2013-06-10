@@ -29,7 +29,7 @@
 
 # for combobox, the value corresponds to the index of the combobox
 
-from PyQt4.QtCore import QSettings, SIGNAL
+from PyQt4.QtCore import QSettings
 from PyQt4.QtGui import QLineEdit, QSpinBox, QSlider, QComboBox
 from qgis.core import QgsProject
 
@@ -42,7 +42,7 @@ class Integer(Setting):
 
         setGlobal = lambda(value): QSettings(pluginName, pluginName).setValue(name, value)
         setProject = lambda(value): QgsProject.instance().writeEntry(pluginName, name, value)
-        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue).toInt()[0]
+        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue, type=int)
         getProject = lambda: QgsProject.instance().readDoubleEntry(pluginName, name, defaultValue)[0]
 
         Setting.__init__(self, pluginName, name, scope, defaultValue, options,
@@ -54,15 +54,15 @@ class Integer(Setting):
 
     def setWidget(self, widget):
         if type(widget) == QLineEdit:
-            self.signal = SIGNAL("textChanged(QString)")
+            self.signal = "textChanged"
             self.widgetSetMethod = widget.setText()
-            self.widgetGetMethod = lambda: widget.text().toInt()[0]
+            self.widgetGetMethod = lambda: widget.text()
         elif type(widget) in (QSpinBox, QSlider):
-            self.signal = SIGNAL("valueChanged(int)")
+            self.signal = "valueChanged"
             self.widgetSetMethod = widget.setValue
             self.widgetGetMethod = widget.value
         elif type(widget) == QComboBox:
-            self.signal = SIGNAL("activated(int)")
+            self.signal = "activated"
             self.widgetSetMethod = widget.setCurrentIndex
             self.widgetGetMethod = widget.currentIndex
         else:

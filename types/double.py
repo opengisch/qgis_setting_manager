@@ -26,7 +26,7 @@
 #
 #---------------------------------------------------------------------
 
-from PyQt4.QtCore import QSettings, SIGNAL
+from PyQt4.QtCore import QSettings
 from PyQt4.QtGui import QLineEdit, QDoubleSpinBox
 from qgis.core import QgsProject
 
@@ -39,7 +39,7 @@ class Double(Setting):
 
         setGlobal = lambda(value): QSettings(pluginName, pluginName).setValue(name, value)
         setProject = lambda(value): QgsProject.instance().writeEntryDouble(pluginName, name, value)
-        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue).toDouble()[0]
+        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue, type=float)
         getProject = lambda: QgsProject.instance().readDoubleEntry(pluginName, name, defaultValue)[0]
 
         Setting.__init__(self, pluginName, name, scope, defaultValue, options,
@@ -51,11 +51,11 @@ class Double(Setting):
 
     def setWidget(self, widget):
         if type(widget) == QLineEdit:
-            self.signal = SIGNAL("textChanged(QString)")
+            self.signal = "textChanged"
             self.widgetSetMethod = widget.setText
-            self.widgetGetMethod = lambda: widget.text().toDouble()[0]
+            self.widgetGetMethod = lambda: widget.text()
         elif type(widget) == QDoubleSpinBox:
-            self.signal = SIGNAL("valueChanged(double)")
+            self.signal = "valueChanged"
             self.widgetSetMethod = widget.setValue
             self.widgetGetMethod = widget.value
         else:

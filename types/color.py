@@ -30,7 +30,7 @@
 # options:
 # dialogTitle: show in color dialog
 
-from PyQt4.QtCore import QSettings, QStringList, SIGNAL
+from PyQt4.QtCore import QSettings
 from PyQt4.QtGui import QColor
 from qgis.core import QgsProject
 from qgis.gui import QgsColorButton
@@ -46,10 +46,10 @@ class Color(Setting):
                                                                                      value.green(),
                                                                                      value.blue()])
         setProject = lambda(value): QgsProject.instance().writeEntry(pluginName, name,
-                                                                     QStringList(["%u" % value.red(),
-                                                                                  "%u" % value.green(),
-                                                                                  "%u" % value.blue()]))
-        getGlobal = lambda: self.list2color(QSettings(pluginName, pluginName).value(name, defaultValue).toStringList())
+                                                                     ["%u" % value.red(),
+                                                                      "%u" % value.green(),
+                                                                      "%u" % value.blue()])
+        getGlobal = lambda: self.list2color(QSettings(pluginName, pluginName).value(name, defaultValue))
         getProject = lambda: self.list2color(QgsProject.instance().readListEntry(pluginName, name, defaultValue))
 
         Setting.__init__(self, pluginName, name, scope, defaultValue, options,
@@ -62,7 +62,7 @@ class Color(Setting):
     def setWidget(self, widget):
         txt = self.options.get("dialogTitle", "")
         self.widget = QgsColorButton(widget, txt)
-        self.signal = SIGNAL("colorChanged(color)")  # TODO: check if signal is working
+        self.signal = "colorChanged"  # TODO: check if signal is working
         self.widgetSetMethod = self.widget.setColor
         self.widgetGetMethod = self.widget.color
 
@@ -70,8 +70,7 @@ class Color(Setting):
         if type(color) != list or len(color) != 3:
             return self.defaultValue
         else:
-            r = color[0].toInt()[0]
-            g = color[1].toInt()[0]
-            b = color[2].toInt()[0]
+            r = int(color[0])
+            g = int(color[1])
+            b = int(color[2])
         return QColor(r, g, b)
-

@@ -26,7 +26,7 @@
 #
 #---------------------------------------------------------------------
 
-from PyQt4.QtCore import QSettings, SIGNAL
+from PyQt4.QtCore import QSettings
 from PyQt4.QtGui import QCheckBox
 from qgis.core import QgsProject
 
@@ -39,7 +39,7 @@ class Bool(Setting):
 
         setGlobal = lambda(value): QSettings(pluginName, pluginName).setValue(name, value)
         setProject = lambda(value): QgsProject.instance().writeEntryBool(pluginName, name, value)
-        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue).toBool()
+        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue, type=bool)
         getProject = lambda: QgsProject.instance().readBoolEntry(pluginName, name, defaultValue)[0]
 
         Setting.__init__(self, pluginName, name, scope, defaultValue, options,
@@ -51,7 +51,7 @@ class Bool(Setting):
 
     def setWidget(self, widget):
         if type(widget) == QCheckBox or (hasattr(widget, "isCheckable") and self.widget.isCheckable()):
-            self.signal = SIGNAL("clicked()")
+            self.signal = "clicked"
             self.widgetSetMethod = widget.setChecked
             self.widgetGetMethod = widget.isChecked
         else:

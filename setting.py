@@ -71,7 +71,7 @@ class Setting(QObject):
     def setValueOnWidgetUpdateSignal(self):
         if self.widget is None:
             return
-        QObject.connect(self.widget, self.signal, self.setValueFromWidget)
+        eval("self.widget.%s.connect(self.setValueFromWidget)" % self.signal)
 
     def setWidgetFromValue(self):
         if self.widget is None:

@@ -27,8 +27,8 @@
 #---------------------------------------------------------------------
 
 
-from PyQt4.QtCore import QSettings, SIGNAL, QStringList, Qt
-from PyQt4.QtGui import QListWidget, QButtonGroup, QListWidgetItem
+from PyQt4.QtCore import QSettings, Qt
+from PyQt4.QtGui import QListWidget, QButtonGroup
 from qgis.core import QgsProject
 
 from ..setting import Setting
@@ -40,23 +40,23 @@ class Stringlist(Setting):
 
         setGlobal = lambda(value): QSettings(pluginName, pluginName).setValue(name, value)
         setProject = lambda(value): QgsProject.instance().writeEntry(pluginName, name, value)
-        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue).toStringList()
+        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue, type=list)
         getProject = lambda: QgsProject.instance().readListEntry(pluginName, name, defaultValue)[0]
 
         Setting.__init__(self, pluginName, name, scope, defaultValue, options,
                          setGlobal, setProject, getGlobal, getProject)
 
     def check(self, value):
-        if type(value) not in (list, tuple, QStringList):
+        if type(value) not in (list, tuple):
             raise NameError("Setting %s must be a string list." % self.name)
 
     def setWidget(self, widget):
         if type(widget) == QListWidget:
-            self.signal = SIGNAL("clicked()")
+            self.signal = "clicked"
             self.widgetSetMethod = self.setListBoxes
             self.widgetGetMethod = self.getListBoxes
         elif type(widget) == QButtonGroup:
-            self.signal = SIGNAL("buttonClicked(int)")
+            self.signal = "buttonClicked"
             self.widgetSetMethod = self.setGroupBoxes
             self.widgetGetMethod = self.getGroupBoxes
         else:
