@@ -68,7 +68,7 @@ class String(Setting):
             comboMode = self.options.get("comboMode", "data")
             if comboMode == 'data':
                 self.widgetSetMethod = lambda(value): self.widget.setCurrentIndex(widget.findData(value))
-                self.widgetGetMethod = lambda: widget.itemData(widget.currentIndex())
+                self.widgetGetMethod = lambda: widget.itemData(widget.currentIndex()) or ""
             elif comboMode == 'text':
                 self.widgetSetMethod = lambda(value): self.widget.setCurrentIndex(widget.findText(value))
                 self.widgetGetMethod = widget.currentText
