@@ -26,7 +26,7 @@
 #
 #---------------------------------------------------------------------
 
-from PyQt4.QtGui import QDialog, QWidget
+from PyQt4.QtGui import QDialog, QWidget, QButtonGroup
 
 from settingmanager import Debug
 
@@ -38,14 +38,16 @@ class SettingDialog():
 
         self._settings = []
         for setting in settingManager.settings:
-            widget = self.findChild(QWidget, setting.name)
-            if widget is not None:
-                if Debug:
-                    print "Widget found: %s" % setting.name
-                setting.setWidget(widget)
-                if setValueOnWidgetUpdate:
-                    setting.setValueOnWidgetUpdateSignal()
-                self._settings.append(setting)
+            for objectClass in (QWidget, QButtonGroup):
+                widget = self.findChild(objectClass, setting.name)
+                if widget is not None:
+                    if Debug:
+                        print "Widget found: %s" % setting.name
+                    setting.setWidget(widget)
+                    if setValueOnWidgetUpdate:
+                        setting.setValueOnWidgetUpdateSignal()
+                    self._settings.append(setting)
+                    break
 
         # in case the widget has no showEvent
         self.setWidgetsFromValues()
