@@ -29,9 +29,10 @@
 
 # options:
 # dialogTitle: show in color dialog
+# alpha: use or not alpha channel
 
 from PyQt4.QtCore import QSettings
-from PyQt4.QtGui import QColor
+from PyQt4.QtGui import QColor, QColorDialog
 from qgis.core import QgsProject
 from qgis.gui import QgsColorButton
 
@@ -44,11 +45,13 @@ class Color(Setting):
 
         setGlobal = lambda(value): QSettings(pluginName, pluginName).setValue(name, [value.red(),
                                                                                      value.green(),
-                                                                                     value.blue()])
+                                                                                     value.blue(),
+                                                                                     value.alpha()])
         setProject = lambda(value): QgsProject.instance().writeEntry(pluginName, name,
                                                                      ["%u" % value.red(),
                                                                       "%u" % value.green(),
-                                                                      "%u" % value.blue()])
+                                                                      "%u" % value.blue(),
+                                                                      "%u" % value.alpha()])
         getGlobal = lambda: self.list2color(QSettings(pluginName, pluginName).value(name, defaultValue))
         getProject = lambda: self.list2color(QgsProject.instance().readListEntry(pluginName, name, defaultValue))
 
@@ -62,15 +65,20 @@ class Color(Setting):
     def setWidget(self, widget):
         txt = self.options.get("dialogTitle", "")
         self.widget = QgsColorButton(widget, txt)
+        if self.options.get("alpha", False):
+            self.widget.setColorDialogOptions(QColorDialog.ShowAlphaChannel)
         self.signal = "colorChanged"  # TODO: check if signal is working
         self.widgetSetMethod = self.widget.setColor
         self.widgetGetMethod = self.widget.color
 
     def list2color(self, color):
-        if type(color) != list or len(color) != 3:
+        if type(color) != list or len(color) != 4:
             return self.defaultValue
         else:
             r = int(color[0])
             g = int(color[1])
             b = int(color[2])
-        return QColor(r, g, b)
+            a = int(color[3])
+            if not self.options.get("alpha", False):
+                a = 255
+        return QColor(r, g, b, a)
