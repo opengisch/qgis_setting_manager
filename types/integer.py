@@ -43,7 +43,7 @@ class Integer(Setting):
         setGlobal = lambda(value): QSettings(pluginName, pluginName).setValue(name, value)
         setProject = lambda(value): QgsProject.instance().writeEntry(pluginName, name, value)
         getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue, type=int)
-        getProject = lambda: QgsProject.instance().readDoubleEntry(pluginName, name, defaultValue)[0]
+        getProject = lambda: QgsProject.instance().readNumEntry(pluginName, name, defaultValue)[0]
 
         Setting.__init__(self, pluginName, name, scope, defaultValue, options,
                          setGlobal, setProject, getGlobal, getProject)
