@@ -4,42 +4,31 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>QGIS Setting Manager by 3nids</title>
+
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/main.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <script src="javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
   <body>
-
+    <div class="wrapper">
       <header>
         <h1>QGIS Setting Manager</h1>
         <p>QGIS setting manager is a python module to easily manage read/write settings and set/get corresponding widgets in a plugin.</p>
+        <p class="view"><a href="https://github.com/3nids/qgissettingmanager">View the Project on GitHub <small>3nids/qgissettingmanager</small></a></p>
+        <ul>
+          <li><a href="https://github.com/3nids/qgissettingmanager/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/3nids/qgissettingmanager/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/3nids/qgissettingmanager">View On <strong>GitHub</strong></a></li>
+        </ul>
       </header>
-
-      <div id="banner">
-        <span id="logo"></span>
-
-        <a href="https://github.com/3nids/qgissettingmanager" class="button fork"><strong>View On GitHub</strong></a>
-        <div class="downloads">
-          <span>Downloads:</span>
-          <ul>
-            <li><a href="https://github.com/3nids/qgissettingmanager/zipball/master" class="button">ZIP</a></li>
-            <li><a href="https://github.com/3nids/qgissettingmanager/tarball/master" class="button">TAR</a></li>
-          </ul>
-        </div>
-      </div><!-- end banner -->
-
-    <div class="wrapper">
-      <nav>
-        <ul></ul>
-      </nav>
       <section>
-        <h1>About</h1>
+        <h1>
+<a id="about" class="anchor" href="#about" aria-hidden="true"><span class="octicon octicon-link"></span></a>About</h1>
 
 <p>Easily manage the settings in your <a href="http://www.qgis.org">QGIS</a> plugin.</p>
 
@@ -53,22 +42,23 @@
 </li>
 <li>automatically <strong>write settings from widgets of a dialog</strong>
 </li>
-</ul><h2>The main setting class</h2>
+</ul>
+
+<h2>
+<a id="the-main-setting-class" class="anchor" href="#the-main-setting-class" aria-hidden="true"><span class="octicon octicon-link"></span></a>The main setting class</h2>
 
 <p>All your settings will be saved in a single class, which will subclass SettingManager.</p>
 
-<div class="highlight"><pre><span class="kn">from</span> <span class="nn">qgissettingmanager</span> <span class="kn">import</span> <span class="o">*</span>
+<div class="highlight highlight-python"><pre><span class="pl-k">from</span> qgissettingmanager <span class="pl-k">import</span> <span class="pl-k">*</span>
 
-<span class="k">class</span> <span class="nc">MySettings</span><span class="p">(</span><span class="n">SettingManager</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">SettingManager</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">myPluginName</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">addSetting</span><span class="p">(</span><span class="s">"myVariable"</span><span class="p">,</span> <span class="s">"bool"</span><span class="p">,</span> <span class="s">"global"</span><span class="p">,</span> <span class="bp">True</span><span class="p">)</span>
-</pre></div>
+<span class="pl-st">class</span> <span class="pl-en">MySettings</span>(<span class="pl-e">SettingManager</span>):
+    <span class="pl-st">def</span> <span class="pl-en"><span class="pl-s3">__init__</span></span>(<span class="pl-vpf">self</span>):
+        SettingManager.<span class="pl-s3">__init__</span>(<span class="pl-v">self</span>, myPluginName)
+        <span class="pl-v">self</span>.addSetting(<span class="pl-s1"><span class="pl-pds">"</span>myVariable<span class="pl-pds">"</span></span>, <span class="pl-s1"><span class="pl-pds">"</span>bool<span class="pl-pds">"</span></span>, <span class="pl-s1"><span class="pl-pds">"</span>global<span class="pl-pds">"</span></span>, <span class="pl-c1">True</span>)</pre></div>
 
 <p>You add as many settings as you want using <em>addSetting</em> method:</p>
 
-<div class="highlight"><pre><span class="n">addSetting</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">settingType</span><span class="p">,</span> <span class="n">scope</span><span class="p">,</span> <span class="n">defaultValue</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{})</span>
-</pre></div>
+<div class="highlight highlight-python"><pre>addSetting(name, settingType, scope, defaultValue, <span class="pl-vpf">options</span><span class="pl-k">=</span>{})</pre></div>
 
 <ul>
 <li>
@@ -83,66 +73,72 @@
 <strong>defaultValue</strong>: the default value of the setting (type must corrsepond)</li>
 <li>
 <strong>options</strong>: a dictionary of options for widgets (see <a href="#possiblewidgets">possible widgets</a>)</li>
-</ul><h2>Access the settings</h2>
+</ul>
+
+<h2>
+<a id="access-the-settings" class="anchor" href="#access-the-settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Access the settings</h2>
 
 <p>Instantiate your settings class in your current class:</p>
 
-<div class="highlight"><pre><span class="kn">import</span> <span class="nn">MySettings</span>
-<span class="bp">self</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="n">MySettings</span><span class="p">()</span>
-</pre></div>
+<div class="highlight highlight-python"><pre><span class="pl-k">import</span> MySettings
+<span class="pl-v">self</span>.settings <span class="pl-k">=</span> MySettings()</pre></div>
 
 <p>The settings are easily accessed using the <code>value</code> and <code>setValue</code> methods:</p>
 
-<div class="highlight"><pre><span class="n">myVariable</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="s">"myVariable"</span><span class="p">)</span>
-<span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">setValue</span><span class="p">(</span><span class="s">"myVariable"</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
-</pre></div>
+<div class="highlight highlight-python"><pre>myVariable <span class="pl-k">=</span> <span class="pl-v">self</span>.settings.value(<span class="pl-s1"><span class="pl-pds">"</span>myVariable<span class="pl-pds">"</span></span>)
+<span class="pl-v">self</span>.settings.setValue(<span class="pl-s1"><span class="pl-pds">"</span>myVariable<span class="pl-pds">"</span></span>, <span class="pl-c1">False</span>)</pre></div>
 
-<h2>Match settings with widgets of a dialog</h2>
+<h2>
+<a id="match-settings-with-widgets-of-a-dialog" class="anchor" href="#match-settings-with-widgets-of-a-dialog" aria-hidden="true"><span class="octicon octicon-link"></span></a>Match settings with widgets of a dialog</h2>
 
-<h3>Quick start</h3>
+<h3>
+<a id="quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick start</h3>
 
 <p>You can associate a setting to a defined widget in a dialog (or a dockable window). The first point is to <strong>name the widget as the setting name</strong>.
 Then, your dialog class subclasses the <code>SettingDialog</code> class:</p>
 
-<div class="highlight"><pre><span class="k">class</span> <span class="nc">MyDialog</span><span class="p">(</span><span class="n">QDialog</span><span class="p">,</span> <span class="n">Ui_myDialog</span><span class="p">,</span> <span class="n">SettingDialog</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">QDialog</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">setupUi</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span> <span class="o">=</span> <span class="n">MySettings</span><span class="p">()</span>
-        <span class="n">SettingDialog</span><span class="o">.</span><span class="n">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">)</span>
-</pre></div>
+<div class="highlight highlight-python"><pre><span class="pl-st">class</span> <span class="pl-en">MyDialog</span>(<span class="pl-e">QDialog</span>, <span class="pl-e">Ui_myDialog</span>, <span class="pl-e">SettingDialog</span>):
+    <span class="pl-st">def</span> <span class="pl-en"><span class="pl-s3">__init__</span></span>(<span class="pl-vpf">self</span>):
+        QDialog.<span class="pl-s3">__init__</span>(<span class="pl-v">self</span>)
+        <span class="pl-v">self</span>.setupUi(<span class="pl-v">self</span>)
+        <span class="pl-v">self</span>.settings <span class="pl-k">=</span> MySettings()
+        SettingDialog.<span class="pl-s3">__init__</span>(<span class="pl-v">self</span>, <span class="pl-v">self</span>.settings)</pre></div>
 
 <p>Hence, must dialog is shown, all widgets which are named as some setting will be set to the corresponding value. On dialog acceptance, the setting will be set according to their widget.</p>
 
 <p>To control which setting has been associated to a widget, you can write <code>print self.widgetList()</code>.</p>
 
-<h3>Settings' update behavior</h3>
+<h3>
+<a id="settings-update-behavior" class="anchor" href="#settings-update-behavior" aria-hidden="true"><span class="octicon octicon-link"></span></a>Settings' update behavior</h3>
 
 <p>You can have a different behavior using <code>SettingDialog</code> parameters:</p>
 
-<div class="highlight"><pre><span class="n">SettingDialog</span><span class="p">(</span><span class="n">settingManager</span><span class="p">,</span> <span class="n">setValuesOnDialogAccepted</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">setValueOnWidgetUpdate</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-</pre></div>
+<div class="highlight highlight-python"><pre>SettingDialog(settingManager, <span class="pl-vpf">setValuesOnDialogAccepted</span><span class="pl-k">=</span><span class="pl-c1">True</span>, <span class="pl-vpf">setValueOnWidgetUpdate</span><span class="pl-k">=</span><span class="pl-c1">False</span>)</pre></div>
 
 <ul>
 <li>setValuesOnDialogAccepted: if <code>True</code>, settings values are set when dialog is accepted;</li>
 <li>setValueOnWidgetUpdate: if <code>True</code>, settings are set as soon as the widgets is modified.</li>
-</ul><h3>Check something before updating the settings</h3>
+</ul>
+
+<h3>
+<a id="check-something-before-updating-the-settings" class="anchor" href="#check-something-before-updating-the-settings" aria-hidden="true"><span class="octicon octicon-link"></span></a>Check something before updating the settings</h3>
 
 <p>You can override the <code>SettingDialog.onBeforeAcceptDialog()</code> method to check your settings.
 Settings will be saved only if method returns <code>True</code>.</p>
 
-<h3>Using showEvent</h3>
+<h3>
+<a id="using-showevent" class="anchor" href="#using-showevent" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using showEvent</h3>
 
 <p>Be warned that <code>SettingDialog</code> implements <code>showEvent</code> method. Therefore, if you redefine it in your dialog class, you have to write:</p>
 
-<div class="highlight"><pre><span class="k">def</span> <span class="nf">showEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
-    <span class="n">settingDialog</span><span class="o">.</span><span class="n">showEvent</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-    <span class="c"># do your own stuff</span>
-</pre></div>
+<div class="highlight highlight-python"><pre><span class="pl-st">def</span> <span class="pl-en">showEvent</span>(<span class="pl-vpf">self</span>, <span class="pl-vpf">e</span>):
+    settingDialog.showEvent(<span class="pl-v">self</span>, e)
+    <span class="pl-c"># do your own stuff</span></pre></div>
 
 <p><a name="possiblewidgets"></a></p>
 
-<h3>Possible widgets</h3>
+<h3>
+<a id="possible-widgets" class="anchor" href="#possible-widgets" aria-hidden="true"><span class="octicon octicon-link"></span></a>Possible widgets</h3>
 
 <p>The widgets are automatically detected by the manager. If the type of widget is not handled, an error is raised.</p>
 
@@ -152,35 +148,48 @@ Settings will be saved only if method returns <code>True</code>.</p>
 <li>QLineEdit</li>
 <li>QComboBox (setting can be defined as the current item text or <a href="http://qt-project.org/doc/qt-4.8/qcombobox.html#itemData">data</a>: specify option <em>comboMode</em> as <em>data</em> (default) or <em>text</em>)</li>
 <li>QButtonGroup (the setting is set as the checked widget text in the button group)</li>
-</ul><p><strong>Booleans</strong></p>
+</ul>
+
+<p><strong>Booleans</strong></p>
 
 <ul>
 <li>QCheckBox</li>
 <li>Any checkable widget (groupbox, etc.)</li>
-</ul><p><strong>Colors</strong></p>
+</ul>
+
+<p><strong>Colors</strong></p>
 
 <ul>
 <li>Any widget but labels or pushbuttons are recommended (it uses QGIS <a href="http://qgis.org/api/classQgsColorButton.html">color button</a>). Use option <em>dialogTitle</em> to set the dialog title.</li>
-</ul><p><strong>Integers</strong></p>
+</ul>
+
+<p><strong>Integers</strong></p>
 
 <ul>
 <li>QLineEdit</li>
 <li>QSpinBox</li>
 <li>QSlider</li>
 <li>QComboBox (setting is set as the combo box index)</li>
-</ul><p><strong>Doubles</strong></p>
+</ul>
+
+<p><strong>Doubles</strong></p>
 
 <ul>
 <li>QLineEdit</li>
 <li>QDoubleSpinBox</li>
-</ul><p><strong>Stringlist</strong></p>
+</ul>
+
+<p><strong>Stringlist</strong></p>
 
 <ul>
 <li>QListWidget (checks items having their <em>text</em> in the list)</li>
 <li>QButtonGroup (checks items having their <em>name</em> in the list)</li>
-</ul><p>New types of widget are easily added, if one is missing, do not hesitate to <a href="https://github.com/3nids/qgissettingmanager/issues">ask</a>!</p>
+</ul>
 
-<h2>Using git submodules</h2>
+<p>New types of widget are easily added, if one is missing, do not hesitate to <a href="https://github.com/3nids/qgissettingmanager/issues">ask</a>!</p>
+
+<h2>
+<a id="using-git-submodules" class="anchor" href="#using-git-submodules" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using git submodules</h2>
 
 <p>To use this module, you can easily copy the files and put them in your project.
 A more elegant way is to use <a href="http://git-scm.com/book/en/Git-Tools-Submodules">git submodule</a>. Hence, you can keep up with latest improvements. In you plugin directory, do</p>
@@ -190,11 +199,11 @@ A more elegant way is to use <a href="http://git-scm.com/book/en/Git-Tools-Submo
 
 <p>A folder <em>qgissettingmanager</em> will be added to your plugin directory. However, git only references the module, and you can <code>git pull</code> in this folder to get the last changes.</p>
       </section>
-      <footer>
-        <p>Project maintained by <a href="https://github.com/3nids">3nids</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></small></p>
-      </footer>
     </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/3nids">3nids</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
     <!--[if !IE]><script>fixScale(document);</script><![endif]-->
     
   </body>
