@@ -33,7 +33,7 @@
 from PyQt4.QtCore import QSettings
 from PyQt4.QtGui import QLineEdit, QButtonGroup, QComboBox
 from qgis.core import QgsProject
-from qgis.gui import QgsMapLayerComobBox, QgsFieldComboBox
+from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox
 
 from ..setting import Setting
 
