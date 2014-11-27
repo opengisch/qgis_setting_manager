@@ -33,6 +33,7 @@
 from PyQt4.QtCore import QSettings
 from PyQt4.QtGui import QLineEdit, QButtonGroup, QComboBox
 from qgis.core import QgsProject
+from qgis.gui import QgsMapLayerComobBox, QgsFieldComboBox
 
 from ..setting import Setting
 
@@ -72,6 +73,10 @@ class String(Setting):
             elif comboMode == 'text':
                 self.widgetSetMethod = lambda(value): self.widget.setCurrentIndex(widget.findText(value))
                 self.widgetGetMethod = widget.currentText
+        elif type(widget) in [QgsMapLayerComboBox, QgsFieldComboBox]:
+            self.signal = "activated"
+            self.widgetSetMethod = lambda(value): self.widget.setCurrentIndex(widget.findData(value))
+            self.widgetGetMethod = lambda: widget.itemData(widget.currentIndex()) or ""
         else:
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
