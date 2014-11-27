@@ -78,7 +78,7 @@ class String(Setting):
             self.widgetSetMethod = lambda(value): self.widget.setCurrentIndex(widget.findData(value))
             self.widgetGetMethod = lambda: widget.itemData(widget.currentIndex()) or ""
         else:
-            raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
+            raise NameError("SettingManager does not handle %s widgets for strings at the moment (setting: %s)" %
                             (type(widget), self.name))
         self.widget = widget
 
