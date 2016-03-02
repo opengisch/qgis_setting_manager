@@ -115,7 +115,7 @@ The widgets are automatically detected by the manager. If the type of widget is 
 
 **Colors**
 
-* Any widget but labels or pushbuttons are recommended (it uses QGIS [color button](http://qgis.org/api/classQgsColorButton.html)). Use option _dialogTitle_ to set the dialog title.
+* Native QGIS widgets (QgsColorButton, QgsColorButtonV2) or any widget (labek or pushbutton are recommended). For standard Qt Widgets, QGIS [color button](http://qgis.org/api/classQgsColorButtonV2.html)) will be used. Use options _allowAlpha_ (boolean) to allow transparent colors and _dialogTitle_ to set the dialog title.
 
 **Integers**
 

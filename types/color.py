@@ -34,7 +34,7 @@
 from PyQt4.QtCore import QSettings
 from PyQt4.QtGui import QColor, QColorDialog
 from qgis.core import QgsProject
-from qgis.gui import QgsColorButton
+from qgis.gui import QgsColorButton, QgsColorButtonV2
 
 from ..setting import Setting
 
@@ -63,22 +63,25 @@ class Color(Setting):
             raise NameError("Color setting %s must be a QColor." % self.name)
 
     def setWidget(self, widget):
-        txt = self.options.get("dialogTitle", "")
-        self.widget = QgsColorButton(widget, txt)
-        if self.options.get("alpha", False):
+        if type(widget) in ( QgsColorButton, QgsColorButtonV2 ):
+            self.widget = widget
+        else:
+            txt = self.options.get("dialogTitle", "")
+            self.widget = QgsColorButtonV2(widget, txt)
+        if type(widget) == QgsColorButton:
             self.widget.setColorDialogOptions(QColorDialog.ShowAlphaChannel)
-        self.signal = "colorChanged"  # TODO: check if signal is working
+        else:
+            self.widget.setAllowAlpha(self.options.get("allowAlpha", False))
+        self.signal = "colorChanged"
         self.widgetSetMethod = self.widget.setColor
         self.widgetGetMethod = self.widget.color
 
     def list2color(self, color):
-        if type(color) != list or len(color) != 4:
+        if type(color) != list or len(color) not in (3,4):
             return self.defaultValue
         else:
             r = int(color[0])
             g = int(color[1])
             b = int(color[2])
-            a = int(color[3])
-            if not self.options.get("alpha", False):
-                a = 255
+            a = int(color[3]) if len(color)>3 and self.options.get("allowAlpha", False) else 255
         return QColor(r, g, b, a)
