@@ -37,10 +37,15 @@ class Bool(Setting):
 
     def __init__(self, pluginName, name, scope, defaultValue, options={}):
 
-        setGlobal = lambda(value): QSettings(pluginName, pluginName).setValue(name, value)
+        setGlobal = lambda(value): QSettings().setValue(pluginName + "/" + name, value)
         setProject = lambda(value): QgsProject.instance().writeEntryBool(pluginName, name, value)
-        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue, type=bool)
+        getGlobal = lambda: QSettings().value(pluginName + "/" + name, defaultValue, type=bool)
         getProject = lambda: QgsProject.instance().readBoolEntry(pluginName, name, defaultValue)[0]
+
+        if scope == 'global':
+            v = QSettings().value(pluginName + "/" + name)
+            if v is None:
+                QSettings().setValue(pluginName + "/" + name, defaultValue)
 
         Setting.__init__(self, pluginName, name, scope, defaultValue, options,
                          setGlobal, setProject, getGlobal, getProject)

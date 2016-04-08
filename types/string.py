@@ -42,13 +42,18 @@ class String(Setting):
 
     def __init__(self, pluginName, name, scope, defaultValue, options={}):
 
-        setGlobal = lambda(value): QSettings(pluginName, pluginName).setValue(name, value)
+        setGlobal = lambda(value): QSettings().setValue(pluginName + "/" + name, value)
         setProject = lambda(value): QgsProject.instance().writeEntry(pluginName, name, value)
-        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue, type=str)
+        getGlobal = lambda: QSettings().value(pluginName + "/" + name, defaultValue, type=str)
         getProject = lambda: QgsProject.instance().readEntry(pluginName, name, defaultValue)[0]
 
-        Setting.__init__(self, pluginName, name, scope, defaultValue, options,
-                         setGlobal, setProject, getGlobal, getProject)
+        if scope == 'global':
+            v = QSettings().value(pluginName + "/" + name)
+            if v is None:
+                QSettings().setValue(pluginName + "/" + name, defaultValue)
+
+            Setting.__init__(self, pluginName, name, scope, defaultValue, options,
+                             setGlobal, setProject, getGlobal, getProject)
 
     def check(self, value):
         if type(value) != str and type(value) != unicode:

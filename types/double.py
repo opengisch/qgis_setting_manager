@@ -37,13 +37,18 @@ class Double(Setting):
 
     def __init__(self, pluginName, name, scope, defaultValue, options={}):
 
-        setGlobal = lambda(value): QSettings(pluginName, pluginName).setValue(name, value)
+        setGlobal = lambda(value): QSettings().setValue(pluginName + "/" + name, value)
         setProject = lambda(value): QgsProject.instance().writeEntryDouble(pluginName, name, value)
-        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue, type=float)
+        getGlobal = lambda: QSettings().value(pluginName + "/" + name, defaultValue, type=float)
         getProject = lambda: QgsProject.instance().readDoubleEntry(pluginName, name, defaultValue)[0]
 
-        Setting.__init__(self, pluginName, name, scope, defaultValue, options,
-                         setGlobal, setProject, getGlobal, getProject)
+        if scope == 'global':
+            v = QSettings().value(pluginName + "/" + name)
+            if v is None:
+                QSettings().setValue(pluginName + "/" + name, defaultValue)
+
+            Setting.__init__(self, pluginName, name, scope, defaultValue, options,
+                             setGlobal, setProject, getGlobal, getProject)
         
     def check(self, value):
         if type(value) != int and type(value) != float:
