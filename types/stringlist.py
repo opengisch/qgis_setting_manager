@@ -38,10 +38,16 @@ class Stringlist(Setting):
 
     def __init__(self, pluginName, name, scope, defaultValue, options={}):
 
-        setGlobal = lambda(value): QSettings(pluginName, pluginName).setValue(name, value)
+        setGlobal = lambda(value): QSettings().setValue(pluginName + "/" + name, value)
         setProject = lambda(value): QgsProject.instance().writeEntry(pluginName, name, value)
-        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue, type=list)
+        getGlobal = lambda: QSettings().value(pluginName + "/" + name, defaultValue, type=list)
         getProject = lambda: QgsProject.instance().readListEntry(pluginName, name, defaultValue)[0]
+
+        if scope == 'global':
+            v = QSettings().value(pluginName + "/" + name)
+            if v is None:
+                QSettings().setValue(pluginName + "/" + name, defaultValue)
+
 
         Setting.__init__(self, pluginName, name, scope, defaultValue, options,
                          setGlobal, setProject, getGlobal, getProject)

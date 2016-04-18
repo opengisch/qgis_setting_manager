@@ -43,7 +43,7 @@ class Color(Setting):
 
     def __init__(self, pluginName, name, scope, defaultValue, options={}):
 
-        setGlobal = lambda(value): QSettings(pluginName, pluginName).setValue(name, [value.red(),
+        setGlobal = lambda(value): QSettings().setValue(pluginName + "/" + name, [value.red(),
                                                                                      value.green(),
                                                                                      value.blue(),
                                                                                      value.alpha()])
@@ -52,8 +52,13 @@ class Color(Setting):
                                                                       "%u" % value.green(),
                                                                       "%u" % value.blue(),
                                                                       "%u" % value.alpha()])
-        getGlobal = lambda: self.list2color(QSettings(pluginName, pluginName).value(name, defaultValue))
+        getGlobal = lambda: self.list2color(QSettings().value(pluginName + "/" + name, defaultValue))
         getProject = lambda: self.list2color(QgsProject.instance().readListEntry(pluginName, name, defaultValue))
+
+        if scope == 'global':
+            v = QSettings().value(pluginName + "/" + name)
+            if v is None:
+                QSettings().setValue(pluginName + "/" + name, defaultValue)
 
         Setting.__init__(self, pluginName, name, scope, defaultValue, options,
                          setGlobal, setProject, getGlobal, getProject)
