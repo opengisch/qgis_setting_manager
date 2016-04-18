@@ -29,8 +29,6 @@
 
 from types import *
 
-from qgis.core import QgsMessageLog
-
 # to print debug info
 Debug = False
 
