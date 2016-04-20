@@ -26,26 +26,33 @@
 #
 #---------------------------------------------------------------------
 
-from PyQt4.QtCore import QObject, pyqtSignal
-
+from PyQt4.QtCore import QObject, pyqtSignal, QSettings
+from qgis.core import QgsProject
 
 class Setting(QObject):
     valueChanged = pyqtSignal()
 
-    def __init__(self, pluginName, name, scope, defaultValue, options, setGlobal, setProject, getGlobal, getProject):
+    def __init__(self, pluginName, name, scope, defaultValue, options={}, objectType = None):
         QObject.__init__(self)
         self.pluginName = pluginName
         self.name = name
         self.scope = scope
         self.defaultValue = defaultValue
         self.widget = None
+        self.objectType = objectType
         self.options = options
-        self.setGlobal = setGlobal
-        self.setProject = setProject
-        self.getGlobal = getGlobal
-        self.getProject = getProject
+
+        self.projectReadMethod = QgsProject.instance().readEntry
 
         self.check(defaultValue)
+
+        self.globalName = 'plugins/{}/{}'.format(self.pluginName, self.name)
+
+    def readOut(self, value, scope):
+        return value
+
+    def writeIn(self, value, scope):
+        return value
 
     def check(self, value):
         """
@@ -55,18 +62,28 @@ class Setting(QObject):
         return True
 
     def setValue(self, value):
-        self.check(value)
+        if not self.check(value):
+            return
+        value = self.writeIn(value, self.scope)
         if self.scope == "global":
-            self.setGlobal(value)
+            QSettings().setValue(self.globalName, value)
         elif self.scope == "project":
-            self.setProject(value)
+            QgsProject.instance().writeEntry(self.pluginName, self.name, value)
         self.valueChanged.emit()
 
     def getValue(self):
         if self.scope == "global":
-            return self.getGlobal()
+            value = QSettings().value(self.globalName, self.defaultValue, type=self.objectType)
+            # try to gather old setting value (using old version of Qgis Setting Manager)
+            if self.readOut(value, self.scope) == self.defaultValue:
+                value = QSettings(self.pluginName, self.pluginName).value(self.name, self.defaultValue, type=self.objectType)
+                if self.readOut(value, self.scope) != self.defaultValue:
+                    # rewrite the setting in new system
+                    QSettings().setValue(self.globalName, value)
         elif self.scope == "project":
-            return self.getProject()
+            value = self.projectReadMethod(self.pluginName, self.name, self.defaultValue)[0]
+
+        return self.readOut(value, self.scope)
 
     def setValueOnWidgetUpdateSignal(self):
         if self.widget is None:

@@ -144,7 +144,7 @@ To use this module, you can easily copy the files and put them in your project.
 A more elegant way is to use [git submodule](http://git-scm.com/book/en/Git-Tools-Submodules). Hence, you can keep up with latest improvements. In you plugin directory, do
 
 ```
-git submodule add git://github.com/3nids/qgissettingmanager.git
+git submodule add https://github.com/3nids/qgissettingmanager.git
 ```
 
 A folder _qgissettingmanager_ will be added to your plugin directory. However, git only references the module, and you can `git pull` in this folder to get the last changes.

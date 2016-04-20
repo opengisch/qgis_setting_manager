@@ -37,14 +37,8 @@ from ..setting import Setting
 class Stringlist(Setting):
 
     def __init__(self, pluginName, name, scope, defaultValue, options={}):
-
-        setGlobal = lambda(value): QSettings(pluginName, pluginName).setValue(name, value)
-        setProject = lambda(value): QgsProject.instance().writeEntry(pluginName, name, value)
-        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue, type=list)
-        getProject = lambda: QgsProject.instance().readListEntry(pluginName, name, defaultValue)[0]
-
-        Setting.__init__(self, pluginName, name, scope, defaultValue, options,
-                         setGlobal, setProject, getGlobal, getProject)
+        Setting.__init__(self, pluginName, name, scope, defaultValue, options, list)
+        self.projectReadMethod = QgsProject.instance().readListEntry
 
     def check(self, value):
         if type(value) not in (list, tuple):

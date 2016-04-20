@@ -36,14 +36,8 @@ from ..setting import Setting
 class Double(Setting):
 
     def __init__(self, pluginName, name, scope, defaultValue, options={}):
-
-        setGlobal = lambda(value): QSettings(pluginName, pluginName).setValue(name, value)
-        setProject = lambda(value): QgsProject.instance().writeEntryDouble(pluginName, name, value)
-        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue, type=float)
-        getProject = lambda: QgsProject.instance().readDoubleEntry(pluginName, name, defaultValue)[0]
-
-        Setting.__init__(self, pluginName, name, scope, defaultValue, options,
-                         setGlobal, setProject, getGlobal, getProject)
+        Setting.__init__(self, pluginName, name, scope, defaultValue, options, float)
+        self.projectReadMethod = QgsProject.instance().readDoubleEntry
         
     def check(self, value):
         if type(value) != int and type(value) != float:

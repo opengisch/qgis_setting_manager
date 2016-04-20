@@ -53,9 +53,9 @@ class SettingManager():
         self.settings.append(setting)
 
     def setting(self, name):
-        for setting in self.settings:
-            if setting.name == name:
-                return setting
+        for s in self.settings:
+            if s.name == name:
+                return s
         return None
 
     def value(self, settingName):

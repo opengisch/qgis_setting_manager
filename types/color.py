@@ -42,21 +42,17 @@ from ..setting import Setting
 class Color(Setting):
 
     def __init__(self, pluginName, name, scope, defaultValue, options={}):
+        Setting.__init__(self, pluginName, name, scope, defaultValue, options)
+        self.projectReadMethod = QgsProject.instance().readListEntry
 
-        setGlobal = lambda(value): QSettings(pluginName, pluginName).setValue(name, [value.red(),
-                                                                                     value.green(),
-                                                                                     value.blue(),
-                                                                                     value.alpha()])
-        setProject = lambda(value): QgsProject.instance().writeEntry(pluginName, name,
-                                                                     ["%u" % value.red(),
-                                                                      "%u" % value.green(),
-                                                                      "%u" % value.blue(),
-                                                                      "%u" % value.alpha()])
-        getGlobal = lambda: self.list2color(QSettings(pluginName, pluginName).value(name, defaultValue))
-        getProject = lambda: self.list2color(QgsProject.instance().readListEntry(pluginName, name, defaultValue))
+    def readOut(self, value, scope):
+        return self.list2color(value)
 
-        Setting.__init__(self, pluginName, name, scope, defaultValue, options,
-                         setGlobal, setProject, getGlobal, getProject)
+    def writeIn(self, value, scope):
+        if scope == 'global':
+            return [value.red(), value.green(), value.blue(), value.alpha()]
+        else:
+            return ["%u" % value.red(), "%u" % value.green(), "%u" % value.blue(), "%u" % value.alpha()]
 
     def check(self, color):
         if type(color) != QColor:

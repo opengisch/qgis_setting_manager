@@ -41,14 +41,8 @@ from ..setting import Setting
 class String(Setting):
 
     def __init__(self, pluginName, name, scope, defaultValue, options={}):
-
-        setGlobal = lambda(value): QSettings(pluginName, pluginName).setValue(name, value)
-        setProject = lambda(value): QgsProject.instance().writeEntry(pluginName, name, value)
-        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue, type=str)
-        getProject = lambda: QgsProject.instance().readEntry(pluginName, name, defaultValue)[0]
-
-        Setting.__init__(self, pluginName, name, scope, defaultValue, options,
-                         setGlobal, setProject, getGlobal, getProject)
+        Setting.__init__(self, pluginName, name, scope, defaultValue, options, str)
+        self.projectReadMethod = QgsProject.instance().readEntry
 
     def check(self, value):
         if type(value) != str and type(value) != unicode:

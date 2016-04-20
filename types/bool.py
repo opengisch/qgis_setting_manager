@@ -36,14 +36,8 @@ from ..setting import Setting
 class Bool(Setting):
 
     def __init__(self, pluginName, name, scope, defaultValue, options={}):
-
-        setGlobal = lambda(value): QSettings(pluginName, pluginName).setValue(name, value)
-        setProject = lambda(value): QgsProject.instance().writeEntryBool(pluginName, name, value)
-        getGlobal = lambda: QSettings(pluginName, pluginName).value(name, defaultValue, type=bool)
-        getProject = lambda: QgsProject.instance().readBoolEntry(pluginName, name, defaultValue)[0]
-
-        Setting.__init__(self, pluginName, name, scope, defaultValue, options,
-                         setGlobal, setProject, getGlobal, getProject)
+        Setting.__init__(self, pluginName, name, scope, defaultValue, options, bool)
+        self.projectReadMethod = QgsProject.instance().readBoolEntry
 
     def check(self, value):
         if type(value) != bool:
