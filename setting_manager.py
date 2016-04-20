@@ -27,9 +27,6 @@
 #---------------------------------------------------------------------
 
 
-from PyQt4.QtCore import QSettings
-
-from types import *
 from scope import Scope
 
 # to print debug info
@@ -39,45 +36,42 @@ Debug = False
 class SettingManager:
     def __init__(self, plugin_name):
         self.plugin_name = plugin_name
-        self.settings = []
+        self.__settings = {}
 
     def add_setting(self, setting):
+        if setting.name in self.__settings:
+            raise NameError("%s already exist in settings." % name)
         setting.set_plugin_name(self.plugin_name)
-        self.settings.append(setting)
-
-    def setting(self, name):
-        for s in self.settings:
-            if s.name == name:
-                return s
-        return None
+        self.__settings[setting.name] = setting
 
     def value(self, setting_name):
-        setting = self.setting(setting_name)
-        if setting is None:
+        if setting_name not in self.__settings:
             raise NameError('%s has no setting %s' % (self.plugin_name, setting_name))
-        return setting.value()
+        return self.__settings[setting_name].value()
 
     def set_value(self, setting_name, value):
-        setting = self.setting(setting_name)
-        if setting is None:
+        if setting_name not in self.__settings:
             raise NameError('%s has no setting %s' % (self.plugin_name, setting_name))
-        setting.set_value(value)
+        self.__settings[setting_name].set_value(value)
 
     def remove(self, setting_name):
-        setting = self.setting(setting_name)
-        if setting is None:
+        if setting_name not in self.__settings:
             raise NameError('{} has no setting {}'.format(self.plugin_name, setting_name))
-        setting.remove()
-        self.settings.remove(setting)
+        self.__settings[setting_name].remove()
+        del self.__settings[setting_name]
+
+    def settings_list(self):
+        return self.__settings.keys()
 
     ##########################################
     #                                        #
     ##########################################
     # deprecated
+    from types import *
     def addSetting(self, name, setting_type, tscope, default_value, options={}):
         print("qgissettingmanager:: calling addSetting with these chain of argument is deprecated."
               " Consider using add_setting.")
-        if self.setting(name) is not None:
+        if name in self.__settings is not None:
             raise NameError("%s already exist in settings." % name)
         if setting_type.lower() not in ("string", "double", "integer", "bool", "color", "stringlist"):
             raise NameError("Wrong type %s" % setting_type)
@@ -90,7 +84,7 @@ class SettingManager:
         SettingClass = globals()[setting_type[0].upper() + setting_type[1:].lower()]
         setting = SettingClass(name, scope, default_value, options)
         setting.set_plugin_name(self.plugin_name)
-        self.settings.append(setting)
+        self.settings[name] = setting
 
     # deprecated
     def setValue(self, setting_name, value):

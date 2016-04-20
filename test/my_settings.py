@@ -25,8 +25,7 @@
 
 from PyQt4.QtGui import QColor
 
-from types import *
-from ..setting_manager import SettingManager
+from .. import *
 
 
 pluginName = "test_plugin"
@@ -36,7 +35,19 @@ class MySettings(SettingManager):
     def __init__(self):
         SettingManager.__init__(self, pluginName)
 
-        self.add_setting(String("project_string", Scope.Project, 'default_string'))
-        self.add_setting(String("global_string", Scope.Global, 'default_string'))
+        self.settings = [{'name': 'bool', 'class': Bool, 'default': True, 'options': {}},
+                         {'name': 'color', 'class': Color, 'default': QColor(100, 100, 100, 100), 'options': {'allowAlpha': True}},
+                         {'name': 'double', 'class': Double, 'default': 0.123456789, 'options': {}},
+                         {'name': 'integer', 'class': Integer, 'default': 1, 'options': {}},
+                         {'name': 'string_list', 'class': Stringlist, 'default': ('abc', 'def', 'ghi'), 'options': {}},
+                         {'name': 'string', 'class': String, 'default': 'default_string', 'options': {}}]
+
+        scopes = {'project': Scope.Project, 'global': Scope.Global}
+        for setting_ in self.settings:
+            for scope_str, scope_val in scopes.iteritems():
+                # TODO python 3 use enum
+                setting_name = '{}_{}'.format(setting_['name'], scope_str)
+                self.add_setting(setting_['class'](setting_name, scope_val, setting_['default']))
+
 
 

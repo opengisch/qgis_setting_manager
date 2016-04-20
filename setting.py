@@ -31,6 +31,7 @@ from qgis.core import QgsProject
 
 from scope import Scope
 
+
 class Setting(QObject):
     valueChanged = pyqtSignal()
 
@@ -105,7 +106,7 @@ class Setting(QObject):
                     # rewrite the setting in new system
                     QSettings().setValue(self.global_name(), value)
         elif self.scope == Scope.Project:
-            value = self.project_read_method(self.plugin_name, self.name, self.default_value)[0]
+            value = self.project_read_method(self.plugin_name, self.name, self.write_in(self.default_value, self.scope))[0]
 
         return self.read_out(value, self.scope)
 
