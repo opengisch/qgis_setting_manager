@@ -1,4 +1,4 @@
-# About
+## About
 
 Easily manage the settings in your [QGIS](http://www.qgis.org) plugin.
 
@@ -18,8 +18,8 @@ from qgissettingmanager import *
 
 class MySettings(SettingManager):
     def __init__(self):
-        SettingManager.__init__(self, myPluginName)
-        self.add_setting( Bool("myVariable", Scope.Global, True) )
+        SettingManager.__init__(self, my_plugin_name)
+        self.add_setting( Bool("my_setting", Scope.Global, True) )
 ```
     
 You may add as many settings as you want using `add_setting` method:
@@ -34,7 +34,7 @@ add_setting( SettingClass( name, scope, default_value, options={} ) )
 * `default_value`: the default value of the setting (type must correspond)
 * `options`: a dictionary of options for widgets (see [possible widgets](#possiblewidgets))
 
-## Access the settings
+### Access the settings
 
 Instantiate your settings class in your current class:
 
@@ -49,6 +49,11 @@ The settings are easily accessed using the `value` and `setValue` methods:
 myVariable = self.settings.value("myVariable")
 self.settings.set_value("myVariable", False)
 ```
+
+### Remove settings
+
+Settings can be removed from registry (local or project wise) using `MySettings().remove('my_setting')`.
+
 
 ## Match settings with widgets of a dialog
 
@@ -96,7 +101,6 @@ def showEvent(self, e):
     # do your own stuff
 ```
 
-
 <a name="possiblewidgets"/>
 ### Possible widgets
 
@@ -135,7 +139,6 @@ The widgets are automatically detected by the manager. If the type of widget is 
 * QButtonGroup (checks items having their _name_ in the list)
 
 New types of widget are easily added, if one is missing, do not hesitate to [ask](https://github.com/3nids/qgissettingmanager/issues)!
-
 
 
 ## Using git submodules

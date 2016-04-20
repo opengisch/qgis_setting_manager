@@ -28,7 +28,7 @@
 
 from PyQt4.QtGui import QDialog, QWidget, QButtonGroup
 
-from settingmanager import Debug
+from setting_manager import Debug
 
 
 class SettingDialog():

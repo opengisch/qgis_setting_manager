@@ -1,8 +1,10 @@
-from settingmanager import SettingManager
+from setting_manager import SettingManager
 from scope import Scope
 from setting import Setting
-from settingdialog import SettingDialog
+from setting_dialog import SettingDialog
 
 from types import *
+
+
 
 
