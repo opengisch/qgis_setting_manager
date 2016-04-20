@@ -27,6 +27,8 @@
 #---------------------------------------------------------------------
 
 
+from PyQt4.QtCore import QSettings
+
 from types import *
 from scope import Scope
 
@@ -60,6 +62,13 @@ class SettingManager:
         if setting is None:
             raise NameError('%s has no setting %s' % (self.plugin_name, setting_name))
         setting.set_value(value)
+
+    def remove(self, setting_name):
+        setting = self.setting(setting_name)
+        if setting is None:
+            raise NameError('{} has no setting {}'.format(self.plugin_name, setting_name))
+        setting.remove()
+        self.settings.remove(setting)
 
     ##########################################
     #                                        #

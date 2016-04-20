@@ -11,7 +11,7 @@ This module can:
 
 ## The main setting class
 
-All your settings will be saved in a single class, which will subclass SettingManager.
+All your settings shall be saved in a single class, which will subclass SettingManager.
 
 ```python
 from qgissettingmanager import *
@@ -19,20 +19,20 @@ from qgissettingmanager import *
 class MySettings(SettingManager):
     def __init__(self):
         SettingManager.__init__(self, myPluginName)
-        self.addSetting("myVariable", "bool", "global", True)
+        self.add_setting( Bool("myVariable", Scope.Global, True) )
 ```
     
-You add as many settings as you want using _addSetting_ method:
+You may add as many settings as you want using `add_setting` method:
 
 ```python
-addSetting(name, settingType, scope, defaultValue, options={})
+add_setting( SettingClass( name, scope, default_value, options={} ) )
 ```
 
-* **name**: the name of the setting
-* **settingType**: _bool_, _string_, _color_, _integer_, _double_ or _stringlist_
-* **scope**: _global_ or _project_
-* **defaultValue**: the default value of the setting (type must corrsepond)
-* **options**: a dictionary of options for widgets (see [possible widgets](#possiblewidgets))
+* `SettingClass`: `Bool`, `String`, `Color`, `Integer`, `Double` or `Stringlist`
+* `name`: the name of the setting
+* `scope`: `Scope.Global` or `Scope.Project`
+* `default_value`: the default value of the setting (type must correspond)
+* `options`: a dictionary of options for widgets (see [possible widgets](#possiblewidgets))
 
 ## Access the settings
 
@@ -47,15 +47,15 @@ The settings are easily accessed using the `value` and `setValue` methods:
 
 ```python
 myVariable = self.settings.value("myVariable")
-self.settings.setValue("myVariable", False)
+self.settings.set_value("myVariable", False)
 ```
 
 ## Match settings with widgets of a dialog
 
 ### Quick start
 
-You can associate a setting to a defined widget in a dialog (or a dockable window). The first point is to **name the widget as the setting name**.
-Then, your dialog class subclasses the `SettingDialog` class:
+You can associate a setting to a defined widget in a dialog (or a dockable window). The first condition is to **name the widget as the setting name**.
+Then, your dialog class shall subclass the `SettingDialog` class:
 
 ```python
 class MyDialog(QDialog, Ui_myDialog, SettingDialog):
@@ -66,25 +66,25 @@ class MyDialog(QDialog, Ui_myDialog, SettingDialog):
         SettingDialog.__init__(self, self.settings)
 ```
 
-Hence, must dialog is shown, all widgets which are named as some setting will be set to the corresponding value. On dialog acceptance, the setting will be set according to their widget.
+Hence, when the dialog is shown, all widgets which are named according to a  setting will be set to the corresponding value. On dialog acceptance, the settings will be set according to the value read from their widget.
 
-To control which setting has been associated to a widget, you can write `print self.widgetList()`.
+To control which setting has been associated to a widget, you can print `self.widget_list()`.
 
 ### Settings' update behavior
 
 You can have a different behavior using `SettingDialog` parameters:
 
 ```python
-SettingDialog(settingManager, setValuesOnDialogAccepted=True, setValueOnWidgetUpdate=False)
+SettingDialog(settingManager, set_values_on_dialog_accepted=True, set_value_on_widget_update=False)
 ```
 
-* setValuesOnDialogAccepted: if `True`, settings values are set when dialog is accepted;
-* setValueOnWidgetUpdate: if `True`, settings are set as soon as the widgets is modified.
+* `set_values_on_dialog_accepted`: if `True`, settings values are set when dialog is accepted;
+* `set_value_on_widget_update`: if `True`, settings are set as soon as the widgets is modified.
 
 ### Check something before updating the settings
 
-You can override the `SettingDialog.onBeforeAcceptDialog()` method to check your settings.
-Settings will be saved only if method returns `True`.
+You can override the `SettingDialog.before_accept_dialog()` method to check your settings.
+Settings will be saved only if the method returns `True`.
 
 ### Using showEvent
 
@@ -105,7 +105,7 @@ The widgets are automatically detected by the manager. If the type of widget is 
 **Strings**
 
 * QLineEdit
-* QComboBox (setting can be defined as the current item text or [data](http://qt-project.org/doc/qt-4.8/qcombobox.html#itemData): specify option _comboMode_ as _data_ (default) or _text_)
+* QComboBox (setting can be defined as the current item text or [data](http://qt-project.org/doc/qt-4.8/qcombobox.html#itemData): specify option `comboMode` as `data` (default) or `text`)
 * QButtonGroup (the setting is set as the checked widget text in the button group)
 
 **Booleans**
@@ -115,7 +115,7 @@ The widgets are automatically detected by the manager. If the type of widget is 
 
 **Colors**
 
-* Native QGIS widgets (QgsColorButton, QgsColorButtonV2) or any widget (labek or pushbutton are recommended). For standard Qt Widgets, QGIS [color button](http://qgis.org/api/classQgsColorButtonV2.html)) will be used. Use options _allowAlpha_ (boolean) to allow transparent colors and _dialogTitle_ to set the dialog title.
+* Native QGIS widgets (QgsColorButton, QgsColorButtonV2) or any widget (label or pushbutton are recommended). For standard Qt Widgets, QGIS [color button](http://qgis.org/api/classQgsColorButtonV2.html)) will be used. Use options `allowAlpha` (boolean) to allow transparent colors and `dialogTitle` to set the dialog title.
 
 **Integers**
 

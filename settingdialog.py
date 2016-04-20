@@ -32,9 +32,9 @@ from settingmanager import Debug
 
 
 class SettingDialog():
-    def __init__(self, settingManager, setValuesOnDialogAccepted=True, setValueOnWidgetUpdate=False):
-        if isinstance(self, QDialog) and setValuesOnDialogAccepted:
-            self.accepted.connect(self.acceptDialog)
+    def __init__(self, settingManager, set_values_on_dialog_accepted=True, set_value_on_widget_update=False):
+        if isinstance(self, QDialog) and set_values_on_dialog_accepted:
+            self.accepted.connect(self.accept_dialog)
 
         self._settings = []
         for setting in settingManager.settings:
@@ -44,39 +44,46 @@ class SettingDialog():
                     if Debug:
                         print "Widget found: %s" % setting.name
                     setting.setWidget(widget)
-                    if setValueOnWidgetUpdate:
+                    if set_value_on_widget_update:
                         setting.set_value_on_widget_update_signal()
                     self._settings.append(setting)
                     break
 
         # in case the widget has no showEvent
-        self.setWidgetsFromValues()
+        self.set_widgets_from_values()
 
     def showEvent(self, e):
-        self.setWidgetsFromValues()
+        self.set_widgets_from_values()
 
-    def onBeforeAcceptDialog(self):
+    def before_accept_dialog(self):
         """
         you can override this method in the PluginSettings subclass
         """
         return True
 
-    def widgetList(self):
+    def widget_list(self):
         wl = []
         for setting in self._settings:
             wl.append(setting.name)
         return wl
 
-    def acceptDialog(self):
+    def accept_dialog(self):
         if self.onBeforeAcceptDialog():
-            self.setValuesFromWidgets()
+            self.set_values_from_widgets()
 
-    def setValuesFromWidgets(self):
+    def set_values_from_widgets(self):
         for setting in self._settings:
             if setting.widget is not None:
                 setting.set_value_from_widget()
 
-    def setWidgetsFromValues(self):
+    def set_widgets_from_values(self):
         for setting in self._settings:
             if setting.widget is not None:
                 setting.set_widget_from_value()
+
+    # deprecated
+    # TODO python 3 remove deprecated method
+
+
+    def onBeforeAcceptDialog(self):
+        return self.before_accept_dialog()

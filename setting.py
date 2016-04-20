@@ -44,7 +44,6 @@ class Setting(QObject):
 
         # these will determined when set_plugin_name is called
         self.plugin_name = None
-        self.global_name = None
 
         self.name = name
         self.scope = scope
@@ -58,7 +57,7 @@ class Setting(QObject):
     def read_out(self, value, scope):
         """
         This method shall be overriden in type subclasses
-        to transform the output beeing read from project/global
+        to transform the output being read from project/global
         to the desired setting format (such as color for instance)
         """
         return value
@@ -81,20 +80,22 @@ class Setting(QObject):
 
     def set_plugin_name(self, plugin_name):
         self.plugin_name = plugin_name
-        self.global_name = 'plugins/{}/{}'.format(self.plugin_name, self.name)
+
+    def global_name(self):
+        return 'plugins/{}/{}'.format(self.plugin_name, self.name)
 
     def set_value(self, value):
         self.check(value)
         value = self.write_in(value, self.scope)
         if self.scope == Scope.Global:
-            QSettings().setValue(self.global_name, value)
+            QSettings().setValue(self.global_name(), value)
         elif self.scope == Scope.Project:
             QgsProject.instance().writeEntry(self.plugin_name, self.name, value)
         self.valueChanged.emit()
 
     def value(self):
         if self.scope == Scope.Global:
-            value = QSettings().value(self.global_name, self.default_value, type=self.object_type)
+            value = QSettings().value(self.global_name(), self.default_value, type=self.object_type)
             # TODO python3: remove backward compatibility
             # try to gather old setting value (using old version of QGIS Setting Manager)
             if self.read_out(value, self.scope) == self.default_value:
@@ -102,11 +103,17 @@ class Setting(QObject):
                                                                             type=self.object_type)
                 if self.read_out(value, self.scope) != self.default_value:
                     # rewrite the setting in new system
-                    QSettings().setValue(self.global_name, value)
+                    QSettings().setValue(self.global_name(), value)
         elif self.scope == Scope.Project:
             value = self.project_read_method(self.plugin_name, self.name, self.default_value)[0]
 
         return self.read_out(value, self.scope)
+
+    def remove(self):
+        if self.scope == Scope.Project:
+            QgsProject.instance().removeEntry(self.plugin_name, self.name)
+        else:
+            QSettings().remove(self.global_name())
 
     def set_value_on_widget_update_signal(self):
         if self.widget is None:
