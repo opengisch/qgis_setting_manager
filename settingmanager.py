@@ -28,28 +28,19 @@
 
 
 from types import *
+from scope import Scope
 
 # to print debug info
 Debug = False
 
-# possible types
-valueTypes = ("string", "double", "integer", "bool", "color", "stringlist")
 
-
-class SettingManager():
-    def __init__(self, pluginName):
-        self.pluginName = pluginName
+class SettingManager:
+    def __init__(self, plugin_name):
+        self.plugin_name = plugin_name
         self.settings = []
 
-    def addSetting(self, name, settingType, scope, defaultValue, options={}):
-        if self.setting(name) is not None:
-            raise NameError("%s already exist in settings." % name)
-        if settingType.lower() not in valueTypes:
-            raise NameError("Wrong type %s" % settingType)
-        if scope.lower() not in ("global", "project"):
-            raise NameError("%s is not a valid scope. Must be project or global." % scope)
-        SettingClass = globals()[settingType[0].upper() + settingType[1:].lower()]
-        setting = SettingClass(self.pluginName, name, scope, defaultValue, options)
+    def add_setting(self, setting):
+        setting.set_plugin_name(self.plugin_name)
         self.settings.append(setting)
 
     def setting(self, name):
@@ -58,17 +49,44 @@ class SettingManager():
                 return s
         return None
 
-    def value(self, settingName):
-        setting = self.setting(settingName)
+    def value(self, setting_name):
+        setting = self.setting(setting_name)
         if setting is None:
-            raise NameError('%s has no setting %s' % (self.pluginName, settingName))
-        return setting.getValue()
+            raise NameError('%s has no setting %s' % (self.plugin_name, setting_name))
+        return setting.value()
 
-    def setValue(self, settingName, value):
-        setting = self.setting(settingName)
+    def set_value(self, setting_name, value):
+        setting = self.setting(setting_name)
         if setting is None:
-            raise NameError('%s has no setting %s' % (self.pluginName, settingName))
-        setting.setValue(value)
+            raise NameError('%s has no setting %s' % (self.plugin_name, setting_name))
+        setting.set_value(value)
+
+    ##########################################
+    #                                        #
+    ##########################################
+    # deprecated
+    def addSetting(self, name, setting_type, tscope, default_value, options={}):
+        print("qgissettingmanager:: calling addSetting with these chain of argument is deprecated."
+              " Consider using add_setting.")
+        if self.setting(name) is not None:
+            raise NameError("%s already exist in settings." % name)
+        if setting_type.lower() not in ("string", "double", "integer", "bool", "color", "stringlist"):
+            raise NameError("Wrong type %s" % setting_type)
+        if tscope.lower() == "global":
+            scope = Scope.Global
+        elif tscope.lower() == "project":
+            scope = Scope.Project
+        else:
+            raise NameError("%s is not a valid scope. Must be project or global." % tscope)
+        SettingClass = globals()[setting_type[0].upper() + setting_type[1:].lower()]
+        setting = SettingClass(name, scope, default_value, options)
+        setting.set_plugin_name(self.plugin_name)
+        self.settings.append(setting)
+
+    # deprecated
+    def setValue(self, setting_name, value):
+        print("qgissettingmanager:: calling setValue is deprecated. Consider using set_value.")
+        return self.set_value(setting_name, value)
 
 
 

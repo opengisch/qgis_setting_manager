@@ -31,7 +31,7 @@
 # dialogTitle: show in color dialog
 # alpha: use or not alpha channel
 
-from PyQt4.QtCore import QSettings
+
 from PyQt4.QtGui import QColor, QColorDialog
 from qgis.core import QgsProject
 from qgis.gui import QgsColorButton, QgsColorButtonV2
@@ -41,14 +41,21 @@ from ..setting import Setting
 
 class Color(Setting):
 
-    def __init__(self, pluginName, name, scope, defaultValue, options={}):
-        Setting.__init__(self, pluginName, name, scope, defaultValue, options)
-        self.projectReadMethod = QgsProject.instance().readListEntry
+    def __init__(self, name, scope, default_value, options={}):
+        Setting.__init__(self, name, scope, default_value, options)
+        self.project_read_method = QgsProject.instance().readListEntry
 
-    def readOut(self, value, scope):
-        return self.list2color(value)
+    def read_out(self, value, scope):
+        if type(value) != list or len(value) not in (3, 4):
+            return self.default_value
+        else:
+            r = int(value[0])
+            g = int(value[1])
+            b = int(value[2])
+            a = int(value[3]) if len(value) > 3 and self.options.get("allowAlpha", False) else 255
+        return QColor(r, g, b, a)
 
-    def writeIn(self, value, scope):
+    def write_in(self, value, scope):
         if scope == 'global':
             return [value.red(), value.green(), value.blue(), value.alpha()]
         else:
@@ -72,12 +79,4 @@ class Color(Setting):
         self.widgetSetMethod = self.widget.setColor
         self.widgetGetMethod = self.widget.color
 
-    def list2color(self, color):
-        if type(color) != list or len(color) not in (3,4):
-            return self.defaultValue
-        else:
-            r = int(color[0])
-            g = int(color[1])
-            b = int(color[2])
-            a = int(color[3]) if len(color)>3 and self.options.get("allowAlpha", False) else 255
-        return QColor(r, g, b, a)
+

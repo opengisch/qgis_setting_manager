@@ -45,7 +45,7 @@ class SettingDialog():
                         print "Widget found: %s" % setting.name
                     setting.setWidget(widget)
                     if setValueOnWidgetUpdate:
-                        setting.setValueOnWidgetUpdateSignal()
+                        setting.set_value_on_widget_update_signal()
                     self._settings.append(setting)
                     break
 
@@ -74,9 +74,9 @@ class SettingDialog():
     def setValuesFromWidgets(self):
         for setting in self._settings:
             if setting.widget is not None:
-                setting.setValueFromWidget()
+                setting.set_value_from_widget()
 
     def setWidgetsFromValues(self):
         for setting in self._settings:
             if setting.widget is not None:
-                setting.setWidgetFromValue()
+                setting.set_widget_from_value()

@@ -27,7 +27,7 @@
 #---------------------------------------------------------------------
 
 
-from PyQt4.QtCore import QSettings, Qt
+from PyQt4.QtCore import Qt
 from PyQt4.QtGui import QListWidget, QButtonGroup
 from qgis.core import QgsProject
 
@@ -36,9 +36,9 @@ from ..setting import Setting
 
 class Stringlist(Setting):
 
-    def __init__(self, pluginName, name, scope, defaultValue, options={}):
-        Setting.__init__(self, pluginName, name, scope, defaultValue, options, list)
-        self.projectReadMethod = QgsProject.instance().readListEntry
+    def __init__(self, name, scope, default_value, options={}):
+        Setting.__init__(self, name, scope, default_value, options, list)
+        self.project_read_method = QgsProject.instance().readListEntry
 
     def check(self, value):
         if type(value) not in (list, tuple):

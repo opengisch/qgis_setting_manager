@@ -30,7 +30,6 @@
 # options:
 # comboMode: can be data or text. It defines if setting is found directly in combobox text or rather in the userData.
 
-from PyQt4.QtCore import QSettings
 from PyQt4.QtGui import QLineEdit, QButtonGroup, QComboBox
 from qgis.core import QgsProject, QgsMapLayerRegistry
 from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox
@@ -40,14 +39,14 @@ from ..setting import Setting
 
 class String(Setting):
 
-    def __init__(self, pluginName, name, scope, defaultValue, options={}):
-        Setting.__init__(self, pluginName, name, scope, defaultValue, options, str)
-        self.projectReadMethod = QgsProject.instance().readEntry
+    def __init__(self, name, scope, default_value, options={}):
+        Setting.__init__(self, name, scope, default_value, options, str)
+        self.project_read_method = QgsProject.instance().readEntry
 
     def check(self, value):
         if type(value) != str and type(value) != unicode:
-            print type(value)
-            raise NameError("Setting %s must be a string." % self.name)
+            print(type(value))
+            raise NameError('{}:: Invalid value for setting {}: {}. It must be a string.'.format(self.plugin_name, self.name, value))
 
     def setWidget(self, widget):
         if type(widget) == QLineEdit:

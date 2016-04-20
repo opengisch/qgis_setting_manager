@@ -26,32 +26,11 @@
 #
 #---------------------------------------------------------------------
 
-from PyQt4.QtGui import QLineEdit, QDoubleSpinBox
-from qgis.core import QgsProject
 
-from ..setting import Setting
+# TODO python3 use enum instead
 
 
-class Double(Setting):
+class Scope(object):
+    Project = 1
+    Global = 2
 
-    def __init__(self, name, scope, default_value, options={}):
-        Setting.__init__(self, name, scope, default_value, options, float)
-        self.project_read_method = QgsProject.instance().readDoubleEntry
-        
-    def check(self, value):
-        if type(value) != int and type(value) != float:
-            raise NameError("Setting %s must be a double." % self.name)
-
-    def setWidget(self, widget):
-        if type(widget) == QLineEdit:
-            self.signal = "textChanged"
-            self.widgetSetMethod = widget.setText
-            self.widgetGetMethod = lambda: widget.text()
-        elif type(widget) == QDoubleSpinBox:
-            self.signal = "valueChanged"
-            self.widgetSetMethod = widget.setValue
-            self.widgetGetMethod = widget.value
-        else:
-            raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
-                            (type(widget), self.name))
-        self.widget = widget

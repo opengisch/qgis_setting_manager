@@ -29,7 +29,6 @@
 
 # for combobox, the value corresponds to the index of the combobox
 
-from PyQt4.QtCore import QSettings
 from PyQt4.QtGui import QLineEdit, QSpinBox, QSlider, QComboBox
 from qgis.core import QgsProject
 
@@ -38,9 +37,9 @@ from ..setting import Setting
 
 class Integer(Setting):
 
-    def __init__(self, pluginName, name, scope, defaultValue, options={}):
-        Setting.__init__(self, pluginName, name, scope, defaultValue, options, int)
-        self.projectReadMethod = QgsProject.instance().readNumEntry
+    def __init__(self, name, scope, default_value, options={}):
+        Setting.__init__(self, name, scope, default_value, options, int)
+        self.project_read_method = QgsProject.instance().readNumEntry
 
     def check(self, value):
         if type(value) != int and type(value) != float:
