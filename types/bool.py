@@ -47,6 +47,6 @@ class Bool(Setting):
             self.widget_get_method = widget.isChecked
         else:
             print type(widget)
-            raise NameError("SettingManager does not handle %s widgets for booleans for the moment (setting: %s)" %
+            raise NameError("SettingManager does not handle %s widgets for booleans at the moment (setting: %s)" %
                             (type(widget), self.name))
         self.__widget = widget
