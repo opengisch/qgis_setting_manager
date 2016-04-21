@@ -54,48 +54,48 @@ class Stringlist(Setting):
     def set_widget(self, widget):
         if type(widget) == QListWidget:
             self.widget_signal = "clicked"
-            self.widget_set_method = self.setListBoxes
-            self.widget_get_method = self.getListBoxes
+            self.widget_set_method = self.set_list_boxes
+            self.widget_get_method = self.get_list_boxes
         elif type(widget) == QButtonGroup:
             self.widget_signal = "buttonClicked"
-            self.widget_set_method = self.setGroupBoxes
-            self.widget_get_method = self.getGroupBoxes
+            self.widget_set_method = self.set_group_boxes
+            self.widget_get_method = self.get_group_boxes
         else:
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
         self._widget = widget
 
-    def setListBoxes(self, value):
-        if self.widget is None:
+    def set_list_boxes(self, value):
+        if self._widget is None:
             return
-        for i in range(self.widget.count()):
-            item = self.widget.item(i)
+        for i in range(self._widget.count()):
+            item = self._widget.item(i)
             if item.text() in value:
                 item.setCheckState(Qt.Checked)
             else:
                 item.setCheckState(Qt.Unchecked)
 
-    def getListBoxes(self):
-        if self.widget is None:
+    def get_list_boxes(self):
+        if self._widget is None:
             return
         value = []
-        for i in range(self.widget.count()):
-            item = self.widget.item(i)
+        for i in range(self._widget.count()):
+            item = self._widget.item(i)
             if item.checkState() == Qt.Checked:
                 value.append(item.text())
         return value
 
-    def setGroupBoxes(self, value):
-        if self.widget is None:
+    def set_group_boxes(self, value):
+        if self._widget is None:
             return
-        for item in self.widget.buttons():
+        for item in self._widget.buttons():
             item.setChecked(item.objectName() in value)
 
-    def getGroupBoxes(self):
-        if self.widget is None:
+    def get_group_boxes(self):
+        if self._widget is None:
             return
         value = []
-        for item in self.widget.buttons():
+        for item in self._widget.buttons():
             if item.isChecked():
                 value.append(item.objectName())
         return value

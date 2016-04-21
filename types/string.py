@@ -60,14 +60,14 @@ class String(Setting):
             self.widget_signal = "activated"
             combo_mode = self.options.get("comboMode", "data")
             if combo_mode == 'data':
-                self.widget_set_method = lambda(value): self.widget.setCurrentIndex(widget.findData(value))
+                self.widget_set_method = lambda(value): widget.setCurrentIndex(widget.findData(value))
                 self.widget_get_method = lambda: widget.itemData(widget.currentIndex()) or ""
             elif combo_mode == 'text':
-                self.widget_set_method = lambda(value): self.widget.setCurrentIndex(widget.findText(value))
+                self.widget_set_method = lambda(value): widget.setCurrentIndex(widget.findText(value))
                 self.widget_get_method = widget.currentText
         elif type(widget) in QgsMapLayerComboBox:
             self.widget_signal = "layerChanged"
-            self.widget_set_method = lambda(value): self.widget.setLayer(QgsMapLayerRegistry.instance().mapLayer(value))
+            self.widget_set_method = lambda(value): widget.setLayer(QgsMapLayerRegistry.instance().mapLayer(value))
             self.widget_get_method = lambda: widget.currentLayer().id()
         else:
             raise NameError("SettingManager does not handle %s widgets for strings at the moment (setting: %s)" %
