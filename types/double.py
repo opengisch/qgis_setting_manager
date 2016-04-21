@@ -35,9 +35,8 @@ from ..setting import Setting
 class Double(Setting):
 
     def __init__(self, name, scope, default_value, options={}):
-        Setting.__init__(self, name, scope, default_value, options, float)
-        self.project_read_method = QgsProject.instance().readDoubleEntry
-        
+        Setting.__init__(self, name, scope, default_value, float, QgsProject.instance().readDoubleEntry, options)
+
     def check(self, value):
         if type(value) != int and type(value) != float:
             raise NameError("Setting %s must be a double." % self.name)

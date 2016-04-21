@@ -40,8 +40,7 @@ from ..setting import Setting
 class String(Setting):
 
     def __init__(self, name, scope, default_value, options={}):
-        Setting.__init__(self, name, scope, default_value, options, str)
-        self.project_read_method = QgsProject.instance().readEntry
+        Setting.__init__(self, name, scope, default_value, str, QgsProject.instance().readEntry, options)
 
     def check(self, value):
         if type(value) != str and type(value) != unicode:

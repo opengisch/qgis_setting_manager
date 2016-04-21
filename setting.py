@@ -35,7 +35,7 @@ from scope import Scope
 class Setting(QObject):
     valueChanged = pyqtSignal()
 
-    def __init__(self, name, scope, default_value, options={}, object_type = None):
+    def __init__(self, name, scope, default_value, object_type, project_read_method, options={}):
         QObject.__init__(self)
 
         # TODO pyton3 check based on enum
@@ -52,8 +52,7 @@ class Setting(QObject):
         self.widget = None
         self.object_type = object_type
         self.options = options
-
-        self.project_read_method = QgsProject.instance().readEntry
+        self.project_read_method = project_read_method
 
     def read_out(self, value, scope):
         """

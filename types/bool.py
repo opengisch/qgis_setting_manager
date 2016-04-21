@@ -36,8 +36,7 @@ from ..setting import Setting
 class Bool(Setting):
 
     def __init__(self, name, scope, default_value, options={}):
-        Setting.__init__(self, name, scope, default_value, options, bool)
-        self.project_read_method = QgsProject.instance().readBoolEntry
+        Setting.__init__(self, name, scope, default_value, bool, QgsProject.instance().readBoolEntry, options)
 
     def check(self, value):
         if type(value) != bool:
