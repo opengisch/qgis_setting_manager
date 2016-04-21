@@ -1,21 +1,21 @@
 import unittest
+from nose_parameterized import parameterized
 
 from my_settings import MySettings
 from .. import Scope
 
+
+
+
+
+
 class TestSetting(unittest.TestCase):
+    @parameterized.expand([
+        (s_name, setting_['default']) for s_name, setting_ in MySettings().settings.iteritems()
+    ])
 
-    def test_setting(self):
-        my_settings = MySettings()
-
-        for setting_ in my_settings.settings:
-            for scope_ in ('project', 'global'):
-                # TODO python 3 use enum
-                setting_name = '{}_{}'.format(setting_['name'], scope_)
-                print(setting_name)
-                self.assertEqual( my_settings.value(setting_name), setting_['default'])
-
-
+    def test_setting(self, name, default):
+        self.assertEqual( MySettings().value(name), default)
 
 
 if __name__ == '__main__':

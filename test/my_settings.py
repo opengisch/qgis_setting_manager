@@ -35,18 +35,20 @@ class MySettings(SettingManager):
     def __init__(self):
         SettingManager.__init__(self, pluginName)
 
-        self.settings = [{'name': 'bool', 'class': Bool, 'default': True, 'options': {}},
-                         {'name': 'color', 'class': Color, 'default': QColor(100, 100, 100, 100), 'options': {'allowAlpha': True}},
-                         {'name': 'double', 'class': Double, 'default': 0.123456789, 'options': {}},
-                         {'name': 'integer', 'class': Integer, 'default': 1, 'options': {}},
-                         {'name': 'string_list', 'class': Stringlist, 'default': ('abc', 'def', 'ghi'), 'options': {}},
-                         {'name': 'string', 'class': String, 'default': 'default_string', 'options': {}}]
+        settings_root = {'bool': {'class': Bool, 'default': True, 'options': {}},
+                         'color': {'class': Color, 'default': QColor(100, 100, 100, 100), 'options': {'allowAlpha': True}},
+                         'double': {'class': Double, 'default': 0.123456789, 'options': {}},
+                         'integer': {'class': Integer, 'default': 1, 'options': {}},
+                         'string_list': {'class': Stringlist, 'default': ('abc', 'def', 'ghi'), 'options': {}},
+                         'string': {'class': String, 'default': 'default_string', 'options': {}}}
 
+        self.settings = {}
         scopes = {'project': Scope.Project, 'global': Scope.Global}
-        for setting_ in self.settings:
+        for s_name, setting_ in settings_root.iteritems():
             for scope_str, scope_val in scopes.iteritems():
                 # TODO python 3 use enum
-                setting_name = '{}_{}'.format(setting_['name'], scope_str)
+                setting_name = '{}_{}'.format(s_name, scope_str)
+                self.settings[setting_name] = setting_
                 self.add_setting(setting_['class'](setting_name, scope_val, setting_['default']))
 
 

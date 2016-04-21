@@ -84,7 +84,7 @@ class SettingManager:
         SettingClass = globals()[setting_type[0].upper() + setting_type[1:].lower()]
         setting = SettingClass(name, scope, default_value, options)
         setting.set_plugin_name(self.plugin_name)
-        self.settings[name] = setting
+        self.__settings[name] = setting
 
     # deprecated
     def setValue(self, setting_name, value):
