@@ -33,7 +33,6 @@
 
 
 from PyQt4.QtGui import QColor, QColorDialog
-from PyQt4.QtCore import QStringList
 from qgis.core import QgsProject
 from qgis.gui import QgsColorButton, QgsColorButtonV2
 
@@ -43,10 +42,10 @@ from ..setting import Setting
 class Color(Setting):
 
     def __init__(self, name, scope, default_value, options={}):
-        Setting.__init__(self, name, scope, default_value, QStringList, QgsProject.instance().readListEntry, QgsProject.instance().writeEntry, options)
+        Setting.__init__(self, name, scope, default_value, None, QgsProject.instance().readListEntry, QgsProject.instance().writeEntry, options)
 
     def read_out(self, value, scope):
-        if type(value) != QStringList or len(value) not in (3, 4):
+        if type(value) not in (list, tuple) or len(value) not in (3, 4):
             # do not raise error if setting type is not correct, return default value
             return self.default_value
         else:

@@ -40,7 +40,7 @@ class MySettings(SettingManager):
                          'color': {'class': Color, 'default': QColor(100, 100, 100, 100), 'options': {'allowAlpha': True}, 'new_value': QColor(30, 30, 30, 30), 'widgets': ()},
                          'double': {'class': Double, 'default': 0.123456789, 'options': {}, 'new_value': 1.234, 'widgets': ()},
                          'integer': {'class': Integer, 'default': 1, 'options': {}, 'new_value': 2, 'widgets': ()},
-                         'string_list': {'class': Stringlist, 'default': ('abc', 'def', 'ghi'), 'options': {}, 'new_value': ('qwe', 'rtz', 'uio'), 'widgets': ()},
+                         'string_list': {'class': Stringlist, 'default': ['abc', 'def', 'ghi'], 'options': {}, 'new_value': ['qwe', 'rtz', 'uio'], 'widgets': ()},
                          'string': {'class': String, 'default': 'default_string', 'options': {}, 'new_value': 'new_string', 'widgets': ()}}
 
         self.settings = {}

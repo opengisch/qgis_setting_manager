@@ -32,6 +32,8 @@ from scope import Scope
 # to print debug info
 Debug = False
 
+# TODO remove this import used in deprecated method
+from types import *
 
 class SettingManager:
     def __init__(self, plugin_name):
@@ -67,7 +69,6 @@ class SettingManager:
     #                                        #
     ##########################################
     # deprecated
-    from types import *
     def addSetting(self, name, setting_type, tscope, default_value, options={}):
         print("qgissettingmanager:: calling addSetting with these chain of argument is deprecated."
               " Consider using add_setting.")

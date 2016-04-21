@@ -37,7 +37,15 @@ from ..setting import Setting
 class Stringlist(Setting):
 
     def __init__(self, name, scope, default_value, options={}):
-        Setting.__init__(self, name, scope, default_value, list, QgsProject.instance().readListEntry, QgsProject.instance().writeEntry, options)
+        Setting.__init__(self, name, scope, default_value, None, QgsProject.instance().readListEntry, QgsProject.instance().writeEntry, options)
+
+    def read_out(self, value, scope):
+        # always cast to list
+        return list(value)
+
+    def write_in(self, value, scope):
+        # always cast to list
+        return list(value)
 
     def check(self, value):
         if type(value) not in (list, tuple):
