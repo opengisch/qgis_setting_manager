@@ -6,9 +6,9 @@ from my_settings import MySettings
 
 
 class TestSetting(unittest.TestCase):
-    @parameterized.expand([ (s_name) for s_name in MySettings().settings.keys() ])
+    @parameterized.expand([ (s_name) for s_name in MySettings().settings_cfg.keys() ])
     def test_setting(self, name):
-        setting_ = MySettings().settings[name]
+        setting_ = MySettings().settings_cfg[name]
 
         # clean just in case
         MySettings().remove(name)

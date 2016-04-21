@@ -54,7 +54,7 @@ class Setting(QObject):
         self.project_read = project_read
         self.project_write = project_write
 
-        self.__widget = None
+        self._widget = None
         self.widget_signal = None
         self.widget_set_method = None
         self.widget_get_method = None
@@ -87,7 +87,7 @@ class Setting(QObject):
         """
         This method must be reimplemented in subclasses
         """
-        self.__widget = None
+        self._widget = None
 
     def set_plugin_name(self, plugin_name):
         self.plugin_name = plugin_name
@@ -135,21 +135,21 @@ class Setting(QObject):
             QSettings().remove(self.global_name())
 
     def widget(self):
-        return self.__widget
+        return self._widget
 
     def set_value_on_widget_update_signal(self):
-        if self.__widget is None:
+        if self._widget is None:
             return
-        eval("self.__widget.%s.connect(self.set_value_from_widget)" % self.widget_signal)
+        eval("self._widget.%s.connect(self.set_value_from_widget)" % self.widget_signal)
 
     def set_widget_from_value(self):
-        if self.__widget is None:
+        if self._widget is None:
             return
         setting_value = self.value()
         self.widget_set_method(setting_value)
 
     def set_value_from_widget(self, dummy=None):
-        if self.__widget is None:
+        if self._widget is None:
             return
         widget_value = self.widget_get_method()
         self.set_value(widget_value)

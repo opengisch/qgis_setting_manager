@@ -49,4 +49,6 @@ class Bool(Setting):
             print type(widget)
             raise NameError("SettingManager does not handle %s widgets for booleans at the moment (setting: %s)" %
                             (type(widget), self.name))
-        self.__widget = widget
+        self._widget = widget
+
+

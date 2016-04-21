@@ -15,5 +15,4 @@ install:
   - sudo pip install nose_parameterized
 
 script:
-  - export PYTHONPATH=/usr/local/share/qgis/python
   - nosetests

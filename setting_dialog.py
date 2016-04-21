@@ -31,7 +31,7 @@ from PyQt4.QtGui import QDialog, QWidget, QButtonGroup
 from setting_manager import Debug
 
 
-class SettingDialog():
+class SettingDialog:
     def __init__(self, setting_manager, set_values_on_dialog_accepted=True, set_value_on_widget_update=False):
         if isinstance(self, QDialog) and set_values_on_dialog_accepted:
             self.accepted.connect(self.accept_dialog)
@@ -45,10 +45,9 @@ class SettingDialog():
                 if widget is not None:
                     if Debug:
                         print "Widget found: {}".format(setting_name)
-                    setting = self.setting_manager.setting(setting_name)
-                    setting.set_widget(widget)
+                    self.setting_manager.set_widget(setting_name, widget)
                     if set_value_on_widget_update:
-                        setting.set_value_on_widget_update_signal()
+                        self.setting_manager.set_value_on_widget_update_signal(setting_name)
                     self.__settings.append(setting_name)
                     break
 
@@ -81,13 +80,11 @@ class SettingDialog():
 
     def set_values_from_widgets(self):
         for setting_name in self.__settings:
-            setting = self.setting_manager.setting(setting_name)
-            setting.set_value_from_widget()
+            self.setting_manager.set_value_from_widget(setting_name)
 
     def set_widgets_from_values(self):
         for setting_name in self.__settings:
-            setting = self.setting_manager.setting(setting_name)
-            setting.set_widget_from_value()
+            self.setting_manager.set_widget_from_value(setting_name)
 
     # deprecated
     # TODO python 3 remove deprecated method

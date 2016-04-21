@@ -45,8 +45,8 @@ class Integer(Setting):
     def set_widget(self, widget):
         if type(widget) == QLineEdit:
             self.widget_signal = "textChanged"
-            self.widget_set_method = widget.setText()
-            self.widget_get_method = lambda: widget.text()
+            self.widget_set_method = lambda(value): widget.setText('{}'.format(value))
+            self.widget_get_method = lambda: int(widget.text())
         elif type(widget) in (QSpinBox, QSlider):
             self.widget_signal = "valueChanged"
             self.widget_set_method = widget.setValue
@@ -59,5 +59,5 @@ class Integer(Setting):
             print type(widget)
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
-        self.__widget = widget
+        self._widget = widget
 

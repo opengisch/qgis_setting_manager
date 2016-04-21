@@ -63,7 +63,7 @@ class Stringlist(Setting):
         else:
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
-        self.__widget = widget
+        self._widget = widget
 
     def setListBoxes(self, value):
         if self.widget is None:

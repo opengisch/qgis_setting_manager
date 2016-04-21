@@ -67,16 +67,16 @@ class Color(Setting):
 
     def set_widget(self, widget):
         if type(widget) in ( QgsColorButton, QgsColorButtonV2 ):
-            self.__widget = widget
+            self._widget = widget
         else:
             txt = self.options.get("dialogTitle", "")
-            self.__widget = QgsColorButtonV2(widget, txt)
+            self._widget = QgsColorButtonV2(widget, txt)
         if type(widget) == QgsColorButton:
-            self.__widget.setColorDialogOptions(QColorDialog.ShowAlphaChannel)
+            self._widget.setColorDialogOptions(QColorDialog.ShowAlphaChannel)
         else:
-            self.__widget.setAllowAlpha(self.options.get("allowAlpha", False))
+            self._widget.setAllowAlpha(self.options.get("allowAlpha", False))
         self.widget_signal = "colorChanged"
-        self.widget_set_method = self.widget.setColor
-        self.widget_get_method = self.widget.color
+        self.widget_set_method = self._widget.setColor
+        self.widget_get_method = self._widget.color
 
 

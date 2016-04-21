@@ -72,7 +72,7 @@ class String(Setting):
         else:
             raise NameError("SettingManager does not handle %s widgets for strings at the moment (setting: %s)" %
                             (type(widget), self.name))
-        self.__widget = widget
+        self._widget = widget
 
     def setButtonGroup(self, value):
         # for checkboxes
