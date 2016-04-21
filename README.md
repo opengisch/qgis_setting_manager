@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/3nids/qgissettingmanager.svg?branch=master)](https://travis-ci.org/3nids/qgissettingmanager)
+
 ## About
 
 Easily manage the settings in your [QGIS](http://www.qgis.org) plugin.

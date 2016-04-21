@@ -35,12 +35,12 @@ class MySettings(SettingManager):
     def __init__(self):
         SettingManager.__init__(self, pluginName)
 
-        settings_root = {'bool': {'class': Bool, 'default': True, 'options': {}},
-                         'color': {'class': Color, 'default': QColor(100, 100, 100, 100), 'options': {'allowAlpha': True}},
-                         'double': {'class': Double, 'default': 0.123456789, 'options': {}},
-                         'integer': {'class': Integer, 'default': 1, 'options': {}},
-                         'string_list': {'class': Stringlist, 'default': ('abc', 'def', 'ghi'), 'options': {}},
-                         'string': {'class': String, 'default': 'default_string', 'options': {}}}
+        settings_root = {'bool': {'class': Bool, 'default': True, 'options': {}, 'new_value': False},
+                         'color': {'class': Color, 'default': QColor(100, 100, 100, 100), 'options': {'allowAlpha': True}, 'new_value': QColor(30, 30,30, 30)},
+                         'double': {'class': Double, 'default': 0.123456789, 'options': {}, 'new_value': 1.234},
+                         'integer': {'class': Integer, 'default': 1, 'options': {}, 'new_value': 2},
+                         'string_list': {'class': Stringlist, 'default': ('abc', 'def', 'ghi'), 'options': {}, 'new_value': ('qwe', 'rtz', 'uio')},
+                         'string': {'class': String, 'default': 'default_string', 'options': {}, 'new_value': 'new_string'}}
 
         self.settings = {}
         scopes = {'project': Scope.Project, 'global': Scope.Global}
