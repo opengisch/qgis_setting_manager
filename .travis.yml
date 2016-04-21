@@ -1,4 +1,4 @@
-language: python
+language: c++
 
 sudo: required
 dist: trusty
@@ -11,6 +11,7 @@ install:
   - sudo add-apt-repository http://qgis.org/debian
   - sudo apt-get update
   - sudo apt-get install -y --force-yes qgis python-qgis python-qt4
+  - sudo pip install nose
   - sudo pip install nose2
   - sudo pip install nose_parameterized
 
