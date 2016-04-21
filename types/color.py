@@ -46,14 +46,15 @@ class Color(Setting):
         Setting.__init__(self, name, scope, default_value, QStringList, QgsProject.instance().readListEntry, QgsProject.instance().writeEntry, options)
 
     def read_out(self, value, scope):
-        if type(value) != list or len(value) not in (3, 4):
+        if type(value) != QStringList or len(value) not in (3, 4):
+            # do not raise error if setting type is not correct, return default value
             return self.default_value
         else:
             r = int(value[0])
             g = int(value[1])
             b = int(value[2])
             a = int(value[3]) if len(value) > 3 and self.options.get("allowAlpha", False) else 255
-        return QColor(r, g, b, a)
+            return QColor(r, g, b, a)
 
     def write_in(self, value, scope):
         if self.options.get("allowAlpha", False):

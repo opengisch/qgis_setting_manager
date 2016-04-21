@@ -2,11 +2,6 @@ import unittest
 from nose_parameterized import parameterized
 
 from my_settings import MySettings
-from .. import Scope
-
-
-
-
 
 
 class TestSetting(unittest.TestCase):
@@ -22,7 +17,6 @@ class TestSetting(unittest.TestCase):
         # set value
         MySettings().set_value(name, setting_['new_value'])
         self.assertEqual(MySettings().value(name), setting_['new_value'])
-
 
 
 

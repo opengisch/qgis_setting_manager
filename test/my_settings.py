@@ -36,7 +36,7 @@ class MySettings(SettingManager):
         SettingManager.__init__(self, pluginName)
 
         settings_root = {'bool': {'class': Bool, 'default': True, 'options': {}, 'new_value': False},
-                         'color': {'class': Color, 'default': QColor(100, 100, 100, 100), 'options': {'allowAlpha': True}, 'new_value': QColor(30, 30,30, 30)},
+                         'color': {'class': Color, 'default': QColor(100, 100, 100, 100), 'options': {'allowAlpha': True}, 'new_value': QColor(30, 30, 30, 30)},
                          'double': {'class': Double, 'default': 0.123456789, 'options': {}, 'new_value': 1.234},
                          'integer': {'class': Integer, 'default': 1, 'options': {}, 'new_value': 2},
                          'string_list': {'class': Stringlist, 'default': ('abc', 'def', 'ghi'), 'options': {}, 'new_value': ('qwe', 'rtz', 'uio')},
@@ -49,7 +49,7 @@ class MySettings(SettingManager):
                 # TODO python 3 use enum
                 setting_name = '{}_{}'.format(s_name, scope_str)
                 self.settings[setting_name] = setting_
-                self.add_setting(setting_['class'](setting_name, scope_val, setting_['default']))
+                self.add_setting(setting_['class'](setting_name, scope_val, setting_['default'], setting_['options']))
 
 
 
