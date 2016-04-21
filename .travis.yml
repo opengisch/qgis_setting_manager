@@ -1,4 +1,4 @@
-language: c++
+language: python
 
 before_install:
   - sudo apt-get -qq -y update
