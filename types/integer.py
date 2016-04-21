@@ -38,7 +38,7 @@ from ..setting import Setting
 class Integer(Setting):
 
     def __init__(self, name, scope, default_value, options={}):
-        Setting.__init__(self, name, scope, default_value, int, QgsProject.instance().readNumEntry, options)
+        Setting.__init__(self, name, scope, default_value, int, QgsProject.instance().readNumEntry, QgsProject.instance().writeEntry, options)
 
     def check(self, value):
         if type(value) != int and type(value) != float:

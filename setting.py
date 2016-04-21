@@ -35,7 +35,7 @@ from scope import Scope
 class Setting(QObject):
     valueChanged = pyqtSignal()
 
-    def __init__(self, name, scope, default_value, object_type, project_read_method, options={}):
+    def __init__(self, name, scope, default_value, object_type, project_read, project_write, options={}):
         QObject.__init__(self)
 
         # TODO pyton3 check based on enum
@@ -52,7 +52,8 @@ class Setting(QObject):
         self.widget = None
         self.object_type = object_type
         self.options = options
-        self.project_read_method = project_read_method
+        self.project_read = project_read
+        self.project_write = project_write
 
     def read_out(self, value, scope):
         """
@@ -90,7 +91,7 @@ class Setting(QObject):
         if self.scope == Scope.Global:
             QSettings().setValue(self.global_name(), value)
         elif self.scope == Scope.Project:
-            QgsProject.instance().writeEntry(self.plugin_name, self.name, value)
+            self.project_write(self.plugin_name, self.name, value)
         self.valueChanged.emit()
 
     def value(self):
@@ -108,7 +109,7 @@ class Setting(QObject):
                     # rewrite the setting in new system
                     QSettings().setValue(self.global_name(), value)
         elif self.scope == Scope.Project:
-            value = self.project_read_method(self.plugin_name, self.name, self.write_in(self.default_value, self.scope))[0]
+            value = self.project_read(self.plugin_name, self.name, self.write_in(self.default_value, self.scope))[0]
 
         return self.read_out(value, self.scope)
 

@@ -43,7 +43,7 @@ from ..setting import Setting
 class Color(Setting):
 
     def __init__(self, name, scope, default_value, options={}):
-        Setting.__init__(self, name, scope, default_value, QStringList, QgsProject.instance().readListEntry, options)
+        Setting.__init__(self, name, scope, default_value, QStringList, QgsProject.instance().readListEntry, QgsProject.instance().writeEntry, options)
 
     def read_out(self, value, scope):
         if type(value) != list or len(value) not in (3, 4):

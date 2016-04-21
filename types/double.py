@@ -35,7 +35,7 @@ from ..setting import Setting
 class Double(Setting):
 
     def __init__(self, name, scope, default_value, options={}):
-        Setting.__init__(self, name, scope, default_value, float, QgsProject.instance().readDoubleEntry, options)
+        Setting.__init__(self, name, scope, default_value, float, QgsProject.instance().readDoubleEntry, QgsProject.instance().writeEntryDouble, options)
 
     def check(self, value):
         if type(value) != int and type(value) != float:
