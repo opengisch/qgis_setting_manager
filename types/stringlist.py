@@ -45,13 +45,13 @@ class Stringlist(Setting):
 
     def setWidget(self, widget):
         if type(widget) == QListWidget:
-            self.signal = "clicked"
-            self.widgetSetMethod = self.setListBoxes
-            self.widgetGetMethod = self.getListBoxes
+            self.widget_signal = "clicked"
+            self.widget_set_method = self.setListBoxes
+            self.widget_get_method = self.getListBoxes
         elif type(widget) == QButtonGroup:
-            self.signal = "buttonClicked"
-            self.widgetSetMethod = self.setGroupBoxes
-            self.widgetGetMethod = self.getGroupBoxes
+            self.widget_signal = "buttonClicked"
+            self.widget_set_method = self.setGroupBoxes
+            self.widget_get_method = self.getGroupBoxes
         else:
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))

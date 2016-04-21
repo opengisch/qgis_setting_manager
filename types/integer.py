@@ -34,9 +34,7 @@ from qgis.core import QgsProject
 
 from ..setting import Setting
 
-
 class Integer(Setting):
-
     def __init__(self, name, scope, default_value, options={}):
         Setting.__init__(self, name, scope, default_value, int, QgsProject.instance().readNumEntry, QgsProject.instance().writeEntry, options)
 
@@ -46,17 +44,17 @@ class Integer(Setting):
 
     def setWidget(self, widget):
         if type(widget) == QLineEdit:
-            self.signal = "textChanged"
-            self.widgetSetMethod = widget.setText()
-            self.widgetGetMethod = lambda: widget.text()
+            self.widget_signal = "textChanged"
+            self.widget_set_method = widget.setText()
+            self.widget_get_method = lambda: widget.text()
         elif type(widget) in (QSpinBox, QSlider):
-            self.signal = "valueChanged"
-            self.widgetSetMethod = widget.setValue
-            self.widgetGetMethod = widget.value
+            self.widget_signal = "valueChanged"
+            self.widget_set_method = widget.setValue
+            self.widget_get_method = widget.value
         elif type(widget) == QComboBox:
-            self.signal = "activated"
-            self.widgetSetMethod = widget.setCurrentIndex
-            self.widgetGetMethod = widget.currentIndex
+            self.widget_signal = "activated"
+            self.widget_set_method = widget.setCurrentIndex
+            self.widget_get_method = widget.currentIndex
         else:
             print type(widget)
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %

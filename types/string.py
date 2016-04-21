@@ -49,26 +49,26 @@ class String(Setting):
 
     def setWidget(self, widget):
         if type(widget) == QLineEdit:
-            self.signal = "textChanged"
-            self.widgetSetMethod = widget.setText
-            self.widgetGetMethod = widget.text
+            self.widget_signal = "textChanged"
+            self.widget_set_method = widget.setText
+            self.widget_get_method = widget.text
         elif type(widget) == QButtonGroup:
-            self.signal = "buttonClicked"
-            self.widgetSetMethod = self.setButtonGroup
-            self.widgetGetMethod = self.getButtonGroup
+            self.widget_signal = "buttonClicked"
+            self.widget_set_method = self.setButtonGroup
+            self.widget_get_method = self.getButtonGroup
         elif type(widget) == QComboBox:
-            self.signal = "activated"
-            comboMode = self.options.get("comboMode", "data")
-            if comboMode == 'data':
-                self.widgetSetMethod = lambda(value): self.widget.setCurrentIndex(widget.findData(value))
-                self.widgetGetMethod = lambda: widget.itemData(widget.currentIndex()) or ""
-            elif comboMode == 'text':
-                self.widgetSetMethod = lambda(value): self.widget.setCurrentIndex(widget.findText(value))
-                self.widgetGetMethod = widget.currentText
+            self.widget_signal = "activated"
+            combo_mode = self.options.get("comboMode", "data")
+            if combo_mode == 'data':
+                self.widget_set_method = lambda(value): self.widget.setCurrentIndex(widget.findData(value))
+                self.widget_get_method = lambda: widget.itemData(widget.currentIndex()) or ""
+            elif combo_mode == 'text':
+                self.widget_set_method = lambda(value): self.widget.setCurrentIndex(widget.findText(value))
+                self.widget_get_method = widget.currentText
         elif type(widget) in QgsMapLayerComboBox:
-            self.signal = "layerChanged"
-            self.widgetSetMethod = lambda(value): self.widget.setLayer(QgsMapLayerRegistry.instance().mapLayer(value))
-            self.widgetGetMethod = lambda: widget.currentLayer().id()
+            self.widget_signal = "layerChanged"
+            self.widget_set_method = lambda(value): self.widget.setLayer(QgsMapLayerRegistry.instance().mapLayer(value))
+            self.widget_get_method = lambda: widget.currentLayer().id()
         else:
             raise NameError("SettingManager does not handle %s widgets for strings at the moment (setting: %s)" %
                             (type(widget), self.name))

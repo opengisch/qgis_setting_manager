@@ -122,16 +122,16 @@ class Setting(QObject):
     def set_value_on_widget_update_signal(self):
         if self.widget is None:
             return
-        eval("self.widget.%s.connect(self.set_value_from_widget)" % self.signal)
+        eval("self.widget.%s.connect(self.set_value_from_widget)" % self.widget_signal)
 
     def set_widget_from_value(self):
         if self.widget is None:
             return
         setting_value = self.value()
-        self.widgetSetMethod(setting_value)
+        self.widget_set_method(setting_value)
 
     def set_value_from_widget(self, dummy=None):
         if self.widget is None:
             return
-        widget_value = self.widgetGetMethod()
+        widget_value = self.widget_get_method()
         self.set_value(widget_value)
