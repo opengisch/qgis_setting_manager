@@ -34,6 +34,7 @@ from my_settings import MySettings
 from my_settings_dialog import MySettingsDialog
 
 
+
 # TODO: remaining tests:
 # string with QgsMapLayerComboBox and QButtonGroup and also comboMode:data
 # stringlist with QGroupBox
