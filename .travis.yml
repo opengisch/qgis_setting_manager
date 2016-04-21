@@ -15,4 +15,4 @@ install:
   - sudo pip install nose_parameterized
 
 script:
-  - nose2
+  - nosetests
