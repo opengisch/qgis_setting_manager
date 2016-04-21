@@ -32,21 +32,24 @@ from setting_manager import Debug
 
 
 class SettingDialog():
-    def __init__(self, settingManager, set_values_on_dialog_accepted=True, set_value_on_widget_update=False):
+    def __init__(self, setting_manager, set_values_on_dialog_accepted=True, set_value_on_widget_update=False):
         if isinstance(self, QDialog) and set_values_on_dialog_accepted:
             self.accepted.connect(self.accept_dialog)
 
-        self._settings = []
-        for setting in settingManager.settings:
+        self.setting_manager = setting_manager
+
+        self.__settings = []
+        for setting_name in setting_manager.settings_list():
             for objectClass in (QWidget, QButtonGroup):
-                widget = self.findChild(objectClass, setting.name)
+                widget = self.findChild(objectClass, setting_name)
                 if widget is not None:
                     if Debug:
-                        print "Widget found: %s" % setting.name
-                    setting.setWidget(widget)
+                        print "Widget found: {}".format(setting_name)
+                    setting = self.setting_manager.setting(setting_name)
+                    setting.set_widget(widget)
                     if set_value_on_widget_update:
                         setting.set_value_on_widget_update_signal()
-                    self._settings.append(setting)
+                    self.__settings.append(setting_name)
                     break
 
         # in case the widget has no showEvent
@@ -62,28 +65,31 @@ class SettingDialog():
         return True
 
     def widget_list(self):
-        wl = []
-        for setting in self._settings:
-            wl.append(setting.name)
-        return wl
+        """
+        returns the list of widgets related to settings
+        """
+        return self.__settings
+
+    def setting(self, name):
+        if name not in self.__settings:
+            return None
+        return self.setting_manager.setting(name)
 
     def accept_dialog(self):
-        if self.onBeforeAcceptDialog():
+        if self.before_accept_dialog():
             self.set_values_from_widgets()
 
     def set_values_from_widgets(self):
-        for setting in self._settings:
-            if setting.widget is not None:
-                setting.set_value_from_widget()
+        for setting_name in self.__settings:
+            setting = self.setting_manager.setting(setting_name)
+            setting.set_value_from_widget()
 
     def set_widgets_from_values(self):
-        for setting in self._settings:
-            if setting.widget is not None:
-                setting.set_widget_from_value()
+        for setting_name in self.__settings:
+            setting = self.setting_manager.setting(setting_name)
+            setting.set_widget_from_value()
 
     # deprecated
     # TODO python 3 remove deprecated method
-
-
     def onBeforeAcceptDialog(self):
         return self.before_accept_dialog()

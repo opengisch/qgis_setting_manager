@@ -40,7 +40,7 @@ class Bool(Setting):
         if type(value) != bool:
             raise NameError("Setting %s must be a boolean." % self.name)
 
-    def setWidget(self, widget):
+    def set_widget(self, widget):
         if type(widget) == QCheckBox or (hasattr(widget, "isCheckable") and widget.isCheckable()):
             self.widget_signal = "clicked"
             self.widget_set_method = widget.setChecked
@@ -49,4 +49,4 @@ class Bool(Setting):
             print type(widget)
             raise NameError("SettingManager does not handle %s widgets for booleans for the moment (setting: %s)" %
                             (type(widget), self.name))
-        self.widget = widget
+        self.__widget = widget

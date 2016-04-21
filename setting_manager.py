@@ -65,6 +65,11 @@ class SettingManager:
     def settings_list(self):
         return self.__settings.keys()
 
+    def setting(self, name):
+        if name not in self.__settings:
+            raise NameError('{} setting does not exist'.format(name))
+        return self.__settings[name]
+
     ##########################################
     #                                        #
     ##########################################

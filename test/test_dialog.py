@@ -6,27 +6,40 @@ from my_settings import MySettings
 from my_settings_dialog import MySettingsDialog
 
 
+def params(settings):
+    param = []
+    for s_name, setting_ in settings.iteritems():
+        for widget in setting_['widgets']:
+            param.append((s_name, widget))
+    return param
+
+
 class TestDialog(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         start_app()
 
-    @parameterized.expand([ (s_name) for s_name in MySettings().settings.keys() ])
-    def test_dialog(self, name):
+    @parameterized.expand(params(MySettings().settings))
+    def test_dialog(self, name, widget_class):
         setting_ = MySettings().settings[name]
 
         # set value
         MySettings().set_value(name, setting_['default'])
 
-        for widget_class in setting_['widgets']:
-            dlg = MySettingsDialog(name, widget_class, True, False)
-            dlg.show()
 
-            # set value
-            print dlg.findChild(name).isChecked()
+        dlg = MySettingsDialog(name, widget_class, True, False)
+        dlg.show()
 
-            MySettings().set_value(name, setting_['new_value'])
-            self.assertEqual(MySettings().value(name), setting_['new_value'])
+        # detect widget
+        setting = dlg.setting(name)
+        self.assertIsNotNone(setting.widget())
+
+
+        # set value
+
+
+        MySettings().set_value(name, setting_['new_value'])
+        self.assertEqual(MySettings().value(name), setting_['new_value'])
 
 
 

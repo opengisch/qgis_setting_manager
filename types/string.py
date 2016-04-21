@@ -47,7 +47,7 @@ class String(Setting):
             print(type(value))
             raise NameError('{}:: Invalid value for setting {}: {}. It must be a string.'.format(self.plugin_name, self.name, value))
 
-    def setWidget(self, widget):
+    def set_widget(self, widget):
         if type(widget) == QLineEdit:
             self.widget_signal = "textChanged"
             self.widget_set_method = widget.setText
@@ -72,7 +72,7 @@ class String(Setting):
         else:
             raise NameError("SettingManager does not handle %s widgets for strings at the moment (setting: %s)" %
                             (type(widget), self.name))
-        self.widget = widget
+        self.__widget = widget
 
     def setButtonGroup(self, value):
         # for checkboxes

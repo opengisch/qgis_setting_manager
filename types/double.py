@@ -41,7 +41,7 @@ class Double(Setting):
         if type(value) != int and type(value) != float:
             raise NameError("Setting %s must be a double." % self.name)
 
-    def setWidget(self, widget):
+    def set_widget(self, widget):
         if type(widget) == QLineEdit:
             self.widget_signal = "textChanged"
             self.widget_set_method = widget.setText
@@ -53,4 +53,4 @@ class Double(Setting):
         else:
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
-        self.widget = widget
+        self.__widget = widget

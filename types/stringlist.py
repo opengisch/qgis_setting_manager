@@ -51,7 +51,7 @@ class Stringlist(Setting):
         if type(value) not in (list, tuple):
             raise NameError("Setting %s must be a string list." % self.name)
 
-    def setWidget(self, widget):
+    def set_widget(self, widget):
         if type(widget) == QListWidget:
             self.widget_signal = "clicked"
             self.widget_set_method = self.setListBoxes
@@ -63,7 +63,7 @@ class Stringlist(Setting):
         else:
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
-        self.widget = widget
+        self.__widget = widget
 
     def setListBoxes(self, value):
         if self.widget is None:
