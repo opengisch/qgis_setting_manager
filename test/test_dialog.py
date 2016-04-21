@@ -26,7 +26,10 @@
 import unittest
 import nose2
 from nose_parameterized import parameterized
-from qgis.testing import start_app
+try:
+    from qgis.testing import start_app
+except:
+    from qgis_testing import start_app
 from my_settings import MySettings
 from my_settings_dialog import MySettingsDialog
 
