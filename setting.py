@@ -96,11 +96,14 @@ class Setting(QObject):
 
     def value(self):
         if self.scope == Scope.Global:
-            value = QSettings().value(self.global_name(), self.default_value, type=self.object_type)
+            value = QSettings().value(self.global_name(),
+                                      self.write_in(self.default_value, self.scope),
+                                      type=self.object_type)
             # TODO python3: remove backward compatibility
             # try to gather old setting value (using old version of QGIS Setting Manager)
             if self.read_out(value, self.scope) == self.default_value:
-                value = QSettings(self.plugin_name, self.plugin_name).value(self.name, self.default_value,
+                value = QSettings(self.plugin_name, self.plugin_name).value(self.name,
+                                                                            self.write_in(self.default_value, self.scope),
                                                                             type=self.object_type)
                 if self.read_out(value, self.scope) != self.default_value:
                     # rewrite the setting in new system

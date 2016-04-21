@@ -33,6 +33,7 @@
 
 
 from PyQt4.QtGui import QColor, QColorDialog
+from PyQt4.QtCore import QStringList
 from qgis.core import QgsProject
 from qgis.gui import QgsColorButton, QgsColorButtonV2
 
@@ -42,7 +43,7 @@ from ..setting import Setting
 class Color(Setting):
 
     def __init__(self, name, scope, default_value, options={}):
-        Setting.__init__(self, name, scope, default_value, options, QColor)
+        Setting.__init__(self, name, scope, default_value, options, QStringList)
         self.project_read_method = QgsProject.instance().readListEntry
 
     def read_out(self, value, scope):
@@ -56,10 +57,10 @@ class Color(Setting):
         return QColor(r, g, b, a)
 
     def write_in(self, value, scope):
-        if scope == 'global':
-            return [value.red(), value.green(), value.blue(), value.alpha()]
-        else:
+        if self.options.get("allowAlpha", False):
             return ["%u" % value.red(), "%u" % value.green(), "%u" % value.blue(), "%u" % value.alpha()]
+        else:
+            return ["%u" % value.red(), "%u" % value.green(), "%u" % value.blue()]
 
     def check(self, color):
         if type(color) != QColor:
