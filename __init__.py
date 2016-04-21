@@ -6,5 +6,3 @@ from setting_dialog import SettingDialog
 from types import *
 
 
-
-

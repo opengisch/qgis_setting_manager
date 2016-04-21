@@ -26,10 +26,8 @@
 #
 #---------------------------------------------------------------------
 
-from PyQt4.QtCore import QSettings
 from PyQt4.QtGui import QCheckBox
 from qgis.core import QgsProject
-
 from ..setting import Setting
 
 
