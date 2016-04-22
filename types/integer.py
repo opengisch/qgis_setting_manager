@@ -44,15 +44,15 @@ class Integer(Setting):
 
     def set_widget(self, widget):
         if type(widget) == QLineEdit:
-            self.widget_signal = "textChanged"
+            self.widget_signal = widget.textChanged
             self.widget_set_method = lambda(value): widget.setText('{}'.format(value))
             self.widget_get_method = lambda: int(widget.text())
         elif type(widget) in (QSpinBox, QSlider):
-            self.widget_signal = "valueChanged"
+            self.widget_signal = widget.valueChanged
             self.widget_set_method = widget.setValue
             self.widget_get_method = widget.value
         elif type(widget) == QComboBox:
-            self.widget_signal = "activated"
+            self.widget_signal = widget.currentIndexChanged
             self.widget_set_method = widget.setCurrentIndex
             self.widget_get_method = widget.currentIndex
         else:

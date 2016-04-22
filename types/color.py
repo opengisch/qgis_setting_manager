@@ -75,7 +75,7 @@ class Color(Setting):
             self._widget.setColorDialogOptions(QColorDialog.ShowAlphaChannel)
         else:
             self._widget.setAllowAlpha(self.options.get("allowAlpha", False))
-        self.widget_signal = "colorChanged"
+        self.widget_signal = self._widget.colorChanged
         self.widget_set_method = self._widget.setColor
         self.widget_get_method = self._widget.color
 

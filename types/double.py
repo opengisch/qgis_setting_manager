@@ -43,11 +43,11 @@ class Double(Setting):
 
     def set_widget(self, widget):
         if type(widget) == QLineEdit:
-            self.widget_signal = "textChanged"
+            self.widget_signal = widget.textChanged
             self.widget_set_method = lambda(value): widget.setText('{}'.format(value))
             self.widget_get_method = lambda: float(widget.text())
         elif type(widget) == QDoubleSpinBox:
-            self.widget_signal = "valueChanged"
+            self.widget_signal = widget.valueChanged
             self.widget_set_method = widget.setValue
             self.widget_get_method = widget.value
         else:

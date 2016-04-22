@@ -49,15 +49,15 @@ class String(Setting):
 
     def set_widget(self, widget):
         if type(widget) == QLineEdit:
-            self.widget_signal = "textChanged"
+            self.widget_signal = widget.textChanged
             self.widget_set_method = widget.setText
             self.widget_get_method = widget.text
         elif type(widget) == QButtonGroup:
-            self.widget_signal = "buttonClicked"
+            self.widget_signal = widget.buttonClicked
             self.widget_set_method = self.setButtonGroup
             self.widget_get_method = self.getButtonGroup
         elif type(widget) == QComboBox:
-            self.widget_signal = "activated"
+            self.widget_signal = widget.currentIndexChanged
             combo_mode = self.options.get("comboMode", "data")
             if combo_mode == 'data':
                 self.widget_set_method = lambda(value): widget.setCurrentIndex(widget.findData(value))
@@ -66,7 +66,7 @@ class String(Setting):
                 self.widget_set_method = lambda(value): widget.setCurrentIndex(widget.findText(value))
                 self.widget_get_method = widget.currentText
         elif type(widget) in QgsMapLayerComboBox:
-            self.widget_signal = "layerChanged"
+            self.widget_signal = widget.layerChanged
             self.widget_set_method = lambda(value): widget.setLayer(QgsMapLayerRegistry.instance().mapLayer(value))
             self.widget_get_method = lambda: widget.currentLayer().id()
         else:

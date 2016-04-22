@@ -37,6 +37,7 @@ class MySettingsDialog(QDialog, SettingDialog):
         w = widget_class(self)
         w.setObjectName(setting_name)
 
+        # setup UI
         if setting_name.startswith('bool_') and widget_class == QgsCollapsibleGroupBox:
             w.setCheckable(True)
         if setting_name.startswith('double_') and widget_class == QDoubleSpinBox:
@@ -50,4 +51,5 @@ class MySettingsDialog(QDialog, SettingDialog):
         if setting_name.startswith('string_list_') and widget_class == QListWidget:
             w.addItems(('abc', 'def', 'ghi', 'random', 'qwe', 'rtz', 'uio'))
 
+        # init SettingDialog
         SettingDialog.__init__(self, self.settings, set_values_on_dialog_accepted, set_value_on_widget_update)

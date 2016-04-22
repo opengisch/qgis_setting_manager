@@ -30,6 +30,7 @@ try:
     from qgis.testing import start_app
 except:
     from qgis_testing import start_app
+from PyQt4.QtTest import QTest
 from my_settings import MySettings
 from my_settings_dialog import MySettingsDialog
 
@@ -55,9 +56,11 @@ class TestDialog(unittest.TestCase):
 
     @parameterized.expand(params(MySettings().settings_cfg))
     def test_dialog(self, test_name, name, widget_class):
-        # reset to default value just in case
+        # get setting config
         setting_cfg = MySettings().settings_cfg[name]
-        MySettings().set_value(name, setting_cfg['default'])
+
+        # this will reset to default with new call of MySettings within MySettingsDialog
+        MySettings().remove(name)
 
         # create dialog
         self.dlg = MySettingsDialog(name, widget_class, True, False)
@@ -71,6 +74,9 @@ class TestDialog(unittest.TestCase):
         widget = setting_.widget()
         self.assertIsNotNone(widget)
 
+        # controls that widget is set to default
+        self.assertEqual(setting_.widget_get_method(), setting_cfg['default'])
+
         # set value
         setting_.widget_set_method(setting_cfg['new_value'])
 
@@ -82,6 +88,38 @@ class TestDialog(unittest.TestCase):
 
         # check setting has now new value
         self.assertEqual(MySettings().value(name), setting_cfg['new_value'])
+        self.dlg.close()
+
+        # reset setting
+        MySettings().remove(name)
+
+        # also test with direct update
+        self.dlg = MySettingsDialog(name, widget_class, False, True)
+
+        # get widget
+        setting_ = self.dlg.setting(name)
+        widget = setting_.widget()
+        self.assertIsNotNone(widget)
+
+        # controls that widget is set to default
+        self.assertEqual(setting_.widget_get_method(), setting_cfg['default'])
+
+        # set value
+        if setting_.widget_test_method is not False:
+            if setting_.widget_test_method is not None:
+                setting_.widget_test_method(setting_cfg['new_value'])
+            else:
+                setting_.widget_set_method(setting_cfg['new_value'])
+            # check setting has now new value
+            self.assertEqual(MySettings().value(name), setting_cfg['new_value'])
+        else:
+            # cannot test UI
+            print('{} cannot be run for set_value_on_widget_update = True'.format(test_name))
+        self.dlg.close()
+
+        # reset setting
+        MySettings().remove(name)
+
 
 if __name__ == '__main__':
     nose2.main()

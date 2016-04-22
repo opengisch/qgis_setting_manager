@@ -53,11 +53,11 @@ class Stringlist(Setting):
 
     def set_widget(self, widget):
         if type(widget) == QListWidget:
-            self.widget_signal = "clicked"
+            self.widget_signal = widget.itemChanged
             self.widget_set_method = self.set_list_boxes
             self.widget_get_method = self.get_list_boxes
         elif type(widget) == QButtonGroup:
-            self.widget_signal = "buttonClicked"
+            self.widget_signal = widget.buttonClicked
             self.widget_set_method = self.set_group_boxes
             self.widget_get_method = self.get_group_boxes
         else:

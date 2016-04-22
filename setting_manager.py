@@ -59,7 +59,7 @@ class SettingManager:
     def remove(self, setting_name):
         if setting_name not in self.__settings:
             raise NameError('{} has no setting {}'.format(self.plugin_name, setting_name))
-        self.__settings[setting_name].remove()
+        self.__settings[setting_name].reset_default()
         del self.__settings[setting_name]
 
     def settings_list(self):

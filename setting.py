@@ -58,6 +58,11 @@ class Setting(QObject):
         self.widget_signal = None
         self.widget_set_method = None
         self.widget_get_method = None
+        # function to test UI
+        #   if None widget_set_method will be triggered
+        #   if False test won't be run
+        #   otherwise provide lambda function
+        self.widget_test_method = None
 
     def read_out(self, value, scope):
         """
@@ -128,7 +133,7 @@ class Setting(QObject):
 
         return self.read_out(value, self.scope)
 
-    def remove(self):
+    def reset_default(self):
         if self.scope == Scope.Project:
             QgsProject.instance().removeEntry(self.plugin_name, self.name)
         else:
@@ -140,7 +145,7 @@ class Setting(QObject):
     def set_value_on_widget_update_signal(self):
         if self._widget is None:
             return
-        eval("self._widget.%s.connect(self.set_value_from_widget)" % self.widget_signal)
+        self.widget_signal.connect(self.set_value_from_widget)
 
     def set_widget_from_value(self):
         if self._widget is None:
