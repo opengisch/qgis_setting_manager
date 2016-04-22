@@ -35,10 +35,10 @@ from qgis.core import QgsProject, QgsMapLayerRegistry
 from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox
 
 from ..setting import Setting
+from ..setting_widget import SettingWidget
 
 
 class String(Setting):
-
     def __init__(self, name, scope, default_value, options={}):
         Setting.__init__(self, name, scope, default_value, str, QgsProject.instance().readEntry, QgsProject.instance().writeEntry, options)
 
@@ -47,48 +47,99 @@ class String(Setting):
             print(type(value))
             raise NameError('{}:: Invalid value for setting {}: {}. It must be a string.'.format(self.plugin_name, self.name, value))
 
-    def set_widget(self, widget):
+    def config_widget(self, widget):
         if type(widget) == QLineEdit:
-            self.widget_signal = widget.textChanged
-            self.widget_set_method = widget.setText
-            self.widget_get_method = widget.text
+            return LineEditStringWidget(self, widget, self.options)
         elif type(widget) == QButtonGroup:
-            self.widget_signal = widget.buttonClicked
-            self.widget_set_method = self.setButtonGroup
-            self.widget_get_method = self.getButtonGroup
+            return ButtonGroupStringWidget(self, widget, self.options)
         elif type(widget) == QComboBox:
-            self.widget_signal = widget.currentIndexChanged
-            combo_mode = self.options.get("comboMode", "data")
-            if combo_mode == 'data':
-                self.widget_set_method = lambda(value): widget.setCurrentIndex(widget.findData(value))
-                self.widget_get_method = lambda: widget.itemData(widget.currentIndex()) or ""
-            elif combo_mode == 'text':
-                self.widget_set_method = lambda(value): widget.setCurrentIndex(widget.findText(value))
-                self.widget_get_method = widget.currentText
+            return ComboStringWidget(self, widget, self.options)
         elif type(widget) in QgsMapLayerComboBox:
-            self.widget_signal = widget.layerChanged
-            self.widget_set_method = lambda(value): widget.setLayer(QgsMapLayerRegistry.instance().mapLayer(value))
-            self.widget_get_method = lambda: widget.currentLayer().id()
+            return MapLayerComboStringWidget(self, widget, self.options)
         else:
             raise NameError("SettingManager does not handle %s widgets for strings at the moment (setting: %s)" %
-                            (type(widget), self.name))
-        self._widget = widget
+                (type(widget), self.name))
 
-    def setButtonGroup(self, value):
-        # for checkboxes
-        if self.widget is None:
-            return
+
+class LineEditStringWidget(SettingWidget):
+    def __init__(self, setting, widget, options):
+        SettingWidget.__init__(self, setting, widget, options)
+
+    def set_widget_value(self, value):
+        self.widget.setText(value)
+
+    def widget_value(self):
+        return self.widget.text()
+
+    def set_value_on_widget_update_signal(self):
+        self.widget.textChanged.connect(self.set_value_from_widget)
+
+
+class ButtonGroupStringWidget(SettingWidget):
+    def __init__(self, setting, widget, options):
+        SettingWidget.__init__(self, setting, widget, options)
+
+    def set_widget_value(self, value):
         for button in self.widget.buttons():
             if value == button.objectName():
                 button.setChecked(True)
                 break
 
-    def getButtonGroup(self):
-        if self.widget is None:
-            return
+    def widget_value(self):
         value = ""
         for button in self.widget.buttons():
             if button.isChecked():
                 value = button.objectName()
                 break
         return value
+
+    def set_value_on_widget_update_signal(self):
+        self.widget.buttonClicked.connect(self.set_value_from_widget)
+
+
+class ComboStringWidget(SettingWidget):
+    def __init__(self, setting, widget, options):
+        SettingWidget.__init__(self, setting, widget, options)
+
+    def set_widget_value(self, value):
+        combo_mode = self.options.get("comboMode", "data")
+        if combo_mode == 'data':
+            self.widget.setCurrentIndex(self.widget.findData(value))
+        elif combo_mode == 'text':
+            self.widget.setCurrentIndex(self.widget.findText(value))
+        else:
+            raise NameError('invalid options for {}.comboMoe: {}'.format(self.setting.name, combo_mode))
+
+    def widget_value(self):
+        combo_mode = self.options.get("comboMode", "data")
+        if combo_mode == 'data':
+            return self.widget.itemData(self.widget.currentIndex()) or ""
+        elif combo_mode == 'text':
+            return self.widget.currentText()
+        else:
+            raise NameError('invalid options for {}.comboMoe: {}'.format(self.setting.name, combo_mode))
+
+    def set_value_on_widget_update_signal(self):
+        self.widget.currentIndexChanged.connect(self.set_value_from_widget)
+
+
+class MapLayerComboStringWidget(SettingWidget):
+    def __init__(self, setting, widget, options):
+        SettingWidget.__init__(self, setting, widget, options)
+
+    def set_widget_value(self, value):
+        self.widget.setLayer(QgsMapLayerRegistry.instance().mapLayer(value))
+
+    def widget_value(self):
+        self.widget.currentLayer().id()
+
+    def set_value_on_widget_update_signal(self):
+        self.widget.layerChanged.connect(self.set_value_from_widget)
+
+
+
+
+
+
+
+

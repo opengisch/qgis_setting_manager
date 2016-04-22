@@ -30,7 +30,7 @@ from PyQt4.QtGui import QLineEdit, QDoubleSpinBox
 from qgis.core import QgsProject
 
 from ..setting import Setting
-
+from ..setting_widget import SettingWidget
 
 class Double(Setting):
 
@@ -41,16 +41,41 @@ class Double(Setting):
         if type(value) != int and type(value) != float:
             raise NameError("Setting %s must be a double." % self.name)
 
-    def set_widget(self, widget):
+    def config_widget(self, widget):
         if type(widget) == QLineEdit:
-            self.widget_signal = widget.textChanged
-            self.widget_set_method = lambda(value): widget.setText('{}'.format(value))
-            self.widget_get_method = lambda: float(widget.text())
+            return LineEditDoubleWidget(self, widget, self.options)
         elif type(widget) == QDoubleSpinBox:
-            self.widget_signal = widget.valueChanged
-            self.widget_set_method = widget.setValue
-            self.widget_get_method = widget.value
+            return DoubleSpinBoxDoubleWidget(self, widget, self.options)
         else:
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
-        self._widget = widget
+
+
+class LineEditDoubleWidget(SettingWidget):
+    def __init__(self, setting, widget, options):
+        SettingWidget.__init__(self, setting, widget, options)
+
+    def set_widget_value(self, value):
+        self.widget.setText('{}'.format(value))
+
+    def widget_value(self):
+        return float(self.widget.text())
+
+    def set_value_on_widget_update_signal(self):
+        self.widget.textChanged.connect(self.set_value_from_widget)
+
+
+class DoubleSpinBoxDoubleWidget(SettingWidget):
+    def __init__(self, setting, widget, options):
+        SettingWidget.__init__(self, setting, widget, options)
+
+    def set_widget_value(self, value):
+        self.widget.setValue(value)
+
+    def widget_value(self):
+        return self.widget.value()
+
+    def set_value_on_widget_update_signal(self):
+        self.widget.valueChanged.connect(self.set_value_from_widget)
+
+

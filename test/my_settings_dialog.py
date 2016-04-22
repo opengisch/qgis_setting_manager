@@ -48,7 +48,7 @@ class MySettingsDialog(QDialog, SettingDialog):
         if setting_name.startswith('string_') and widget_class == QComboBox:
             w.addItem('default_string')
             w.addItem('new_string')
-        if setting_name.startswith('string_list_') and widget_class == QListWidget:
+        if setting_name.startswith('stringlist_') and widget_class == QListWidget:
             w.addItems(('abc', 'def', 'ghi', 'random', 'qwe', 'rtz', 'uio'))
 
         # init SettingDialog

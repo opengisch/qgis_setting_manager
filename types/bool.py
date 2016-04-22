@@ -29,6 +29,7 @@
 from PyQt4.QtGui import QCheckBox
 from qgis.core import QgsProject
 from ..setting import Setting
+from ..setting_widget import SettingWidget
 
 
 class Bool(Setting):
@@ -39,22 +40,46 @@ class Bool(Setting):
     def check(self, value):
         if type(value) != bool:
             raise NameError("Setting %s must be a boolean." % self.name)
-
-    def set_widget(self, widget):
+        
+    def config_widget(self, widget):
         if type(widget) == QCheckBox:
-            self.widget_signal = widget.stateChanged
-            self.widget_set_method = widget.setChecked
-            self.widget_get_method = widget.isChecked
-            self.widget_test_method = lambda(value): widget.click()
+            return CheckBoxBoolWidget(self, widget, self.options)
         elif hasattr(widget, "isCheckable") and widget.isCheckable():
-            self.widget_signal = widget.clicked
-            self.widget_set_method = widget.setChecked
-            self.widget_get_method = widget.isChecked
-            self.widget_test_method = False
+            return CheckableBoolWidget(self, widget, self.options)
         else:
             print type(widget)
             raise NameError("SettingManager does not handle %s widgets for booleans at the moment (setting: %s)" %
                             (type(widget), self.name))
-        self._widget = widget
 
 
+class CheckBoxBoolWidget(SettingWidget):
+    def __init__(self, setting, widget, options):
+        SettingWidget.__init__(self, setting, widget, options)
+
+    def set_widget_value(self, value):
+        self.widget.setChecked(value)
+
+    def widget_value(self):
+        return self.widget.isChecked()
+
+    def set_value_on_widget_update_signal(self):
+        self.widget.stateChanged.connect(self.set_value_from_widget)
+
+
+
+class CheckableBoolWidget(SettingWidget):
+    def __init__(self, setting, widget, options):
+        SettingWidget.__init__(self, setting, widget, options)
+
+    def set_widget_value(self, value):
+        self.widget.setChecked(value)
+
+    def widget_value(self):
+        return self.widget.isChecked()
+
+    def set_value_on_widget_update_signal(self):
+        self.widget.clicked.connect(self.set_value_from_widget)
+        
+    def widget_test(self, value):
+        print('cannot test checkable groupbox at the moment')
+        return False

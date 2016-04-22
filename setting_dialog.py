@@ -38,17 +38,27 @@ class SettingDialog:
 
         self.setting_manager = setting_manager
 
-        self.__settings = []
-        for setting_name in setting_manager.settings_list():
+        self.__settings = {}
+
+        for setting_name in self.setting_manager.settings_list():
             for objectClass in (QWidget, QButtonGroup):
                 widget = self.findChild(objectClass, setting_name)
                 if widget is not None:
                     if Debug:
                         print "Widget found: {}".format(setting_name)
-                    self.setting_manager.set_widget(setting_name, widget)
+
+                    # configure the widget
+                    setting_widget = self.setting_manager.setting(setting_name).config_widget(widget)
+                    if setting_widget is None:
+                        raise NameError('Widget could not be set for setting {}'.format(setting_name))
+
+                    # TODO
+                    # setting_widget.widgetDestroyed.connect(self.widgetDestroyed)
+
                     if set_value_on_widget_update:
-                        self.setting_manager.set_value_on_widget_update_signal(setting_name)
-                    self.__settings.append(setting_name)
+                        setting_widget.set_value_on_widget_update_signal()
+
+                    self.__settings[setting_name] = setting_widget
                     break
 
         # in case the widget has no showEvent
@@ -67,24 +77,24 @@ class SettingDialog:
         """
         returns the list of widgets related to settings
         """
-        return self.__settings
+        return self.__settings.keys()
 
-    def setting(self, name):
+    def setting_widget(self, name):
         if name not in self.__settings:
             return None
-        return self.setting_manager.setting(name)
+        return self.__settings[name]
 
     def accept_dialog(self):
         if self.before_accept_dialog():
             self.set_values_from_widgets()
 
     def set_values_from_widgets(self):
-        for setting_name in self.__settings:
-            self.setting_manager.set_value_from_widget(setting_name)
+        for setting_widget in self.__settings.values():
+            setting_widget.set_value_from_widget()
 
     def set_widgets_from_values(self):
-        for setting_name in self.__settings:
-            self.setting_manager.set_widget_from_value(setting_name)
+        for setting_widget in self.__settings.values():
+            setting_widget.set_widget_from_value()
 
     # deprecated
     # TODO python 3 remove deprecated method

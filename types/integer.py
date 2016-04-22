@@ -33,6 +33,8 @@ from PyQt4.QtGui import QLineEdit, QSpinBox, QSlider, QComboBox
 from qgis.core import QgsProject
 
 from ..setting import Setting
+from ..setting_widget import SettingWidget
+
 
 class Integer(Setting):
     def __init__(self, name, scope, default_value, options={}):
@@ -42,22 +44,63 @@ class Integer(Setting):
         if type(value) != int and type(value) != float:
             raise NameError("Setting %s must be an integer." % self.name)
 
-    def set_widget(self, widget):
+    def config_widget(self, widget):
         if type(widget) == QLineEdit:
-            self.widget_signal = widget.textChanged
-            self.widget_set_method = lambda(value): widget.setText('{}'.format(value))
-            self.widget_get_method = lambda: int(widget.text())
+            return LineEditIntegerWidget(self, widget, self.options)
         elif type(widget) in (QSpinBox, QSlider):
-            self.widget_signal = widget.valueChanged
-            self.widget_set_method = widget.setValue
-            self.widget_get_method = widget.value
+            return SpinBoxIntegerWidget(self, widget, self.options)
         elif type(widget) == QComboBox:
-            self.widget_signal = widget.currentIndexChanged
-            self.widget_set_method = widget.setCurrentIndex
-            self.widget_get_method = widget.currentIndex
+            return ComboBoxIntegerWidget(self, widget, self.options)
         else:
             print type(widget)
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
-        self._widget = widget
+
+
+class LineEditIntegerWidget(SettingWidget):
+    def __init__(self, setting, widget, options):
+        SettingWidget.__init__(self, setting, widget, options)
+
+    def set_widget_value(self, value):
+        self.widget.setText('{}'.format(value))
+
+    def widget_value(self):
+        try:
+            value = int(self.widget.text())
+        except ValueError:
+            value = None
+        return value
+
+    def set_value_on_widget_update_signal(self):
+        self.widget.textChanged.connect(self.set_value_from_widget)
+
+
+class SpinBoxIntegerWidget(SettingWidget):
+    def __init__(self, setting, widget, options):
+        SettingWidget.__init__(self, setting, widget, options)
+
+    def set_widget_value(self, value):
+        self.widget.setValue(value)
+
+    def widget_value(self):
+        return self.widget.value()
+
+    def set_value_on_widget_update_signal(self):
+        self.widget.valueChanged.connect(self.set_value_from_widget)
+
+
+class ComboBoxIntegerWidget(SettingWidget):
+    def __init__(self, setting, widget, options):
+        SettingWidget.__init__(self, setting, widget, options)
+
+    def set_widget_value(self, value):
+        self.widget.setCurrentIndex(value)
+
+    def widget_value(self):
+        return self.widget.currentIndex()
+
+    def set_value_on_widget_update_signal(self):
+        self.widget.currentIndexChanged.connect(self.set_value_from_widget)
+
+
 

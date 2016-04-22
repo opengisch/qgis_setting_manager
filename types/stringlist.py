@@ -32,10 +32,10 @@ from PyQt4.QtGui import QListWidget, QButtonGroup
 from qgis.core import QgsProject
 
 from ..setting import Setting
+from ..setting_widget import SettingWidget
 
 
 class Stringlist(Setting):
-
     def __init__(self, name, scope, default_value, options={}):
         Setting.__init__(self, name, scope, default_value, None, QgsProject.instance().readListEntry, QgsProject.instance().writeEntry, options)
 
@@ -51,52 +51,59 @@ class Stringlist(Setting):
         if type(value) not in (list, tuple):
             raise NameError("Setting %s must be a string list." % self.name)
 
-    def set_widget(self, widget):
+    def config_widget(self, widget):
         if type(widget) == QListWidget:
-            self.widget_signal = widget.itemChanged
-            self.widget_set_method = self.set_list_boxes
-            self.widget_get_method = self.get_list_boxes
+            return ListStingListWidget(self, widget, self.options)
         elif type(widget) == QButtonGroup:
-            self.widget_signal = widget.buttonClicked
-            self.widget_set_method = self.set_group_boxes
-            self.widget_get_method = self.get_group_boxes
+            return ButtonGroupStingListWidget(self, widget, self.options)
         else:
+            print type(widget)
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
-        self._widget = widget
 
-    def set_list_boxes(self, value):
-        if self._widget is None:
-            return
-        for i in range(self._widget.count()):
-            item = self._widget.item(i)
+
+class ListStingListWidget(SettingWidget):
+    def __init__(self, setting, widget, options):
+        SettingWidget.__init__(self, setting, widget, options)
+
+    def set_widget_value(self, value):
+        for i in range(self.widget.count()):
+            item = self.widget.item(i)
             if item.text() in value:
                 item.setCheckState(Qt.Checked)
             else:
                 item.setCheckState(Qt.Unchecked)
 
-    def get_list_boxes(self):
-        if self._widget is None:
-            return
+    def widget_value(self):
         value = []
-        for i in range(self._widget.count()):
-            item = self._widget.item(i)
+        for i in range(self.widget.count()):
+            item = self.widget.item(i)
             if item.checkState() == Qt.Checked:
                 value.append(item.text())
         return value
 
-    def set_group_boxes(self, value):
-        if self._widget is None:
-            return
-        for item in self._widget.buttons():
+    def set_value_on_widget_update_signal(self):
+        self.widget.itemChanged.connect(self.set_value_from_widget)
+
+
+class ButtonGroupStingListWidget(SettingWidget):
+    def __init__(self, setting, widget, options):
+        SettingWidget.__init__(self, setting, widget, options)
+
+    def set_widget_value(self, value):
+        for item in self.widget.buttons():
             item.setChecked(item.objectName() in value)
 
-    def get_group_boxes(self):
-        if self._widget is None:
-            return
+    def widget_value(self):
         value = []
-        for item in self._widget.buttons():
+        for item in self.widget.buttons():
             if item.isChecked():
                 value.append(item.objectName())
         return value
+
+    def set_value_on_widget_update_signal(self):
+        self.widget.buttonClicked.connect(self.set_value_from_widget)
+
+
+
 

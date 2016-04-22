@@ -69,18 +69,17 @@ class TestDialog(unittest.TestCase):
         self.assertIn(name, self.dlg.widget_list())
 
         # get widget
-        setting_ = self.dlg.setting(name)
-        widget = setting_.widget()
-        self.assertIsNotNone(widget)
+        setting_widget = self.dlg.setting_widget(name)
+        self.assertIsNotNone(setting_widget)
 
         # controls that widget is set to default
-        self.assertEqual(setting_.widget_get_method(), setting_cfg['default'])
+        self.assertEqual(setting_widget.widget_value(), setting_cfg['default'])
 
         # set value
-        setting_.widget_set_method(setting_cfg['new_value'])
+        setting_widget.set_widget_value(setting_cfg['new_value'])
 
         # controls that widget has been update
-        self.assertEqual(setting_.widget_get_method(), setting_cfg['new_value'])
+        self.assertEqual(setting_widget.widget_value(), setting_cfg['new_value'])
 
         # accept dialog
         self.dlg.accept()
@@ -96,20 +95,13 @@ class TestDialog(unittest.TestCase):
         self.dlg = MySettingsDialog(name, widget_class, False, True)
 
         # get widget
-        setting_ = self.dlg.setting(name)
-        widget = setting_.widget()
-        self.assertIsNotNone(widget)
+        setting_widget = self.dlg.setting_widget(name)
 
         # controls that widget is set to default
-        self.assertEqual(setting_.widget_get_method(), setting_cfg['default'])
+        self.assertEqual(setting_widget.widget_value(), setting_cfg['default'])
 
         # set value
-        if setting_.widget_test_method is not False:
-            if setting_.widget_test_method is not None:
-                setting_.widget_test_method(setting_cfg['new_value'])
-            else:
-                setting_.widget_set_method(setting_cfg['new_value'])
-            # check setting has now new value
+        if setting_widget.widget_test(setting_cfg['new_value']) is not False:
             self.assertEqual(MySettings().value(name), setting_cfg['new_value'])
         else:
             # cannot test UI

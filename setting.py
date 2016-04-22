@@ -54,15 +54,6 @@ class Setting(QObject):
         self.project_read = project_read
         self.project_write = project_write
 
-        self._widget = None
-        self.widget_signal = None
-        self.widget_set_method = None
-        self.widget_get_method = None
-        # function to test UI
-        #   if None widget_set_method will be triggered
-        #   if False test won't be run
-        #   otherwise provide lambda function
-        self.widget_test_method = None
 
     def read_out(self, value, scope):
         """
@@ -88,11 +79,11 @@ class Setting(QObject):
         """
         return True
 
-    def set_widget(self, widget):
+    def config_widget(self, widget):
         """
         This method must be reimplemented in subclasses
         """
-        self._widget = None
+        return None
 
     def set_plugin_name(self, plugin_name):
         self.plugin_name = plugin_name
@@ -139,22 +130,5 @@ class Setting(QObject):
         else:
             QSettings().remove(self.global_name())
 
-    def widget(self):
-        return self._widget
 
-    def set_value_on_widget_update_signal(self):
-        if self._widget is None:
-            return
-        self.widget_signal.connect(self.set_value_from_widget)
 
-    def set_widget_from_value(self):
-        if self._widget is None:
-            return
-        setting_value = self.value()
-        self.widget_set_method(setting_value)
-
-    def set_value_from_widget(self, dummy=None):
-        if self._widget is None:
-            return
-        widget_value = self.widget_get_method()
-        self.set_value(widget_value)

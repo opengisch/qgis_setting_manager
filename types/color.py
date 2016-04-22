@@ -37,6 +37,7 @@ from qgis.core import QgsProject
 from qgis.gui import QgsColorButton, QgsColorButtonV2
 
 from ..setting import Setting
+from ..setting_widget import SettingWidget
 
 
 class Color(Setting):
@@ -65,18 +66,48 @@ class Color(Setting):
         if type(color) != QColor:
             raise NameError("Color setting %s must be a QColor." % self.name)
 
-    def set_widget(self, widget):
-        if type(widget) in ( QgsColorButton, QgsColorButtonV2 ):
-            self._widget = widget
+    def config_widget(self, widget):
+        if type(widget) in (QgsColorButton, QgsColorButtonV2):
+            return QgisColorWidget(self, widget, self.options)
         else:
-            txt = self.options.get("dialogTitle", "")
-            self._widget = QgsColorButtonV2(widget, txt)
-        if type(widget) == QgsColorButton:
-            self._widget.setColorDialogOptions(QColorDialog.ShowAlphaChannel)
+            return StandardColorWidget(self, widget, self.options)
+
+
+class QgisColorWidget(SettingWidget):
+    def __init__(self, setting, widget, options):
+        SettingWidget.__init__(self, setting, widget, options)
+
+        if type(self.widget) == QgsColorButton:
+            self.widget.setColorDialogOptions(QColorDialog.ShowAlphaChannel)
         else:
-            self._widget.setAllowAlpha(self.options.get("allowAlpha", False))
-        self.widget_signal = self._widget.colorChanged
-        self.widget_set_method = self._widget.setColor
-        self.widget_get_method = self._widget.color
+            self.widget.setAllowAlpha(self.options.get("allowAlpha", False))
+
+    def set_widget_value(self, value):
+        self.widget.setColor(value)
+
+    def widget_value(self):
+        return self.widget.color()
+
+    def set_value_on_widget_update_signal(self):
+        self.widget.colorChanged.connect(self.set_value_from_widget)
+
+
+class StandardColorWidget(SettingWidget):
+    def __init__(self, setting, widget, options):
+        txt = options.get("dialogTitle", "")
+        color_widget = QgsColorButtonV2(widget, txt)
+
+        SettingWidget.__init__(self, setting, color_widget, options)
+        self.widget.setAllowAlpha(self.options.get("allowAlpha", False))
+
+    def set_widget_value(self, value):
+        self.widget.setColor(value)
+
+    def widget_value(self):
+        return self.widget.color()
+
+    def set_value_on_widget_update_signal(self):
+        self.widget.colorChanged.connect(self.set_value_from_widget)
+
 
 

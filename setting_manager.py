@@ -70,25 +70,6 @@ class SettingManager:
             raise NameError('{} setting does not exist'.format(name))
         return self.__settings[name]
 
-    def set_widget(self, setting_name, widget):
-        if setting_name not in self.__settings:
-            raise NameError('{} setting does not exist'.format(setting_name))
-        self.__settings[setting_name].set_widget(widget)
-
-    def set_value_on_widget_update_signal(self, setting_name):
-        if setting_name not in self.__settings:
-            raise NameError('{} setting does not exist'.format(setting_name))
-        self.__settings[setting_name].set_value_on_widget_update_signal()
-
-    def set_value_from_widget(self, setting_name):
-        if setting_name not in self.__settings:
-            raise NameError('{} setting does not exist'.format(setting_name))
-        self.__settings[setting_name].set_value_from_widget()
-
-    def set_widget_from_value(self, setting_name):
-        if setting_name not in self.__settings:
-            raise NameError('{} setting does not exist'.format(setting_name))
-        self.__settings[setting_name].set_widget_from_value()
 
     ##########################################
     #                                        #
