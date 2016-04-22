@@ -24,10 +24,9 @@
 #---------------------------------------------------------------------
 
 import qgis
-from qgis.testing import start_app
+from qgis.testing import start_app, unittest
 
 import nose2
-from nose2.compat import unittest
 from my_settings import MySettings
 from my_settings_dialog import MySettingsDialog
 

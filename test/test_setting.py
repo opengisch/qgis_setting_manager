@@ -23,8 +23,10 @@
 #
 # ---------------------------------------------------------------------
 
+import qgis
+from qgis.testing import unittest
+
 import nose2
-from nose2.compat import unittest
 
 from my_settings import MySettings
 
