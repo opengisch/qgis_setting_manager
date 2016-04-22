@@ -23,17 +23,18 @@
 #
 # ---------------------------------------------------------------------
 
-
-import unittest
 import nose2
-from nose_parameterized import parameterized
+from nose2.compat import unittest
 
 from my_settings import MySettings
 
 
 class TestSetting(unittest.TestCase):
-    @parameterized.expand([ (s_name) for s_name in MySettings().settings_cfg.keys() ])
-    def test_setting(self, name):
+    def test_settings(self):
+        for s_name in MySettings().settings_cfg.keys():
+            yield self.check_setting, s_name
+
+    def check_setting(self, name):
         setting_ = MySettings().settings_cfg[name]
 
         # clean just in case
