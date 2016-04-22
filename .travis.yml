@@ -16,6 +16,6 @@ install:
 script:
   - export PATH=/usr/bin:$PATH
   - curl -L https://github.com/qgis/QGIS/archive/master.tar.gz | tar -xzC /tmp
-  - sudo cp -R /tmp/QGIS-master/python/testing /usr/lib/python2.7/dist-packages/qgis/testing
+  - sudo cp -r /tmp/QGIS-master/python/testing /usr/lib/python2.7/dist-packages/qgis/testing
   - sudo cp -r /tmp/QGIS-master/python/PyQt/PyQt4 /usr/lib/python2.7/dist-packages/PyQt
   - xvfb-run nose2
