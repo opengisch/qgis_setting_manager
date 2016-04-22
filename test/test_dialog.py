@@ -23,14 +23,11 @@
 #
 #---------------------------------------------------------------------
 
-import unittest
+import qgis
+from qgis.testing import start_app
+
 import nose2
-from nose_parameterized import parameterized
-try:
-    from qgis.testing import start_app
-except:
-    from qgis_testing import start_app
-from PyQt4.QtTest import QTest
+from nose2.compat import unittest
 from my_settings import MySettings
 from my_settings_dialog import MySettingsDialog
 
@@ -42,11 +39,11 @@ from my_settings_dialog import MySettingsDialog
 
 
 def params(settings):
-    param = []
+    params = []
     for s_name, setting_ in settings.iteritems():
         for widget_class in setting_['widgets']:
-            param.append(('{}_{}'.format(s_name, widget_class.__name__), s_name, widget_class))
-    return param
+            params.append(('{}_{}'.format(s_name, widget_class.__name__), s_name, widget_class))
+    return params
 
 
 class TestDialog(unittest.TestCase):
@@ -54,8 +51,11 @@ class TestDialog(unittest.TestCase):
     def setUpClass(cls):
         start_app()
 
-    @parameterized.expand(params(MySettings().settings_cfg))
-    def test_dialog(self, test_name, name, widget_class):
+
+    def test_dialog(self):
+        for param in params(MySettings().settings_cfg):
+            yield self.check_dialog, param[0], param[1], param[2]
+    def check_dialog(self, test_name, name, widget_class):
         # get setting config
         setting_cfg = MySettings().settings_cfg[name]
 
