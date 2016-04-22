@@ -8,7 +8,7 @@ before_install:
 
 install:
   - sudo apt-get install python-software-properties
-  - sudo add-apt-repository http://qgis.org/debian
+  - sudo add-apt-repository http://qgis.org/debian-nightly
   - sudo apt-get update
   - sudo apt-get install -y --force-yes qgis python-qgis python-qt4
   - sudo pip install nose2
