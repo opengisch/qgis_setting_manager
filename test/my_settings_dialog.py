@@ -25,12 +25,12 @@
 
 from PyQt4.QtGui import QDialog, QDoubleSpinBox, QComboBox, QListWidget
 from qgis.gui import QgsCollapsibleGroupBox
-from ..setting_dialog import SettingDialog
+from ..setting_dialog import SettingDialog, UpdateMode
 from my_settings import MySettings
 
 
 class MySettingsDialog(QDialog, SettingDialog):
-    def __init__(self, setting_name, widget_class, set_values_on_dialog_accepted, set_value_on_widget_update):
+    def __init__(self, setting_name, widget_class, mode=UpdateMode.DialogAccept):
         QDialog.__init__(self)
 
         self.settings = MySettings()
@@ -52,4 +52,4 @@ class MySettingsDialog(QDialog, SettingDialog):
             w.addItems(('abc', 'def', 'ghi', 'random', 'qwe', 'rtz', 'uio'))
 
         # init SettingDialog
-        SettingDialog.__init__(self, self.settings, set_values_on_dialog_accepted, set_value_on_widget_update)
+        SettingDialog.__init__(self, self.settings, mode)

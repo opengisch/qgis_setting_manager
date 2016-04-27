@@ -31,9 +31,27 @@ from PyQt4.QtGui import QDialog, QWidget, QButtonGroup
 from setting_manager import Debug
 
 
+# TODO python3 use enum instead
+class UpdateMode(object):
+    DialogAccept = 1
+    WidgetUpdate = 2
+
+
 class SettingDialog:
-    def __init__(self, setting_manager, set_values_on_dialog_accepted=True, set_value_on_widget_update=False):
-        if isinstance(self, QDialog) and set_values_on_dialog_accepted:
+    # TODO Python 3 remove deprecated constructor (i.e. last argument)
+    def __init__(self, setting_manager, mode=UpdateMode.DialogAccept, set_value_on_widget_update=False ):
+
+        # backward compatibility for old api
+        if isinstance(mode, bool):
+            set_values_on_dialog_accepted = mode
+            if set_values_on_dialog_accepted == set_value_on_widget_update:
+                raise NameError('Setting dialog cannot set values both on dialog accept and widget update. '
+                            'Choose one or another.')
+            mode = UpdateMode.DialogAccept if set_values_on_dialog_accepted else UpdateMode.WidgetUpdate
+
+
+
+        if isinstance(self, QDialog) and mode == UpdateMode.DialogAccept:
             self.accepted.connect(self.accept_dialog)
 
         self.setting_manager = setting_manager
@@ -55,7 +73,7 @@ class SettingDialog:
                     # TODO
                     # setting_widget.widgetDestroyed.connect(self.widgetDestroyed)
 
-                    if set_value_on_widget_update:
+                    if mode == UpdateMode.WidgetUpdate:
                         setting_widget.connect_widget_auto_update()
 
                     self.__settings[setting_name] = setting_widget

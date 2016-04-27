@@ -27,6 +27,8 @@ import qgis
 from qgis.testing import start_app, unittest
 
 import nose2
+
+from ..setting_dialog import UpdateMode
 from my_settings import MySettings
 from my_settings_dialog import MySettingsDialog
 
@@ -62,7 +64,7 @@ class TestDialog(unittest.TestCase):
         MySettings().remove(name)
 
         # create dialog
-        self.dlg = MySettingsDialog(name, widget_class, True, False)
+        self.dlg = MySettingsDialog(name, widget_class, UpdateMode.DialogAccept)
         self.dlg.show()
 
         # control that the widget is detected
@@ -103,7 +105,7 @@ class TestDialog(unittest.TestCase):
         MySettings().remove(name)
 
         # test with direct update
-        self.dlg = MySettingsDialog(name, widget_class, False, True)
+        self.dlg = MySettingsDialog(name, widget_class, UpdateMode.WidgetUpdate)
         self.dlg.show()
 
         # get widget
