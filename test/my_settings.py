@@ -28,7 +28,6 @@ from qgis.gui import QgsCollapsibleGroupBox, QgsColorButton, QgsColorButtonV2
 
 from .. import *
 
-
 pluginName = "test_plugin"
 
 

@@ -29,7 +29,11 @@
 from PyQt4.QtCore import QObject, pyqtSignal, QSettings
 from qgis.core import QgsProject
 
-from scope import Scope
+
+# TODO python3 use enum instead
+class Scope(object):
+    Project = 1
+    Global = 2
 
 
 class Setting(QObject):
@@ -127,6 +131,3 @@ class Setting(QObject):
             QgsProject.instance().removeEntry(self.plugin_name, self.name)
         else:
             QSettings().remove(self.global_name())
-
-
-
