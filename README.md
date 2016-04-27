@@ -82,11 +82,13 @@ To control which setting has been associated to a widget, you can print `self.wi
 You can have a different behavior using `SettingDialog` parameters:
 
 ```python
-SettingDialog(settingManager, set_values_on_dialog_accepted=True, set_value_on_widget_update=False)
+SettingDialog(settingManager, mode=UpdateMode.DialogAccept)
 ```
 
-* `set_values_on_dialog_accepted`: if `True`, settings values are set when dialog is accepted;
-* `set_value_on_widget_update`: if `True`, settings are set as soon as the widgets is modified.
+`mode` can take the following values:
+
+* `UpdateMode.DialogAccept`: settings values are set when the dialog is accepted _(default)_;
+* `UpdateMode.WidgetUpdate`: settings are set as soon as the widget is modified.
 
 ### Check something before updating the settings
 
