@@ -5,10 +5,11 @@
 Easily manage the settings in your [QGIS](http://www.qgis.org) plugin.
 
 This module can:
+
 * manage **different types of settings** (bool, string, color, integer, double, stringlist)
-* **read and write settings** in QGIS application or in the QGIS project
-* automatically **set widgets from corresponding setting**
-* automatically **write settings from widgets of a dialog**
+* **read and write settings** both in QGIS application or in the QGIS project
+* automatically **set widgets** of a dialog according to their **corresponding setting**
+* automatically **write settings from their corresponding widgets**
 
 
 ## The main setting class
