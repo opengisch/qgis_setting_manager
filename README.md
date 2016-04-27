@@ -112,13 +112,14 @@ The widgets are automatically detected by the manager. If the type of widget is 
 
 **Strings**
 
-* QLineEdit
-* QComboBox (setting can be defined as the current item text or [data](http://qt-project.org/doc/qt-4.8/qcombobox.html#itemData): specify option `comboMode` as `data` (default) or `text`)
-* QButtonGroup (the setting is set as the checked widget text in the button group)
+* `QLineEdit`
+* `QComboBox` (setting can be defined as the current item text or [data](http://qt-project.org/doc/qt-4.8/qcombobox.html#itemData): specify option `comboMode` as `data` (default) or `text`)
+* `QButtonGroup` (the setting is set as the checked widget text in the button group)
+* `QgsMapLayerComboBox` uses layer ID for the setting value
 
 **Booleans**
 
-* QCheckBox
+* `QCheckBox`
 * Any checkable widget (groupbox, etc.)
 
 **Colors**
@@ -127,20 +128,20 @@ The widgets are automatically detected by the manager. If the type of widget is 
 
 **Integers**
 
-* QLineEdit
-* QSpinBox
-* QSlider
-* QComboBox (setting is set as the combo box index)
+* `QLineEdit`
+* `QSpinBox`
+* `QSlider`
+* `QComboBox` (setting is set as the combo box index)
 
 **Doubles**
 
-* QLineEdit
-* QDoubleSpinBox
+* `QLineEdit`
+* `QDoubleSpinBox`
 
 **Stringlist**
 
-* QListWidget (checks items having their _text_ in the list)
-* QButtonGroup (checks items having their _name_ in the list)
+* `QListWidget` (checks items having their _text_ in the list)
+* `QButtonGroup` (checks items having their _name_ in the list)
 
 New types of widget are easily added, if one is missing, do not hesitate to [ask](https://github.com/3nids/qgissettingmanager/issues)!
 
