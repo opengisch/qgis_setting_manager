@@ -56,7 +56,7 @@ class SettingDialog:
                     # setting_widget.widgetDestroyed.connect(self.widgetDestroyed)
 
                     if set_value_on_widget_update:
-                        setting_widget.set_value_on_widget_update_signal()
+                        setting_widget.connect_widget_auto_update()
 
                     self.__settings[setting_name] = setting_widget
                     break

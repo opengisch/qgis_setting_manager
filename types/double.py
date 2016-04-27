@@ -53,7 +53,8 @@ class Double(Setting):
 
 class LineEditDoubleWidget(SettingWidget):
     def __init__(self, setting, widget, options):
-        SettingWidget.__init__(self, setting, widget, options)
+        signal = widget.textChanged
+        SettingWidget.__init__(self, setting, widget, options, signal)
 
     def set_widget_value(self, value):
         self.widget.setText('{}'.format(value))
@@ -61,13 +62,11 @@ class LineEditDoubleWidget(SettingWidget):
     def widget_value(self):
         return float(self.widget.text())
 
-    def set_value_on_widget_update_signal(self):
-        self.widget.textChanged.connect(self.set_value_from_widget)
-
 
 class DoubleSpinBoxDoubleWidget(SettingWidget):
     def __init__(self, setting, widget, options):
-        SettingWidget.__init__(self, setting, widget, options)
+        signal = widget.valueChanged
+        SettingWidget.__init__(self, setting, widget, options, signal)
 
     def set_widget_value(self, value):
         self.widget.setValue(value)
@@ -75,7 +74,5 @@ class DoubleSpinBoxDoubleWidget(SettingWidget):
     def widget_value(self):
         return self.widget.value()
 
-    def set_value_on_widget_update_signal(self):
-        self.widget.valueChanged.connect(self.set_value_from_widget)
 
 

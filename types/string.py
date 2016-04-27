@@ -63,7 +63,8 @@ class String(Setting):
 
 class LineEditStringWidget(SettingWidget):
     def __init__(self, setting, widget, options):
-        SettingWidget.__init__(self, setting, widget, options)
+        signal = widget.textChanged
+        SettingWidget.__init__(self, setting, widget, options, signal)
 
     def set_widget_value(self, value):
         self.widget.setText(value)
@@ -71,13 +72,11 @@ class LineEditStringWidget(SettingWidget):
     def widget_value(self):
         return self.widget.text()
 
-    def set_value_on_widget_update_signal(self):
-        self.widget.textChanged.connect(self.set_value_from_widget)
-
 
 class ButtonGroupStringWidget(SettingWidget):
     def __init__(self, setting, widget, options):
-        SettingWidget.__init__(self, setting, widget, options)
+        signal = widget.buttonClicked
+        SettingWidget.__init__(self, setting, widget, options, signal)
 
     def set_widget_value(self, value):
         for button in self.widget.buttons():
@@ -93,13 +92,11 @@ class ButtonGroupStringWidget(SettingWidget):
                 break
         return value
 
-    def set_value_on_widget_update_signal(self):
-        self.widget.buttonClicked.connect(self.set_value_from_widget)
-
 
 class ComboStringWidget(SettingWidget):
     def __init__(self, setting, widget, options):
-        SettingWidget.__init__(self, setting, widget, options)
+        signal = widget.currentIndexChanged
+        SettingWidget.__init__(self, setting, widget, options, signal)
 
     def set_widget_value(self, value):
         combo_mode = self.options.get("comboMode", "data")
@@ -108,7 +105,7 @@ class ComboStringWidget(SettingWidget):
         elif combo_mode == 'text':
             self.widget.setCurrentIndex(self.widget.findText(value))
         else:
-            raise NameError('invalid options for {}.comboMoe: {}'.format(self.setting.name, combo_mode))
+            raise NameError('invalid options for {}.comboMode: {}'.format(self.setting.name, combo_mode))
 
     def widget_value(self):
         combo_mode = self.options.get("comboMode", "data")
@@ -117,15 +114,13 @@ class ComboStringWidget(SettingWidget):
         elif combo_mode == 'text':
             return self.widget.currentText()
         else:
-            raise NameError('invalid options for {}.comboMoe: {}'.format(self.setting.name, combo_mode))
-
-    def set_value_on_widget_update_signal(self):
-        self.widget.currentIndexChanged.connect(self.set_value_from_widget)
+            raise NameError('invalid options for {}.comboMode: {}'.format(self.setting.name, combo_mode))
 
 
 class MapLayerComboStringWidget(SettingWidget):
     def __init__(self, setting, widget, options):
-        SettingWidget.__init__(self, setting, widget, options)
+        signal = widget.layerChanged
+        SettingWidget.__init__(self, setting, widget, options, signal)
 
     def set_widget_value(self, value):
         self.widget.setLayer(QgsMapLayerRegistry.instance().mapLayer(value))
@@ -133,8 +128,6 @@ class MapLayerComboStringWidget(SettingWidget):
     def widget_value(self):
         self.widget.currentLayer().id()
 
-    def set_value_on_widget_update_signal(self):
-        self.widget.layerChanged.connect(self.set_value_from_widget)
 
 
 

@@ -38,7 +38,7 @@ class Setting(QObject):
     def __init__(self, name, scope, default_value, object_type, project_read, project_write, options={}):
         QObject.__init__(self)
 
-        # TODO pyton3 check based on enum
+        # TODO python3 check based on enum
         if scope not in (Scope.Global, Scope.Project):
             raise NameError('Scope of setting {} is not valid: {}'.format(name, scope))
         self.check(default_value)
@@ -53,7 +53,6 @@ class Setting(QObject):
         self.options = options
         self.project_read = project_read
         self.project_write = project_write
-
 
     def read_out(self, value, scope):
         """
@@ -115,13 +114,12 @@ class Setting(QObject):
                                                                                 type=self.object_type)
                 else:
                     value = QSettings(self.plugin_name, self.plugin_name).value(self.name,
-                                                                                self.write_in(self.default_value,self.scope))
+                                                                                self.write_in(self.default_value, self.scope))
                 if self.read_out(value, self.scope) != self.default_value:
                     # rewrite the setting in new system
                     QSettings().setValue(self.global_name(), value)
         elif self.scope == Scope.Project:
             value = self.project_read(self.plugin_name, self.name, self.write_in(self.default_value, self.scope))[0]
-
         return self.read_out(value, self.scope)
 
     def reset_default(self):

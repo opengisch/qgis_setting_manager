@@ -59,7 +59,8 @@ class Integer(Setting):
 
 class LineEditIntegerWidget(SettingWidget):
     def __init__(self, setting, widget, options):
-        SettingWidget.__init__(self, setting, widget, options)
+        signal = widget.textChanged
+        SettingWidget.__init__(self, setting, widget, options, signal)
 
     def set_widget_value(self, value):
         self.widget.setText('{}'.format(value))
@@ -71,13 +72,12 @@ class LineEditIntegerWidget(SettingWidget):
             value = None
         return value
 
-    def set_value_on_widget_update_signal(self):
-        self.widget.textChanged.connect(self.set_value_from_widget)
 
 
 class SpinBoxIntegerWidget(SettingWidget):
     def __init__(self, setting, widget, options):
-        SettingWidget.__init__(self, setting, widget, options)
+        signal = widget.valueChanged
+        SettingWidget.__init__(self, setting, widget, options, signal)
 
     def set_widget_value(self, value):
         self.widget.setValue(value)
@@ -85,22 +85,17 @@ class SpinBoxIntegerWidget(SettingWidget):
     def widget_value(self):
         return self.widget.value()
 
-    def set_value_on_widget_update_signal(self):
-        self.widget.valueChanged.connect(self.set_value_from_widget)
-
 
 class ComboBoxIntegerWidget(SettingWidget):
     def __init__(self, setting, widget, options):
-        SettingWidget.__init__(self, setting, widget, options)
+        signal = widget.currentIndexChanged
+        SettingWidget.__init__(self, setting, widget, options, signal)
 
     def set_widget_value(self, value):
         self.widget.setCurrentIndex(value)
 
     def widget_value(self):
         return self.widget.currentIndex()
-
-    def set_value_on_widget_update_signal(self):
-        self.widget.currentIndexChanged.connect(self.set_value_from_widget)
 
 
 

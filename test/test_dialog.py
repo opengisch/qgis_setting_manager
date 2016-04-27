@@ -50,11 +50,11 @@ class TestDialog(unittest.TestCase):
     def setUpClass(cls):
         start_app()
 
-
-    def test_dialog(self):
+    def test_dialog_accept_update(self):
         for param in params(MySettings().settings_cfg):
-            yield self.check_dialog, param[0], param[1], param[2]
-    def check_dialog(self, test_name, name, widget_class):
+            yield self.check_dialog_accept_update, param[0], param[1], param[2]
+
+    def check_dialog_accept_update(self, test_name, name, widget_class):
         # get setting config
         setting_cfg = MySettings().settings_cfg[name]
 
@@ -91,8 +91,20 @@ class TestDialog(unittest.TestCase):
         # reset setting
         MySettings().remove(name)
 
-        # also test with direct update
+    def test_dialog_auto_update(self):
+        for param in params(MySettings().settings_cfg):
+            yield self.check_dialog_auto_update, param[0], param[1], param[2]
+
+    def check_dialog_auto_update(self, test_name, name, widget_class):
+        # get setting config
+        setting_cfg = MySettings().settings_cfg[name]
+
+        # this will reset to default with new call of MySettings within MySettingsDialog
+        MySettings().remove(name)
+
+        # test with direct update
         self.dlg = MySettingsDialog(name, widget_class, False, True)
+        self.dlg.show()
 
         # get widget
         setting_widget = self.dlg.setting_widget(name)

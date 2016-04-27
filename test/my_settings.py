@@ -41,7 +41,7 @@ class MySettings(SettingManager):
                          'double': {'class': Double, 'default': 0.12345, 'options': {}, 'new_value': 1.98765, 'widgets': (QDoubleSpinBox, QLineEdit)},
                          'integer': {'class': Integer, 'default': 1, 'options': {}, 'new_value': 2, 'widgets': (QLineEdit, QSpinBox, QSlider, QComboBox)},
                          'string': {'class': String, 'default': 'default_string', 'options': {'comboMode': 'text'}, 'new_value': 'new_string', 'widgets': (QLineEdit, QComboBox)},
-                         'stringlist': {'class': Stringlist, 'default': ['abc', 'def', 'ghi'], 'options': {}, 'new_value': ['qwe', 'rtz', 'uio'], 'widgets': [QListWidget]}}
+                         'stringlist': {'class': Stringlist, 'default': ['abc', 'def', 'ghi'], 'options': {}, 'new_value': ['qwe', 'rtz', 'uio'], 'widgets': []}}
 
 
         self.settings_cfg = {}

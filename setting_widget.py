@@ -26,25 +26,33 @@
 #
 #---------------------------------------------------------------------
 
-from PyQt4.QtCore import QObject, pyqtSignal
+from PyQt4.QtCore import pyqtSlot, QObject
 
 
 class SettingWidget(QObject):
-    # TODO
-    widgetDestroyed = pyqtSignal(str)
-
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget, options, signal):
         QObject.__init__(self)
 
         self.setting = setting
         self.widget = widget
         self.options = options
+        self.signal = signal
+        self.connected = False
 
-    def set_value_on_widget_update_signal(self):
+    def connect_widget_auto_update(self):
         """
-        Should be reimplemented in each subclass
-        This should connect the proper signal of the widget to self.set_value_from_widget
+        This connects the proper signal of the widget to self.set_value_from_widget
         """
+        self.signal.connect(self.set_value_from_widget)
+        self.connected = True
+
+    def disconnect_widget_auto_update(self):
+        """
+        This disconnects the proper signal of the widget from self.set_value_from_widget
+        """
+        if self.connected:
+            self.signal.disconnect(self.set_value_from_widget)
+            self.connected = False
 
     def set_widget_value(self, value):
         """
@@ -69,5 +77,6 @@ class SettingWidget(QObject):
     def set_widget_from_value(self):
         self.set_widget_value(self.setting.value())
 
+    @pyqtSlot()
     def set_value_from_widget(self):
         self.setting.set_value(self.widget_value())

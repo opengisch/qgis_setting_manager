@@ -26,7 +26,6 @@
 #
 #---------------------------------------------------------------------
 
-
 from scope import Scope
 
 # to print debug info
@@ -35,7 +34,8 @@ Debug = False
 # TODO remove this import used in deprecated method
 from types import *
 
-class SettingManager:
+
+class SettingManager():
     def __init__(self, plugin_name):
         self.plugin_name = plugin_name
         self.__settings = {}

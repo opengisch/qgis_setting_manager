@@ -75,7 +75,8 @@ class Color(Setting):
 
 class QgisColorWidget(SettingWidget):
     def __init__(self, setting, widget, options):
-        SettingWidget.__init__(self, setting, widget, options)
+        signal = widget.colorChanged
+        SettingWidget.__init__(self, setting, widget, options, signal)
 
         if type(self.widget) == QgsColorButton:
             self.widget.setColorDialogOptions(QColorDialog.ShowAlphaChannel)
@@ -88,16 +89,14 @@ class QgisColorWidget(SettingWidget):
     def widget_value(self):
         return self.widget.color()
 
-    def set_value_on_widget_update_signal(self):
-        self.widget.colorChanged.connect(self.set_value_from_widget)
-
 
 class StandardColorWidget(SettingWidget):
     def __init__(self, setting, widget, options):
         txt = options.get("dialogTitle", "")
         color_widget = QgsColorButtonV2(widget, txt)
+        signal = color_widget.colorChanged
 
-        SettingWidget.__init__(self, setting, color_widget, options)
+        SettingWidget.__init__(self, setting, color_widget, options, signal)
         self.widget.setAllowAlpha(self.options.get("allowAlpha", False))
 
     def set_widget_value(self, value):
@@ -106,8 +105,7 @@ class StandardColorWidget(SettingWidget):
     def widget_value(self):
         return self.widget.color()
 
-    def set_value_on_widget_update_signal(self):
-        self.widget.colorChanged.connect(self.set_value_from_widget)
+
 
 
 

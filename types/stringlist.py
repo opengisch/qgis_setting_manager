@@ -53,18 +53,19 @@ class Stringlist(Setting):
 
     def config_widget(self, widget):
         if type(widget) == QListWidget:
-            return ListStingListWidget(self, widget, self.options)
+            return ListStringListWidget(self, widget, self.options)
         elif type(widget) == QButtonGroup:
-            return ButtonGroupStingListWidget(self, widget, self.options)
+            return ButtonGroupStringListWidget(self, widget, self.options)
         else:
             print type(widget)
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
 
 
-class ListStingListWidget(SettingWidget):
+class ListStringListWidget(SettingWidget):
     def __init__(self, setting, widget, options):
-        SettingWidget.__init__(self, setting, widget, options)
+        signal = widget.itemChanged
+        SettingWidget.__init__(self, setting, widget, options, signal)
 
     def set_widget_value(self, value):
         for i in range(self.widget.count()):
@@ -82,13 +83,11 @@ class ListStingListWidget(SettingWidget):
                 value.append(item.text())
         return value
 
-    def set_value_on_widget_update_signal(self):
-        self.widget.itemChanged.connect(self.set_value_from_widget)
 
-
-class ButtonGroupStingListWidget(SettingWidget):
+class ButtonGroupStringListWidget(SettingWidget):
     def __init__(self, setting, widget, options):
-        SettingWidget.__init__(self, setting, widget, options)
+        signal = widget.buttonClicked
+        SettingWidget.__init__(self, setting, widget, options, signal)
 
     def set_widget_value(self, value):
         for item in self.widget.buttons():
@@ -101,8 +100,7 @@ class ButtonGroupStingListWidget(SettingWidget):
                 value.append(item.objectName())
         return value
 
-    def set_value_on_widget_update_signal(self):
-        self.widget.buttonClicked.connect(self.set_value_from_widget)
+
 
 
 
