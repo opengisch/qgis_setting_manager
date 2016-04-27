@@ -71,11 +71,19 @@ class SettingWidget(QObject):
         Method to test the UI, might be reimplemented in sub-class
         Returns True if the test can be run, False otherwise
         """
+        # this will skip the disconnect/connect
+        # so it should trigger the set_value_from_widget when in auto update mode
         self.set_widget_value(value)
         return True
 
     def set_widget_from_value(self):
+        reconnect = False
+        if self.connected:
+            reconnect = True
+            self.disconnect_widget_auto_update()
         self.set_widget_value(self.setting.value())
+        if reconnect:
+            self.connect_widget_auto_update()
 
     @pyqtSlot()
     def set_value_from_widget(self):
