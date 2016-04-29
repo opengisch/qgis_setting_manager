@@ -30,6 +30,10 @@ from PyQt4.QtCore import QObject, pyqtSignal, QSettings
 from qgis.core import QgsProject
 
 
+# Regex to replace old class
+# (self.addSetting\(")(.*)(",\s*")(.*)(",\s*")(.*)(",\s*)(.*)\)
+# self.add_setting( $4( '$2', Scope.$6, $8) )
+
 # TODO python3 use enum instead
 class Scope(object):
     Project = 1

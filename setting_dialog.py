@@ -33,8 +33,9 @@ from setting_manager import Debug
 
 # TODO python3 use enum instead
 class UpdateMode(object):
-    DialogAccept = 1
-    WidgetUpdate = 2
+    NoUpdate = 1
+    DialogAccept = 2
+    WidgetUpdate = 3
 
 
 class SettingDialog:
@@ -44,12 +45,15 @@ class SettingDialog:
         # backward compatibility for old api
         if isinstance(mode, bool):
             set_values_on_dialog_accepted = mode
-            if set_values_on_dialog_accepted == set_value_on_widget_update:
+            if not set_values_on_dialog_accepted and not set_value_on_widget_update:
+                mode = UpdateMode.NoUpdate
+            elif set_values_on_dialog_accepted:
+                mode = UpdateMode.DialogAccept
+            elif set_value_on_widget_update:
+                mode = UpdateMode.WidgetUpdate
+            else:
                 raise NameError('Setting dialog cannot set values both on dialog accept and widget update. '
-                            'Choose one or another.')
-            mode = UpdateMode.DialogAccept if set_values_on_dialog_accepted else UpdateMode.WidgetUpdate
-
-
+                                'Choose one or another.')
 
         if isinstance(self, QDialog) and mode == UpdateMode.DialogAccept:
             self.accepted.connect(self.accept_dialog)
