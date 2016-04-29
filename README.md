@@ -88,6 +88,7 @@ SettingDialog(settingManager, mode=UpdateMode.DialogAccept)
 
 `mode` can take the following values:
 
+* `UpdateMode.NoUpdate`: settings values won't be updated;
 * `UpdateMode.DialogAccept`: settings values are set when the dialog is accepted _(default)_;
 * `UpdateMode.WidgetUpdate`: settings are set as soon as the widget is modified.
 
