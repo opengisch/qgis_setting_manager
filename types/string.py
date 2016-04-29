@@ -54,7 +54,7 @@ class String(Setting):
             return ButtonGroupStringWidget(self, widget, self.options)
         elif type(widget) == QComboBox:
             return ComboStringWidget(self, widget, self.options)
-        elif type(widget) in QgsMapLayerComboBox:
+        elif type(widget) == QgsMapLayerComboBox:
             return MapLayerComboStringWidget(self, widget, self.options)
         else:
             raise NameError("SettingManager does not handle %s widgets for strings at the moment (setting: %s)" %
