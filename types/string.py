@@ -32,7 +32,7 @@
 
 from PyQt4.QtGui import QLineEdit, QButtonGroup, QComboBox
 from qgis.core import QgsProject, QgsMapLayerRegistry
-from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox
+from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox, QgsFieldModel
 
 from ..setting import Setting
 from ..setting_widget import SettingWidget
@@ -56,6 +56,8 @@ class String(Setting):
             return ComboStringWidget(self, widget, self.options)
         elif type(widget) == QgsMapLayerComboBox:
             return MapLayerComboStringWidget(self, widget, self.options)
+        elif type(widget) == QgsFieldComboBox:
+            return FieldComboStringWidget(self, widget, self.options)
         else:
             raise NameError("SettingManager does not handle %s widgets for strings at the moment (setting: %s)" %
                 (type(widget), self.name))
@@ -128,6 +130,17 @@ class MapLayerComboStringWidget(SettingWidget):
     def widget_value(self):
         self.widget.currentLayer().id()
 
+
+class FieldComboStringWidget(SettingWidget):
+    def __init__(self, setting, widget, options):
+        signal = widget.currentIndexChanged
+        SettingWidget.__init__(self, setting, widget, options, signal)
+
+    def set_widget_value(self, value):
+        self.widget.setCurrentIndex(self.widget.findData(value, QgsFieldModel.FieldNameRole))
+
+    def widget_value(self):
+        return self.widget.itemData(self.widget.currentIndex(), QgsFieldModel.FieldNameRole) or ""
 
 
 
