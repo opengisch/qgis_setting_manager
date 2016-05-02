@@ -32,7 +32,7 @@
 
 from PyQt4.QtGui import QLineEdit, QButtonGroup, QComboBox
 from qgis.core import QgsProject, QgsMapLayerRegistry
-from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox, QgsFieldModel
+from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox
 
 from ..setting import Setting
 from ..setting_widget import SettingWidget
@@ -128,7 +128,11 @@ class MapLayerComboStringWidget(SettingWidget):
         self.widget.setLayer(QgsMapLayerRegistry.instance().mapLayer(value))
 
     def widget_value(self):
-        self.widget.currentLayer().id()
+        layer = self.widget.currentLayer()
+        if layer is not None:
+            return layer.id()
+        else:
+            return ""
 
 
 class FieldComboStringWidget(SettingWidget):
@@ -137,10 +141,10 @@ class FieldComboStringWidget(SettingWidget):
         SettingWidget.__init__(self, setting, widget, options, signal)
 
     def set_widget_value(self, value):
-        self.widget.setCurrentIndex(self.widget.findData(value, QgsFieldModel.FieldNameRole))
+        self.widget.setField(value)
 
     def widget_value(self):
-        return self.widget.itemData(self.widget.currentIndex(), QgsFieldModel.FieldNameRole) or ""
+        return self.widget.currentField()
 
 
 
