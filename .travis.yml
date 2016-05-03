@@ -7,8 +7,8 @@ before_install:
   - sudo apt-get -qq -y update
 
 env:
-  - QGIS_REPO=http://qgis.org/debian-nightly QGIS_BRANCH=master
-  - QGIS_REPO=http://qgis.org/debian-nightly-release QGIS_BRANCH=release-2_14
+  - QGIS_REPO=http://qgis.org/debian-nightly
+  - QGIS_REPO=http://qgis.org/debian-nightly-release
 
 install:
   - sudo apt-get install python-software-properties
