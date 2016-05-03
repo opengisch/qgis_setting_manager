@@ -8,7 +8,7 @@ before_install:
 
 env:
   - QGIS_REPO=http://qgis.org/debian-nightly QGIS_BRANCH=master
-  - QGIS_REPO=http://qgis.org/debian QGIS_BRANCH=release-2_14
+  - QGIS_REPO=http://qgis.org/debian-nightly-release QGIS_BRANCH=release-2_14
 
 install:
   - sudo apt-get install python-software-properties
@@ -19,7 +19,4 @@ install:
 
 script:
   - export PATH=/usr/bin:$PATH
-  - curl -L https://github.com/qgis/QGIS/archive/${QGIS_BRANCH}.tar.gz | tar -xzC /tmp
-  - sudo cp -r /tmp/QGIS-${QGIS_BRANCH}/python/PyQt/PyQt4 /usr/lib/python2.7/dist-packages/PyQt
-  - test "${QGIS_BRANCH}" = "release-2_14" && sudo cp -r /tmp/QGIS-${QGIS_BRANCH}/python/testing /usr/lib/python2.7/dist-packages/qgis/testing
   - xvfb-run nose2
