@@ -69,7 +69,7 @@ class DoubleSpinBoxDoubleWidget(SettingWidget):
         SettingWidget.__init__(self, setting, widget, options, signal)
 
     def set_widget_value(self, value):
-        self.widget.setValue(value)
+        self.widget.set_value(value)
 
     def widget_value(self):
         return self.widget.value()

@@ -46,7 +46,7 @@ import MySettings
 self.settings = MySettings()
 ```
 
-The settings are easily accessed using the `value` and `setValue` methods:
+The settings are easily accessed using the `value` and `set_value` methods:
 
 ```python
 myVariable = self.settings.value("myVariable")
