@@ -27,6 +27,7 @@
 #---------------------------------------------------------------------
 
 from .setting import Scope
+import inspect
 
 # to print debug info
 Debug = False
@@ -76,8 +77,11 @@ class SettingManager():
     ##########################################
     # deprecated
     def addSetting(self, name, setting_type, tscope, default_value, options={}):
+        curframe = inspect.currentframe()
+        calframe = inspect.getouterframes(curframe, 2)
         print("qgissettingmanager:: calling addSetting with these chain of argument is deprecated."
               " Consider using add_setting.")
+        print("caller: %s line %u in %s" % (calframe[1][3], calframe[1][2], calframe[1][1]))
         if name in self.__settings is not None:
             raise NameError("%s already exist in settings." % name)
         if setting_type.lower() not in ("string", "double", "integer", "bool", "color", "stringlist"):
