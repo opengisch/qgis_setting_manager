@@ -29,8 +29,8 @@ from qgis.testing import start_app, unittest
 import nose2
 
 from ..setting_dialog import UpdateMode
-from my_settings import MySettings
-from my_settings_dialog import MySettingsDialog
+from .my_settings import MySettings
+from .my_settings_dialog import MySettingsDialog
 
 
 
@@ -41,7 +41,7 @@ from my_settings_dialog import MySettingsDialog
 
 def params(settings):
     params = []
-    for s_name, setting_ in settings.iteritems():
+    for s_name, setting_ in settings.items():
         for widget_class in setting_['widgets']:
             params.append(('{}_{}'.format(s_name, widget_class.__name__), s_name, widget_class))
     return params

@@ -28,7 +28,7 @@ from qgis.testing import unittest
 
 import nose2
 
-from my_settings import MySettings
+from .my_settings import MySettings
 
 
 class TestSetting(unittest.TestCase):

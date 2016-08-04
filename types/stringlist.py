@@ -27,8 +27,8 @@
 #---------------------------------------------------------------------
 
 
-from PyQt4.QtCore import Qt
-from PyQt4.QtGui import QListWidget, QButtonGroup
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QListWidget, QButtonGroup
 from qgis.core import QgsProject
 
 from ..setting import Setting
@@ -57,7 +57,7 @@ class Stringlist(Setting):
         elif type(widget) == QButtonGroup:
             return ButtonGroupStringListWidget(self, widget, self.options)
         else:
-            print type(widget)
+            print(type(widget))
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
 

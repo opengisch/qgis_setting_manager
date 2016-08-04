@@ -32,7 +32,8 @@
 # alpha: use or not alpha channel
 
 
-from PyQt4.QtGui import QColor, QColorDialog
+from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QColorDialog
 from qgis.core import QgsProject
 from qgis.gui import QgsColorButton, QgsColorButtonV2
 

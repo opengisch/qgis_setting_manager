@@ -23,7 +23,8 @@
 #
 #---------------------------------------------------------------------
 
-from PyQt4.QtGui import QColor, QCheckBox, QLabel, QPushButton, QDoubleSpinBox, QLineEdit, QSpinBox, QSlider, QComboBox, QListWidget
+from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QCheckBox, QLabel, QPushButton, QDoubleSpinBox, QLineEdit, QSpinBox, QSlider, QComboBox, QListWidget
 from qgis.gui import QgsCollapsibleGroupBox, QgsColorButton, QgsColorButtonV2
 
 from .. import *
@@ -45,8 +46,8 @@ class MySettings(SettingManager):
 
         self.settings_cfg = {}
         scopes = {'project': Scope.Project, 'global': Scope.Global}
-        for s_name, setting_ in settings_root.iteritems():
-            for scope_str, scope_val in scopes.iteritems():
+        for s_name, setting_ in settings_root.items():
+            for scope_str, scope_val in scopes.items():
                 # TODO python 3 use enum
                 setting_name = '{}_{}'.format(s_name, scope_str)
                 self.settings_cfg[setting_name] = setting_

@@ -30,7 +30,7 @@
 # options:
 # comboMode: can be data or text. It defines if setting is found directly in combobox text or rather in the userData.
 
-from PyQt4.QtGui import QLineEdit, QButtonGroup, QComboBox
+from PyQt5.QtWidgets import QLineEdit, QButtonGroup, QComboBox
 from qgis.core import QgsProject, QgsMapLayerRegistry
 from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox
 
