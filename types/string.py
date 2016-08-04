@@ -43,7 +43,7 @@ class String(Setting):
         Setting.__init__(self, name, scope, default_value, str, QgsProject.instance().readEntry, QgsProject.instance().writeEntry, options)
 
     def check(self, value):
-        if type(value) != str and type(value) != unicode:
+        if type(value) != str:
             print(type(value))
             raise NameError('{}:: Invalid value for setting {}: {}. It must be a string.'.format(self.plugin_name, self.name, value))
 
