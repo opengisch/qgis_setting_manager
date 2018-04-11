@@ -28,14 +28,13 @@
 
 from PyQt5.QtCore import QObject, pyqtSignal, QSettings
 from qgis.core import QgsProject
-
+from enum import Enum
 
 # Regex to replace old class
 # (self.addSetting\(")(.*)(",\s*")(.*)(",\s*")(.*)(",\s*)(.*)\)
 # self.add_setting( $4( '$2', Scope.$6, $8) )
 
-# TODO python3 use enum instead
-class Scope(object):
+class Scope(Enum):
     Project = 1
     Global = 2
 
@@ -46,8 +45,7 @@ class Setting(QObject):
     def __init__(self, name, scope, default_value, object_type, project_read, project_write, options={}):
         QObject.__init__(self)
 
-        # TODO python3 check based on enum
-        if scope not in (Scope.Global, Scope.Project):
+        if not isinstance(scope, Scope):
             raise NameError('Scope of setting {} is not valid: {}'.format(name, scope))
         self.check(default_value)
 
