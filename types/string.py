@@ -31,8 +31,8 @@
 # comboMode: can be data or text. It defines if setting is found directly in combobox text or rather in the userData.
 
 from PyQt5.QtWidgets import QLineEdit, QButtonGroup, QComboBox
-from qgis.core import QgsProject, QgsMapLayerRegistry
-from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox
+from qgis.core import QgsProject
+from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox, QgsFileWidget
 
 from ..setting import Setting
 from ..setting_widget import SettingWidget
@@ -58,6 +58,8 @@ class String(Setting):
             return MapLayerComboStringWidget(self, widget, self.options)
         elif type(widget) == QgsFieldComboBox:
             return FieldComboStringWidget(self, widget, self.options)
+        elif type(widget) == QgsFileWidget:
+            return FileStringWidget(self, widget, self.options)
         else:
             raise NameError("SettingManager does not handle %s widgets for strings at the moment (setting: %s)" %
                 (type(widget), self.name))
@@ -125,7 +127,7 @@ class MapLayerComboStringWidget(SettingWidget):
         SettingWidget.__init__(self, setting, widget, options, signal)
 
     def set_widget_value(self, value):
-        self.widget.setLayer(QgsMapLayerRegistry.instance().mapLayer(value))
+        self.widget.setLayer(QgsProject.instance().mapLayer(value))
 
     def widget_value(self):
         layer = self.widget.currentLayer()
@@ -147,9 +149,13 @@ class FieldComboStringWidget(SettingWidget):
         return self.widget.currentField()
 
 
+class FileStringWidget(SettingWidget):
+    def __init__(self, setting, widget, options):
+        signal = widget.fileChanged
+        SettingWidget.__init__(self, setting, widget, options, signal)
 
+    def set_widget_value(self, value):
+        self.widget.setFilePath(value)
 
-
-
-
-
+    def widget_value(self):
+        return self.widget.filePath()

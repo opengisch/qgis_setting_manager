@@ -24,7 +24,7 @@ class MySettings(SettingManager):
         SettingManager.__init__(self, my_plugin_name)
         self.add_setting( Bool("my_setting", Scope.Global, True) )
 ```
-    
+
 You may add as many settings as you want using `add_setting` method:
 
 ```python
@@ -118,6 +118,7 @@ The widgets are automatically detected by the manager. If the type of widget is 
 * `QComboBox` (setting can be defined as the current item text or [data](http://qt-project.org/doc/qt-4.8/qcombobox.html#itemData): specify option `comboMode` as `data` (default) or `text`)
 * `QButtonGroup` (the setting is set as the checked widget text in the button group)
 * `QgsMapLayerComboBox` uses layer ID for the setting value
+* `QgsFileWidget`
 
 **Booleans**
 
