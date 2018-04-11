@@ -52,7 +52,7 @@ class Integer(Setting):
         elif type(widget) == QComboBox:
             return ComboBoxIntegerWidget(self, widget, self.options)
         else:
-            print(type(widget))
+            print((type(widget)))
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
 

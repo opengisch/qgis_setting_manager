@@ -57,7 +57,7 @@ class Stringlist(Setting):
         elif type(widget) == QButtonGroup:
             return ButtonGroupStringListWidget(self, widget, self.options)
         else:
-            print(type(widget))
+            print((type(widget)))
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
 

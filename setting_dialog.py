@@ -53,7 +53,7 @@ class SettingDialog:
                 widget = self.findChild(objectClass, setting_name)
                 if widget is not None:
                     if Debug:
-                        print("Widget found: {}".format(setting_name))
+                        print(("Widget found: {}".format(setting_name)))
 
                     # configure the widget
                     setting_widget = self.setting_manager.setting(setting_name).config_widget(widget)
@@ -85,7 +85,7 @@ class SettingDialog:
         """
         returns the list of widgets related to settings
         """
-        return self.__settings.keys()
+        return list(self.__settings.keys())
 
     def setting_widget(self, name):
         if name not in self.__settings:
@@ -97,10 +97,10 @@ class SettingDialog:
             self.set_values_from_widgets()
 
     def set_values_from_widgets(self):
-        for setting_widget in self.__settings.values():
+        for setting_widget in list(self.__settings.values()):
             setting_widget.set_value_from_widget()
 
     def set_widgets_from_values(self):
-        for setting_widget in self.__settings.values():
+        for setting_widget in list(self.__settings.values()):
             setting_widget.set_widget_from_value()
 

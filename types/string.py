@@ -44,7 +44,7 @@ class String(Setting):
 
     def check(self, value):
         if type(value) != str:
-            print(type(value))
+            print((type(value)))
             raise NameError('{}:: Invalid value for setting {}: {}. It must be a string.'.format(self.plugin_name, self.name, value))
 
     def config_widget(self, widget):

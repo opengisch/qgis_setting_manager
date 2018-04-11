@@ -33,7 +33,7 @@ import inspect
 Debug = False
 
 # TODO remove this import used in deprecated method
-from types import *
+from .types import *
 
 
 class SettingManager():
@@ -64,7 +64,7 @@ class SettingManager():
         del self.__settings[setting_name]
 
     def settings_list(self):
-        return self.__settings.keys()
+        return list(self.__settings.keys())
 
     def setting(self, name):
         if name not in self.__settings:

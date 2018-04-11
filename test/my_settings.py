@@ -46,8 +46,8 @@ class MySettings(SettingManager):
 
         self.settings_cfg = {}
         scopes = {'project': Scope.Project, 'global': Scope.Global}
-        for s_name, setting_ in settings_root.items():
-            for scope_str, scope_val in scopes.items():
+        for s_name, setting_ in list(settings_root.items()):
+            for scope_str, scope_val in list(scopes.items()):
                 # TODO python 3 use enum
                 setting_name = '{}_{}'.format(s_name, scope_str)
                 self.settings_cfg[setting_name] = setting_

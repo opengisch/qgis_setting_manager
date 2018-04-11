@@ -41,7 +41,7 @@ from .my_settings_dialog import MySettingsDialog
 
 def params(settings):
     params = []
-    for s_name, setting_ in settings.items():
+    for s_name, setting_ in list(settings.items()):
         for widget_class in setting_['widgets']:
             params.append(('{}_{}'.format(s_name, widget_class.__name__), s_name, widget_class))
     return params
@@ -119,7 +119,7 @@ class TestDialog(unittest.TestCase):
             self.assertEqual(MySettings().value(name), setting_cfg['new_value'])
         else:
             # cannot test UI
-            print('{} cannot be run for set_value_on_widget_update = True'.format(test_name))
+            print(('{} cannot be run for set_value_on_widget_update = True'.format(test_name)))
         self.dlg.close()
 
         # reset setting

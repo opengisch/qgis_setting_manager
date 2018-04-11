@@ -47,7 +47,7 @@ class Bool(Setting):
         elif hasattr(widget, "isCheckable") and widget.isCheckable():
             return CheckableBoolWidget(self, widget, self.options)
         else:
-            print(type(widget))
+            print((type(widget)))
             raise NameError("SettingManager does not handle %s widgets for booleans at the moment (setting: %s)" %
                             (type(widget), self.name))
 
