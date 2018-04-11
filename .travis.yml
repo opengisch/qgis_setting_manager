@@ -1,22 +1,12 @@
 language: python
 
-sudo: required
+sudo: false
 dist: trusty
 
-before_install:
-  - sudo apt-get -qq -y update
-
 env:
-  - QGIS_REPO=http://qgis.org/debian-nightly
-  - QGIS_REPO=http://qgis.org/debian-nightly-release
-
-install:
-  - sudo apt-get install python-software-properties
-  - sudo add-apt-repository ${QGIS_REPO}
-  - sudo apt-get update
-  - sudo apt-get install -y --force-yes qgis python-qgis xvfb
-  - sudo pip install nose2
+  - QGIS_DOCKER_TAG=master
+  - QGIS_DOCKER_TAG=3.0
 
 script:
-  - export PATH=/usr/bin:$PATH
-  - xvfb-run nose2
+  - docker pull "qgis/qgis:${QGIS_DOCKER_TAG}"
+  - docker run -v .:/root/qgissettingmanager "qgis/qgis:${QGIS_DOCKER_TAG}" nose2 -s /root/qgissettingmanager
