@@ -4,8 +4,8 @@ sudo: false
 dist: trusty
 
 env:
-  - QGIS_DOCKER_TAG=master
-  - QGIS_DOCKER_TAG=3.0
+  - QGIS_DOCKER_TAG=latest
+  - QGIS_DOCKER_TAG=release-3_0
 
 script:
   - docker pull "qgis/qgis:${QGIS_DOCKER_TAG}"
