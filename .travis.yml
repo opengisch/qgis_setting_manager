@@ -9,4 +9,4 @@ env:
 
 script:
   - docker pull "qgis/qgis:${QGIS_DOCKER_TAG}"
-  - docker run -v .:/root/qgissettingmanager "qgis/qgis:${QGIS_DOCKER_TAG}" nose2 -s /root/qgissettingmanager
+  - docker run -v $TRAVIS_BUILD_DIR/qgissettingmanager:/root/qgissettingmanager "qgis/qgis:${QGIS_DOCKER_TAG}" nose2 -s /root/qgissettingmanager
