@@ -70,10 +70,11 @@ Then, your dialog class shall subclass the `SettingDialog` class:
 ```python
 class MyDialog(QDialog, Ui_myDialog, SettingDialog):
     def __init__(self):
-        QDialog.__init__(self)
+        settings = MySettings()
+        super.__init__(self, setting_manager=settings)
         self.setupUi(self)
-        self.settings = MySettings()
-        SettingDialog.__init__(self, self.settings)
+        self.settings = settings
+        self.init_widgets()
 ```
 
 Hence, when the dialog is shown, all widgets which are named according to a  setting will be set to the corresponding value. On dialog acceptance, the settings will be set according to the value read from their widget.
@@ -85,7 +86,7 @@ To control which setting has been associated to a widget, you can print `self.wi
 You can have a different behavior using `SettingDialog` parameters:
 
 ```python
-SettingDialog(settingManager, mode=UpdateMode.DialogAccept)
+super.__init__(self, setting_manager=settings, mode=UpdateMode.WidgetUpdate)
 ```
 
 `mode` can take the following values:

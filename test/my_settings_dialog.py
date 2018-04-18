@@ -23,7 +23,7 @@
 #
 #---------------------------------------------------------------------
 
-from PyQt5.QtWidgets import QDialog, QDoubleSpinBox, QComboBox, QListWidget
+from PyQt5.QtWidgets import QDialog, QDoubleSpinBox, QComboBox, QListWidget, QGridLayout
 from qgis.gui import QgsCollapsibleGroupBox
 from ..setting_dialog import SettingDialog, UpdateMode
 from .my_settings import MySettings
@@ -31,7 +31,9 @@ from .my_settings import MySettings
 
 class MySettingsDialog(QDialog, SettingDialog):
     def __init__(self, setting_name, widget_class, mode=UpdateMode.DialogAccept):
-        QDialog.__init__(self)
+
+        settings = MySettings()
+        super(QDialog, self).__init__(setting_manager=settings, mode=mode)
 
         self.settings = MySettings()
         w = widget_class(self)
@@ -51,5 +53,4 @@ class MySettingsDialog(QDialog, SettingDialog):
         if setting_name.startswith('stringlist_') and widget_class == QListWidget:
             w.addItems(('abc', 'def', 'ghi', 'random', 'qwe', 'rtz', 'uio'))
 
-        # init SettingDialog
-        SettingDialog.__init__(self, self.settings, mode)
+        self.init_widgets()

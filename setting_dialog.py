@@ -44,9 +44,15 @@ class SettingDialog:
         if isinstance(self, QDialog) and mode == UpdateMode.DialogAccept:
             self.accepted.connect(self.accept_dialog)
 
+        self.mode = mode
         self.setting_manager = setting_manager
-
         self.__settings = {}
+
+    def init_widgets(self):
+        if self.__settings.keys():
+            raise NameError('init_widgets was already run.')
+
+        self.__settings.clear()
 
         for setting_name in self.setting_manager.settings_list():
             for objectClass in (QWidget, QButtonGroup):
@@ -63,7 +69,7 @@ class SettingDialog:
                     # TODO
                     # setting_widget.widgetDestroyed.connect(self.widgetDestroyed)
 
-                    if mode == UpdateMode.WidgetUpdate:
+                    if self.mode == UpdateMode.WidgetUpdate:
                         setting_widget.connect_widget_auto_update()
 
                     self.__settings[setting_name] = setting_widget
@@ -103,4 +109,3 @@ class SettingDialog:
     def set_widgets_from_values(self):
         for setting_widget in list(self.__settings.values()):
             setting_widget.set_widget_from_value()
-
