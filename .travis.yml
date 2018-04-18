@@ -8,6 +8,5 @@ env:
   - QGIS_DOCKER_TAG=release-3_0
 
 script:
-  - echo "$(ls -la $TRAVIS_BUILD_DIR)"
   - docker pull "qgis/qgis:${QGIS_DOCKER_TAG}"
-  - docker run -v $TRAVIS_BUILD_DIR:/root/qgissettingmanager "qgis/qgis:${QGIS_DOCKER_TAG}" bash -c 'xvfb-run nose2-3 -s /root/qgissettingmanager'
+  - docker run -v $TRAVIS_BUILD_DIR:/root/qgissettingmanager "qgis/qgis:${QGIS_DOCKER_TAG}" bash -c 'cd /root/qgissettingmanager && xvfb-run nose2-3'
