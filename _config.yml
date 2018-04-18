@@ -1,0 +1,8 @@
+title: QGIS Setting Manager
+description: QGIS setting manager is a python module to easily manage read/write settings and set/get corresponding widgets in a plugin.
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-cayman
+
+gems:
+  - jekyll-mentions
