@@ -11,7 +11,7 @@ This module can:
 * automatically **set widgets** of a dialog according to their **corresponding setting**
 * automatically **write settings from their corresponding widgets**
 
-A branch for QGIS 3 (Python 3, PyQt5, new API) is a work in progress. See https://github.com/3nids/qgissettingmanager/tree/qgis3
+You are looking at the documentation for **QGIS 2**. See the [master](https://github.com/3nids/qgissettingmanager/tree/master) branch for QGIS 3.
 
 
 ## The main setting class
