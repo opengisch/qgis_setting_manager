@@ -11,7 +11,7 @@ This module can:
 * automatically **set widgets** of a dialog according to their **corresponding setting**
 * automatically **write settings from their corresponding widgets**
 
-You are looking at the documentation for QGIS 3. See the qgis2 branch for QGIS 2.
+You are looking at the documentation for **QGIS 3**. See the [qgis2](https://github.com/3nids/qgissettingmanager/tree/qgis2) branch for QGIS 2.
 
 
 ## The main setting class
