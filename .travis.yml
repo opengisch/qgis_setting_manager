@@ -10,4 +10,4 @@ env:
 script:
   - echo "$(ls -la $TRAVIS_BUILD_DIR)"
   - docker pull "qgis/qgis:${QGIS_DOCKER_TAG}"
-  - docker run -v $TRAVIS_BUILD_DIR:/root/qgissettingmanager "qgis/qgis:${QGIS_DOCKER_TAG}" bash -c 'cd /root/qgissettingmanager; ls -la; nose2-3'
+  - docker run -v $TRAVIS_BUILD_DIR:/root/qgissettingmanager "qgis/qgis:${QGIS_DOCKER_TAG}" bash -c 'xvfb-run nose2-3 -s /root/qgissettingmanager'
