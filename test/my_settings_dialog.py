@@ -33,8 +33,7 @@ class MySettingsDialog(QDialog, SettingDialog):
     def __init__(self, setting_name, widget_class, mode=UpdateMode.DialogAccept):
 
         settings = MySettings()
-        QDialog.__init__(self)
-        SettingDialog.__init__(self, setting_manager=settings, mode=mode)
+        super(QDialog, self).__init__(setting_manager=settings, mode=mode)
 
         self.settings = MySettings()
         w = widget_class(self)
