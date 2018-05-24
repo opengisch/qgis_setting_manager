@@ -43,12 +43,10 @@ class MySettings(SettingManager):
                          'string': {'class': String, 'default': 'EPSG:2056', 'options': {'comboMode': 'text'}, 'new_value': 'EPSG:21781', 'widgets': (QLineEdit, QComboBox, QgsProjectionSelectionWidget)},
                          'stringlist': {'class': Stringlist, 'default': ['abc', 'def', 'ghi'], 'options': {}, 'new_value': ['qwe', 'rtz', 'uio'], 'widgets': [QListWidget]}}
 
-
         self.settings_cfg = {}
         scopes = {'project': Scope.Project, 'global': Scope.Global}
         for s_name, setting_ in list(settings_root.items()):
             for scope_str, scope_val in list(scopes.items()):
-                # TODO python 3 use enum
                 setting_name = '{}_{}'.format(s_name, scope_str)
                 self.settings_cfg[setting_name] = setting_
                 self.add_setting(setting_['class'](setting_name, scope_val, setting_['default'], setting_['options']))
