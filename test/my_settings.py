@@ -25,7 +25,7 @@
 
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QCheckBox, QLabel, QPushButton, QDoubleSpinBox, QLineEdit, QSpinBox, QSlider, QComboBox, QListWidget
-from qgis.gui import QgsCollapsibleGroupBox, QgsColorButton
+from qgis.gui import QgsCollapsibleGroupBox, QgsColorButton, QgsProjectionSelectionWidget
 
 from .. import *
 
@@ -40,15 +40,13 @@ class MySettings(SettingManager):
                          'color': {'class': Color, 'default': QColor(100, 100, 100, 100), 'options': {'allowAlpha': True}, 'new_value': QColor(30, 30, 30, 30), 'widgets': (QgsColorButton, QLabel, QPushButton)},
                          'double': {'class': Double, 'default': 0.12345, 'options': {}, 'new_value': 1.98765, 'widgets': (QDoubleSpinBox, QLineEdit)},
                          'integer': {'class': Integer, 'default': 1, 'options': {}, 'new_value': 2, 'widgets': (QLineEdit, QSpinBox, QSlider, QComboBox)},
-                         'string': {'class': String, 'default': 'default_string', 'options': {'comboMode': 'text'}, 'new_value': 'new_string', 'widgets': (QLineEdit, QComboBox)},
+                         'string': {'class': String, 'default': 'EPSG:2056', 'options': {'comboMode': 'text'}, 'new_value': 'EPSG:21781', 'widgets': (QLineEdit, QComboBox, QgsProjectionSelectionWidget)},
                          'stringlist': {'class': Stringlist, 'default': ['abc', 'def', 'ghi'], 'options': {}, 'new_value': ['qwe', 'rtz', 'uio'], 'widgets': [QListWidget]}}
-
 
         self.settings_cfg = {}
         scopes = {'project': Scope.Project, 'global': Scope.Global}
         for s_name, setting_ in list(settings_root.items()):
             for scope_str, scope_val in list(scopes.items()):
-                # TODO python 3 use enum
                 setting_name = '{}_{}'.format(s_name, scope_str)
                 self.settings_cfg[setting_name] = setting_
                 self.add_setting(setting_['class'](setting_name, scope_val, setting_['default'], setting_['options']))
