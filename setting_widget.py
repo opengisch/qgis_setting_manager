@@ -87,4 +87,5 @@ class SettingWidget(QObject):
 
     @pyqtSlot()
     def set_value_from_widget(self):
+        print("signal called for {}".format(self.setting.name))
         self.setting.set_value(self.widget_value())
