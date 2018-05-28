@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/3nids/qgissettingmanager.svg?branch=master)](https://travis-ci.org/3nids/qgissettingmanager)
+[![Build Status](https://travis-ci.org/opengisch/qgissettingmanager.svg?branch=master)](https://travis-ci.org/opengisch/qgissettingmanager)
 
 ## About
 
@@ -11,7 +11,7 @@ This module can:
 * automatically **set widgets** of a dialog according to their **corresponding setting**
 * automatically **write settings from their corresponding widgets**
 
-You are looking at the documentation for **QGIS 3**. See the [qgis2](https://github.com/3nids/qgissettingmanager/tree/qgis2) branch for QGIS 2.
+You are looking at the documentation for **QGIS 3**. See the [qgis2](https://github.com/opengisch/qgissettingmanager/tree/qgis2) branch for QGIS 2.
 
 
 ## The main setting class
@@ -149,7 +149,7 @@ The widgets are automatically detected by the manager. If the type of widget is 
 * `QListWidget` (checks items having their _text_ in the list)
 * `QButtonGroup` (checks items having their _name_ in the list)
 
-New types of widget are easily added, if one is missing, do not hesitate to [ask](https://github.com/3nids/qgissettingmanager/issues)!
+New types of widget are easily added, if one is missing, do not hesitate to [ask](https://github.com/opengisch/qgissettingmanager/issues)!
 
 
 ## Using git submodules
@@ -158,7 +158,7 @@ To use this module, you can easily copy the files and put them in your project.
 A more elegant way is to use [git submodule](http://git-scm.com/book/en/Git-Tools-Submodules). Hence, you can keep up with latest improvements. In you plugin directory, do
 
 ```
-git submodule add https://github.com/3nids/qgissettingmanager.git
+git submodule add https://github.com/opengisch/qgissettingmanager.git
 ```
 
 A folder _qgissettingmanager_ will be added to your plugin directory. However, git only references the module, and you can `git pull` in this folder to get the last changes.
