@@ -54,7 +54,7 @@ class TestSetting(unittest.TestCase):
         self.assertEqual(MySettings().value(name), setting_['default'])
 
     def test_value_list(self):
-        MySettings().setValue('value_list_str', 'my_invalid_val')
+        MySettings().set_value('value_list_str', 'my_invalid_val')
         self.assertEqual(MySettings().value('value_list_str'), 'my_val_1')
 
 
