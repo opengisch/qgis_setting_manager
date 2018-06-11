@@ -27,7 +27,7 @@
 #---------------------------------------------------------------------
 
 from PyQt5.QtWidgets import QCheckBox
-from qgis.core import QgsProject
+from qgis.core import QgsProject, Qgis
 from ..setting import Setting
 from ..setting_widget import SettingWidget
 
@@ -37,10 +37,14 @@ class Bool(Setting):
     def __init__(self, name, scope, default_value, options={}):
         Setting.__init__(self, name, scope, default_value, bool, QgsProject.instance().readBoolEntry, QgsProject.instance().writeEntryBool, options)
 
-    def check(self, value):
+    def check(self, value: bool):
         if type(value) != bool:
-            raise NameError("Setting %s must be a boolean." % self.name)
-        
+            self.info('{}:: Invalid value for setting {}: {}. It must be a boolean.'
+                      .format(self.plugin_name, self.name, value),
+                      Qgis.Warning)
+            return False
+        return True
+
     def config_widget(self, widget):
         if type(widget) == QCheckBox:
             return CheckBoxBoolWidget(self, widget, self.options)

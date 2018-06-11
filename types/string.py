@@ -31,7 +31,7 @@
 # comboMode: can be data or text. It defines if setting is found directly in combobox text or rather in the userData.
 
 from PyQt5.QtWidgets import QLineEdit, QButtonGroup, QComboBox
-from qgis.core import QgsProject, QgsCoordinateReferenceSystem
+from qgis.core import QgsProject, QgsCoordinateReferenceSystem, Qgis
 from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox, QgsFileWidget, QgsProjectionSelectionWidget
 
 from ..setting import Setting
@@ -44,8 +44,11 @@ class String(Setting):
 
     def check(self, value):
         if type(value) != str:
-            print((type(value)))
-            raise NameError('{}:: Invalid value for setting {}: {}. It must be a string.'.format(self.plugin_name, self.name, value))
+            self.info('{}:: Invalid value for setting {}: {}. It must be a string.'
+                      .format(self.plugin_name, self.name, value),
+                      Qgis.Warning)
+            return False
+        return True
 
     def config_widget(self, widget):
         if type(widget) == QLineEdit:

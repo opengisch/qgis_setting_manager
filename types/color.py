@@ -33,8 +33,7 @@
 
 
 from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import QColorDialog
-from qgis.core import QgsProject
+from qgis.core import QgsProject, Qgis
 from qgis.gui import QgsColorButton
 
 from ..setting import Setting
@@ -63,9 +62,13 @@ class Color(Setting):
         else:
             return ["%u" % value.red(), "%u" % value.green(), "%u" % value.blue()]
 
-    def check(self, color):
-        if type(color) != QColor:
-            raise NameError("Color setting %s must be a QColor." % self.name)
+    def check(self, value: QColor):
+        if type(value) != QColor:
+            self.info('{}:: Invalid value for setting {}: {}. It must be a QColor.'
+                      .format(self.plugin_name, self.name, value),
+                      Qgis.Warning)
+            return False
+        return True
 
     def config_widget(self, widget):
         if type(widget) == QgsColorButton:

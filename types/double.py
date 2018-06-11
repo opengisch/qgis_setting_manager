@@ -27,10 +27,11 @@
 #---------------------------------------------------------------------
 
 from PyQt5.QtWidgets import QLineEdit, QDoubleSpinBox
-from qgis.core import QgsProject
+from qgis.core import QgsProject, Qgis
 
 from ..setting import Setting
 from ..setting_widget import SettingWidget
+
 
 class Double(Setting):
 
@@ -39,7 +40,11 @@ class Double(Setting):
 
     def check(self, value):
         if type(value) != int and type(value) != float:
-            raise NameError("Setting %s must be a double." % self.name)
+            self.info('{}:: Invalid value for setting {}: {}. It must be a floating number.'
+                      .format(self.plugin_name, self.name, value),
+                      Qgis.Warning)
+            return False
+        return True
 
     def config_widget(self, widget):
         if type(widget) == QLineEdit:

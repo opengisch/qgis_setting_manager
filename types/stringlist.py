@@ -29,7 +29,7 @@
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QListWidget, QButtonGroup
-from qgis.core import QgsProject
+from qgis.core import QgsProject, Qgis
 
 from ..setting import Setting
 from ..setting_widget import SettingWidget
@@ -49,7 +49,11 @@ class Stringlist(Setting):
 
     def check(self, value):
         if type(value) not in (list, tuple):
-            raise NameError("Setting %s must be a string list." % self.name)
+            self.info('{}:: Invalid value for setting {}: {}. It must be a string list.'
+                      .format(self.plugin_name, self.name, value),
+                      Qgis.Warning)
+            return False
+        return True
 
     def config_widget(self, widget):
         if type(widget) == QListWidget:
