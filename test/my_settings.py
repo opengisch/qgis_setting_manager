@@ -51,5 +51,7 @@ class MySettings(SettingManager):
                 self.settings_cfg[setting_name] = setting_
                 self.add_setting(setting_['class'](setting_name, scope_val, setting_['default'], setting_['options']))
 
+        self.add_setting(String('value_list_str', Scope.Global, 'my_val_1', {'value_list': ('my_val_1', 'my_val_2')}))
+
 
 
