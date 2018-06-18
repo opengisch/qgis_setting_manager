@@ -28,8 +28,8 @@
 
 
 # options:
-# dialogTitle: show in color dialog
-# alpha: use or not alpha channel
+# dialog_title: show in color dialog
+# allow_alpha: use or not alpha channel
 
 
 from PyQt5.QtGui import QColor
@@ -42,8 +42,20 @@ from ..setting_widget import SettingWidget
 
 class Color(Setting):
 
-    def __init__(self, name, scope, default_value, options={}):
-        Setting.__init__(self, name, scope, default_value, None, QgsProject.instance().readListEntry, QgsProject.instance().writeEntry, options)
+    def __init__(self, name, scope, default_value, allow_alpha: bool = False, dialog_tilte: str = False, **kwargs):
+        Setting.__init__(self, name, scope, default_value, None,
+                         QgsProject.instance().readListEntry, QgsProject.instance().writeEntry, kwargs)
+        # compatibility (TODO: remove in next major release)
+        if type(allow_alpha) is dict:
+            self.allow_alpha = False
+            self.dialog_title = None
+            if 'dialogTitle' in allow_alpha:
+                self.dialog_title = allow_alpha['dialogTitle']
+            if 'allowAlpha' in allow_alpha:
+                self.allow_alpha = allow_alpha['allowAlpha']
+        else:
+            self.allow_alpha = allow_alpha
+            self.dialog_title = dialog_tilte
 
     def read_out(self, value, scope):
         if type(value) not in (list, tuple) or len(value) not in (3, 4):
@@ -53,11 +65,11 @@ class Color(Setting):
             r = int(value[0])
             g = int(value[1])
             b = int(value[2])
-            a = int(value[3]) if len(value) > 3 and self.options.get("allowAlpha", False) else 255
+            a = int(value[3]) if len(value) > 3 and self.allow_alpha else 255
             return QColor(r, g, b, a)
 
     def write_in(self, value, scope):
-        if self.options.get("allowAlpha", False):
+        if self.allow_alpha:
             return ["%u" % value.red(), "%u" % value.green(), "%u" % value.blue(), "%u" % value.alpha()]
         else:
             return ["%u" % value.red(), "%u" % value.green(), "%u" % value.blue()]
@@ -72,17 +84,16 @@ class Color(Setting):
 
     def config_widget(self, widget):
         if type(widget) == QgsColorButton:
-            return QgisColorWidget(self, widget, self.options)
+            return QgisColorWidget(self, widget, allow_alpha=self.allow_alpha)
         else:
-            return StandardColorWidget(self, widget, self.options)
+            return StandardColorWidget(self, widget, allow_alpha=self.allow_alpha, dialog_title=self.dialog_title)
 
 
 class QgisColorWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget, allow_alpha: bool = False):
         signal = widget.colorChanged
-        SettingWidget.__init__(self, setting, widget, options, signal)
-
-        self.widget.setAllowOpacity(self.options.get("allowAlpha", False))
+        SettingWidget.__init__(self, setting, widget, signal)
+        self.widget.setAllowOpacity(allow_alpha)
 
     def set_widget_value(self, value):
         self.widget.setColor(value)
@@ -92,13 +103,12 @@ class QgisColorWidget(SettingWidget):
 
 
 class StandardColorWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
-        txt = options.get("dialogTitle", "")
-        color_widget = QgsColorButton(widget, txt)
+    def __init__(self, setting, widget, allow_alpha: bool = False, dialog_title: str = None):
+        color_widget = QgsColorButton(widget, dialog_title)
         signal = color_widget.colorChanged
 
-        SettingWidget.__init__(self, setting, color_widget, options, signal)
-        self.widget.setAllowOpacity(self.options.get("allowAlpha", False))
+        SettingWidget.__init__(self, setting, color_widget, signal)
+        self.widget.setAllowOpacity(allow_alpha)
 
     def set_widget_value(self, value):
         self.widget.setColor(value)

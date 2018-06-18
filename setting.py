@@ -39,7 +39,17 @@ class Scope(Enum):
 class Setting(QObject):
     valueChanged = pyqtSignal()
 
-    def __init__(self, name, scope, default_value, object_type, project_read, project_write, options={}):
+    def __init__(self, name, scope, default_value, object_type, project_read, project_write, value_list: list = None):
+        """
+
+        :param name:
+        :param scope:
+        :param default_value:
+        :param object_type:
+        :param project_read:
+        :param project_write:
+        :param value_list: optional list to limit the authorized values for the settings.
+        """
         QObject.__init__(self)
 
         if not isinstance(scope, Scope):
@@ -54,9 +64,9 @@ class Setting(QObject):
         self.scope = scope
         self.default_value = default_value
         self.object_type = object_type
-        self.options = options
         self.project_read = project_read
         self.project_write = project_write
+        self.value_list = value_list
 
     def read_out(self, value, scope):
         """
@@ -96,12 +106,11 @@ class Setting(QObject):
         """
         if not self.check(value):
             return False
-        if 'value_list' in self.options:
-            if value not in self.options['value_list']:
-                self.info('{}:: Invalid value for setting {}: {}. It should be within the list of values: {}.'
-                          .format(self.plugin_name, self.name, value, self.options['value_list']),
-                          Qgis.Warning)
-                return False
+        if self.value_list and value not in self.value_list:
+            self.info('{}:: Invalid value for setting {}: {}. It should be within the list of values: {}.'
+                      .format(self.plugin_name, self.name, value, self.value_list),
+                      Qgis.Warning)
+            return False
         return True
 
     def set_plugin_name(self, plugin_name):
