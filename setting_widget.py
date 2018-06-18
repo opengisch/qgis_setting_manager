@@ -30,12 +30,11 @@ from PyQt5.QtCore import pyqtSlot, QObject
 
 
 class SettingWidget(QObject):
-    def __init__(self, setting, widget, options, signal):
+    def __init__(self, setting, widget, signal):
         QObject.__init__(self)
 
         self.setting = setting
         self.widget = widget
-        self.options = options
         self.signal = signal
         self.connected = False
 

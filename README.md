@@ -30,14 +30,16 @@ class MySettings(SettingManager):
 You may add as many settings as you want using `add_setting` method:
 
 ```python
-add_setting( SettingClass( name, scope, default_value, options={} ) )
+add_setting( SettingClass( name, scope, default_value, value_list: list = None, **options ) )
 ```
 
 * `SettingClass`: `Bool`, `String`, `Color`, `Integer`, `Double` or `Stringlist`
 * `name`: the name of the setting
 * `scope`: `Scope.Global` or `Scope.Project`
 * `default_value`: the default value of the setting (type must correspond)
-* `options`: a dictionary of options for widgets (see [possible widgets](#possiblewidgets))
+* `value_list`: a list of authorized values. 
+If specified, the setting will fall back to `default_value` if an unauthorized value is provided.
+* `options`: additional options (see [possible widgets](#possiblewidgets))
 
 ### Access the settings
 
@@ -110,15 +112,17 @@ def showEvent(self, e):
     # do your own stuff
 ```
 
-<a name="possiblewidgets"/>
+
 ### Possible widgets
+<a name="possiblewidgets"/>
 
 The widgets are automatically detected by the manager. If the type of widget is not handled, an error is raised.
 
 **Strings**
 
 * `QLineEdit`
-* `QComboBox` (setting can be defined as the current item text or [data](http://qt-project.org/doc/qt-4.8/qcombobox.html#itemData): specify option `comboMode` as `data` (default) or `text`)
+* `QComboBox` 
+    * `mode` additional option to define if the current item `text` or [`data`](http://qt-project.org/doc/qt-5/qcombobox.html#itemData) is used to define the setting.
 * `QButtonGroup` (the setting is set as the checked widget text in the button group)
 * `QgsMapLayerComboBox` uses layer ID for the setting value
 * `QgsFileWidget`
@@ -130,7 +134,11 @@ The widgets are automatically detected by the manager. If the type of widget is 
 
 **Colors**
 
-* Native QGIS widgets (QgsColorButton) or any widget (label or pushbutton are recommended). For standard Qt Widgets, QGIS [color button](http://qgis.org/api/classQgsColorButton.html)) will be used. Use options `allowAlpha` (boolean) to allow transparent colors and `dialogTitle` to set the dialog title.
+* Native QGIS widgets (QgsColorButton) or any widget (label or pushbutton are recommended). For standard Qt Widgets, QGIS [color button](http://qgis.org/api/classQgsColorButton.html)) will be used. 
+
+Additional options:
+* `allow_alpha` (boolean) to allow transparent colors
+* `dialog_title` (string) to set the dialog title.
 
 **Integers**
 

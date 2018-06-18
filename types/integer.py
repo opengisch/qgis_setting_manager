@@ -37,8 +37,9 @@ from ..setting_widget import SettingWidget
 
 
 class Integer(Setting):
-    def __init__(self, name, scope, default_value, options={}):
-        Setting.__init__(self, name, scope, default_value, int, QgsProject.instance().readNumEntry, QgsProject.instance().writeEntry, options)
+    def __init__(self, name, scope, default_value, **kwargs):
+        Setting.__init__(self, name, scope, default_value, int,
+                         QgsProject.instance().readNumEntry, QgsProject.instance().writeEntry, kwargs)
 
     def check(self, value):
         if type(value) != int and type(value) != float:
@@ -50,11 +51,11 @@ class Integer(Setting):
 
     def config_widget(self, widget):
         if type(widget) == QLineEdit:
-            return LineEditIntegerWidget(self, widget, self.options)
+            return LineEditIntegerWidget(self, widget)
         elif type(widget) in (QSpinBox, QSlider):
-            return SpinBoxIntegerWidget(self, widget, self.options)
+            return SpinBoxIntegerWidget(self, widget)
         elif type(widget) == QComboBox:
-            return ComboBoxIntegerWidget(self, widget, self.options)
+            return ComboBoxIntegerWidget(self, widget)
         else:
             print((type(widget)))
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
@@ -62,9 +63,9 @@ class Integer(Setting):
 
 
 class LineEditIntegerWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget):
         signal = widget.textChanged
-        SettingWidget.__init__(self, setting, widget, options, signal)
+        SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
         self.widget.setText('{}'.format(value))
@@ -79,9 +80,9 @@ class LineEditIntegerWidget(SettingWidget):
 
 
 class SpinBoxIntegerWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget):
         signal = widget.valueChanged
-        SettingWidget.__init__(self, setting, widget, options, signal)
+        SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
         self.widget.setValue(value)
@@ -91,9 +92,9 @@ class SpinBoxIntegerWidget(SettingWidget):
 
 
 class ComboBoxIntegerWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget):
         signal = widget.currentIndexChanged
-        SettingWidget.__init__(self, setting, widget, options, signal)
+        SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
         self.widget.setCurrentIndex(value)

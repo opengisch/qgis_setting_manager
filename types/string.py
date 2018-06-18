@@ -28,7 +28,7 @@
 
 
 # options:
-# comboMode: can be data or text. It defines if setting is found directly in combobox text or rather in the userData.
+# combo_mode: can be data or text. It defines if setting is found directly in combobox text or rather in the userData.
 
 from PyQt5.QtWidgets import QLineEdit, QButtonGroup, QComboBox
 from qgis.core import QgsProject, QgsCoordinateReferenceSystem, Qgis
@@ -39,8 +39,16 @@ from ..setting_widget import SettingWidget
 
 
 class String(Setting):
-    def __init__(self, name, scope, default_value, options={}):
-        Setting.__init__(self, name, scope, default_value, str, QgsProject.instance().readEntry, QgsProject.instance().writeEntry, options)
+    def __init__(self, name, scope, default_value, combo_mode: str='data', **kwargs):
+        Setting.__init__(self, name, scope, default_value, str,
+                         QgsProject.instance().readEntry, QgsProject.instance().writeEntry, kwargs)
+        # compatibility (TODO: remove in next major release)
+        if type(combo_mode) is dict and 'comboMode' in combo_mode:
+            self.combo_mode = combo_mode['comboMode']
+        else:
+            if combo_mode not in ('data', 'text'):
+                raise NameError('setting {}: invalid value for combo mode {}'.format(self.name, combo_mode))
+            self.combo_mode = combo_mode
 
     def check(self, value):
         if type(value) != str:
@@ -52,28 +60,28 @@ class String(Setting):
 
     def config_widget(self, widget):
         if type(widget) == QLineEdit:
-            return LineEditStringWidget(self, widget, self.options)
+            return LineEditStringWidget(self, widget)
         elif type(widget) == QButtonGroup:
-            return ButtonGroupStringWidget(self, widget, self.options)
+            return ButtonGroupStringWidget(self, widget)
         elif type(widget) == QComboBox:
-            return ComboStringWidget(self, widget, self.options)
+            return ComboStringWidget(self, widget, self.combo_mode)
         elif type(widget) == QgsMapLayerComboBox:
-            return MapLayerComboStringWidget(self, widget, self.options)
+            return MapLayerComboStringWidget(self, widget)
         elif type(widget) == QgsFieldComboBox:
-            return FieldComboStringWidget(self, widget, self.options)
+            return FieldComboStringWidget(self, widget)
         elif type(widget) == QgsFileWidget:
-            return FileStringWidget(self, widget, self.options)
+            return FileStringWidget(self, widget)
         elif type(widget) == QgsProjectionSelectionWidget:
-            return ProjectionStringWidget(self, widget, self.options)
+            return ProjectionStringWidget(self, widget)
         else:
             raise NameError("SettingManager does not handle %s widgets for strings at the moment (setting: %s)" %
                 (type(widget), self.name))
 
 
 class LineEditStringWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget):
         signal = widget.textChanged
-        SettingWidget.__init__(self, setting, widget, options, signal)
+        SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
         self.widget.setText(value)
@@ -83,9 +91,9 @@ class LineEditStringWidget(SettingWidget):
 
 
 class ButtonGroupStringWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget):
         signal = widget.buttonClicked
-        SettingWidget.__init__(self, setting, widget, options, signal)
+        SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
         for button in self.widget.buttons():
@@ -103,33 +111,28 @@ class ButtonGroupStringWidget(SettingWidget):
 
 
 class ComboStringWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget, mode: str = 'data'):
+        self.mode = mode
         signal = widget.currentIndexChanged
-        SettingWidget.__init__(self, setting, widget, options, signal)
+        SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
-        combo_mode = self.options.get("comboMode", "data")
-        if combo_mode == 'data':
-            self.widget.setCurrentIndex(self.widget.findData(value))
-        elif combo_mode == 'text':
+        if self.mode == 'text':
             self.widget.setCurrentIndex(self.widget.findText(value))
         else:
-            raise NameError('invalid options for {}.comboMode: {}'.format(self.setting.name, combo_mode))
+            self.widget.setCurrentIndex(self.widget.findData(value))
 
     def widget_value(self):
-        combo_mode = self.options.get("comboMode", "data")
-        if combo_mode == 'data':
-            return self.widget.itemData(self.widget.currentIndex()) or ""
-        elif combo_mode == 'text':
+        if self.mode == 'text':
             return self.widget.currentText()
         else:
-            raise NameError('invalid options for {}.comboMode: {}'.format(self.setting.name, combo_mode))
+            return self.widget.itemData(self.widget.currentIndex()) or ""
 
 
 class MapLayerComboStringWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget):
         signal = widget.layerChanged
-        SettingWidget.__init__(self, setting, widget, options, signal)
+        SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
         self.widget.setLayer(QgsProject.instance().mapLayer(value))
@@ -143,9 +146,9 @@ class MapLayerComboStringWidget(SettingWidget):
 
 
 class FieldComboStringWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget):
         signal = widget.currentIndexChanged
-        SettingWidget.__init__(self, setting, widget, options, signal)
+        SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
         self.widget.setField(value)
@@ -155,9 +158,9 @@ class FieldComboStringWidget(SettingWidget):
 
 
 class FileStringWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget):
         signal = widget.fileChanged
-        SettingWidget.__init__(self, setting, widget, options, signal)
+        SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
         self.widget.setFilePath(value)
@@ -167,9 +170,9 @@ class FileStringWidget(SettingWidget):
 
 
 class ProjectionStringWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget):
         signal = widget.crsChanged
-        SettingWidget.__init__(self, setting, widget, options, signal)
+        SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
         self.widget.setCrs(QgsCoordinateReferenceSystem(value))

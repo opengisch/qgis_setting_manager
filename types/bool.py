@@ -34,8 +34,9 @@ from ..setting_widget import SettingWidget
 
 class Bool(Setting):
 
-    def __init__(self, name, scope, default_value, options={}):
-        Setting.__init__(self, name, scope, default_value, bool, QgsProject.instance().readBoolEntry, QgsProject.instance().writeEntryBool, options)
+    def __init__(self, name, scope, default_value, **kwargs):
+        Setting.__init__(self, name, scope, default_value, bool,
+                         QgsProject.instance().readBoolEntry, QgsProject.instance().writeEntryBool, kwargs)
 
     def check(self, value: bool):
         if type(value) != bool:
@@ -47,9 +48,9 @@ class Bool(Setting):
 
     def config_widget(self, widget):
         if type(widget) == QCheckBox:
-            return CheckBoxBoolWidget(self, widget, self.options)
+            return CheckBoxBoolWidget(self, widget)
         elif hasattr(widget, "isCheckable") and widget.isCheckable():
-            return CheckableBoolWidget(self, widget, self.options)
+            return CheckableBoolWidget(self, widget)
         else:
             print((type(widget)))
             raise NameError("SettingManager does not handle %s widgets for booleans at the moment (setting: %s)" %
@@ -57,9 +58,9 @@ class Bool(Setting):
 
 
 class CheckBoxBoolWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget):
         signal = widget.stateChanged
-        SettingWidget.__init__(self, setting, widget, options, signal)
+        SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
         self.widget.setChecked(value)
@@ -69,9 +70,9 @@ class CheckBoxBoolWidget(SettingWidget):
 
 
 class CheckableBoolWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget):
         signal = widget.clicked
-        SettingWidget.__init__(self, setting, widget, options, signal)
+        SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
         self.widget.setChecked(value)

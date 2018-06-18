@@ -36,8 +36,9 @@ from ..setting_widget import SettingWidget
 
 
 class Stringlist(Setting):
-    def __init__(self, name, scope, default_value, options={}):
-        Setting.__init__(self, name, scope, default_value, None, QgsProject.instance().readListEntry, QgsProject.instance().writeEntry, options)
+    def __init__(self, name, scope, default_value, **kwargs):
+        Setting.__init__(self, name, scope, default_value, None,
+                         QgsProject.instance().readListEntry, QgsProject.instance().writeEntry, kwargs)
 
     def read_out(self, value, scope):
         # always cast to list
@@ -57,9 +58,9 @@ class Stringlist(Setting):
 
     def config_widget(self, widget):
         if type(widget) == QListWidget:
-            return ListStringListWidget(self, widget, self.options)
+            return ListStringListWidget(self, widget)
         elif type(widget) == QButtonGroup:
-            return ButtonGroupStringListWidget(self, widget, self.options)
+            return ButtonGroupStringListWidget(self, widget)
         else:
             print((type(widget)))
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
@@ -67,9 +68,9 @@ class Stringlist(Setting):
 
 
 class ListStringListWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget):
         signal = widget.itemChanged
-        SettingWidget.__init__(self, setting, widget, options, signal)
+        SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
         for i in range(self.widget.count()):
@@ -89,9 +90,9 @@ class ListStringListWidget(SettingWidget):
 
 
 class ButtonGroupStringListWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget):
         signal = widget.buttonClicked
-        SettingWidget.__init__(self, setting, widget, options, signal)
+        SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
         for item in self.widget.buttons():

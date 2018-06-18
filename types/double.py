@@ -35,8 +35,9 @@ from ..setting_widget import SettingWidget
 
 class Double(Setting):
 
-    def __init__(self, name, scope, default_value, options={}):
-        Setting.__init__(self, name, scope, default_value, float, QgsProject.instance().readDoubleEntry, QgsProject.instance().writeEntryDouble, options)
+    def __init__(self, name, scope, default_value, **kwargs):
+        Setting.__init__(self, name, scope, default_value, float, QgsProject.instance().readDoubleEntry,
+                         QgsProject.instance().writeEntryDouble, kwargs)
 
     def check(self, value):
         if type(value) != int and type(value) != float:
@@ -48,18 +49,18 @@ class Double(Setting):
 
     def config_widget(self, widget):
         if type(widget) == QLineEdit:
-            return LineEditDoubleWidget(self, widget, self.options)
+            return LineEditDoubleWidget(self, widget)
         elif type(widget) == QDoubleSpinBox:
-            return DoubleSpinBoxDoubleWidget(self, widget, self.options)
+            return DoubleSpinBoxDoubleWidget(self, widget)
         else:
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
 
 
 class LineEditDoubleWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget):
         signal = widget.textChanged
-        SettingWidget.__init__(self, setting, widget, options, signal)
+        SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
         self.widget.setText('{}'.format(value))
@@ -69,9 +70,9 @@ class LineEditDoubleWidget(SettingWidget):
 
 
 class DoubleSpinBoxDoubleWidget(SettingWidget):
-    def __init__(self, setting, widget, options):
+    def __init__(self, setting, widget):
         signal = widget.valueChanged
-        SettingWidget.__init__(self, setting, widget, options, signal)
+        SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
         self.widget.setValue(value)
