@@ -35,9 +35,10 @@ from ..setting_widget import SettingWidget
 
 
 class Stringlist(Setting):
-    def __init__(self, name, scope, default_value, **kwargs):
+    def __init__(self, name, scope, default_value, table_column: int = 0, **kwargs):
         Setting.__init__(self, name, scope, default_value, None,
                          QgsProject.instance().readListEntry, QgsProject.instance().writeEntry, **kwargs)
+        self.table_column = table_column
 
     def read_out(self, value, scope):
         # always cast to list
@@ -65,7 +66,7 @@ class Stringlist(Setting):
         if type(widget) == QListWidget:
             return ListStringListWidget(self, widget)
         elif type(widget) == QTableWidget:
-            return TableWidgetStringListWidget(self, widget)
+            return TableWidgetStringListWidget(self, widget, self.table_column)
         elif type(widget) == QButtonGroup:
             return ButtonGroupStringListWidget(self, widget)
         else:

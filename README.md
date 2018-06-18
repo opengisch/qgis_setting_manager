@@ -156,6 +156,8 @@ Additional options:
 
 * `QListWidget` (checks items having their _text_ in the list)
 * `QButtonGroup` (checks items having their _name_ in the list)
+* `QTableWidget` (checks items having their _text_ in the list)
+  * `table_column` specifies which column is used
 
 New types of widget are easily added, if one is missing, do not hesitate to [ask](https://github.com/opengisch/qgissettingmanager/issues)!
 
