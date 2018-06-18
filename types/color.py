@@ -44,7 +44,7 @@ class Color(Setting):
 
     def __init__(self, name, scope, default_value, allow_alpha: bool = False, dialog_tilte: str = False, **kwargs):
         Setting.__init__(self, name, scope, default_value, None,
-                         QgsProject.instance().readListEntry, QgsProject.instance().writeEntry, kwargs)
+                         QgsProject.instance().readListEntry, QgsProject.instance().writeEntry, **kwargs)
         # compatibility (TODO: remove in next major release)
         if type(allow_alpha) is dict:
             self.allow_alpha = False

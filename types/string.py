@@ -41,7 +41,7 @@ from ..setting_widget import SettingWidget
 class String(Setting):
     def __init__(self, name, scope, default_value, combo_mode: str='data', **kwargs):
         Setting.__init__(self, name, scope, default_value, str,
-                         QgsProject.instance().readEntry, QgsProject.instance().writeEntry, kwargs)
+                         QgsProject.instance().readEntry, QgsProject.instance().writeEntry, **kwargs)
         # compatibility (TODO: remove in next major release)
         if type(combo_mode) is dict and 'comboMode' in combo_mode:
             self.combo_mode = combo_mode['comboMode']
