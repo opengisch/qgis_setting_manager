@@ -31,6 +31,7 @@
 # dialog_title: show in color dialog
 # allow_alpha: use or not alpha channel
 
+import warnings
 
 from PyQt5.QtGui import QColor
 from qgis.core import QgsProject, Qgis
@@ -49,6 +50,8 @@ class Color(Setting):
         if type(allow_alpha) is dict:
             self.allow_alpha = False
             self.dialog_title = None
+            warnings.warn('You are using the old API with dictionary based options.'
+                          ' Switch to named arguments instead.', DeprecationWarning)
             if 'dialogTitle' in allow_alpha:
                 self.dialog_title = allow_alpha['dialogTitle']
             if 'allowAlpha' in allow_alpha:

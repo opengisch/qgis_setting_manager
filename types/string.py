@@ -30,6 +30,7 @@
 # options:
 # combo_mode: can be data or text. It defines if setting is found directly in combobox text or rather in the userData.
 
+import warnings
 from PyQt5.QtWidgets import QLineEdit, QButtonGroup, QComboBox
 from qgis.core import QgsProject, QgsCoordinateReferenceSystem, Qgis
 from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox, QgsFileWidget, QgsProjectionSelectionWidget
@@ -45,6 +46,8 @@ class String(Setting):
         # compatibility (TODO: remove in next major release)
         if type(combo_mode) is dict and 'comboMode' in combo_mode:
             self.combo_mode = combo_mode['comboMode']
+            warnings.warn('You are using the old API with dictionary based options.'
+                          ' Switch to named arguments instead.', DeprecationWarning)
         else:
             if combo_mode not in ('data', 'text'):
                 raise NameError('setting {}: invalid value for combo mode {}'.format(self.name, combo_mode))
