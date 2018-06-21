@@ -3,4 +3,5 @@ from .color import Color
 from .double import Double
 from .integer import Integer
 from .stringlist import Stringlist
-from .string import String
+from .string import String, ComboMode
+from .enum import Enum, EnumMode

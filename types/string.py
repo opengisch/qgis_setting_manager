@@ -31,27 +31,49 @@
 # combo_mode: can be data or text. It defines if setting is found directly in combobox text or rather in the userData.
 
 import warnings
+from enum import Enum
+
 from PyQt5.QtWidgets import QLineEdit, QButtonGroup, QComboBox
-from qgis.core import QgsProject, QgsCoordinateReferenceSystem, Qgis
+from qgis.core import QgsProject, QgsCoordinateReferenceSystem, Qgis, QgsSettings
 from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox, QgsFileWidget, QgsProjectionSelectionWidget
 
-from ..setting import Setting
+from ..setting import Setting, Scope
 from ..setting_widget import SettingWidget
 
 
+class ComboMode(Enum):
+    Text = 1
+    Data = 2
+
+
 class String(Setting):
-    def __init__(self, name, scope, default_value, combo_mode: str='data', **kwargs):
-        Setting.__init__(self, name, scope, default_value, str,
-                         QgsProject.instance().readEntry, QgsProject.instance().writeEntry, **kwargs)
+    def __init__(self,
+                 name,
+                 scope: Scope,
+                 default_value,
+                 combo_mode: ComboMode=ComboMode.Data,
+                 **kwargs):
+        """
+
+        :param name:
+        :param scope:
+        :param default_value:
+        :param combo_mode: defines what is used to retrieve the setting in a combo box. Can be Data (default) or Text.
+        :param enum: if given, the setting will be associated to the enum as given by the default value.
+                     Can be QGIS for a QGIS enum. Enum must have been declared using Qt Q_ENUM macro.
+                     Enum mode is available for global settings only.
+        :param kwargs:
+        """
         # compatibility (TODO: remove in next major release)
         if type(combo_mode) is dict and 'comboMode' in combo_mode:
             self.combo_mode = combo_mode['comboMode']
             warnings.warn('You are using the old API with dictionary based options.'
                           ' Switch to named arguments instead.', DeprecationWarning)
         else:
-            if combo_mode not in ('data', 'text'):
-                raise NameError('setting {}: invalid value for combo mode {}'.format(self.name, combo_mode))
+            assert isinstance(combo_mode, ComboMode)
             self.combo_mode = combo_mode
+
+        Setting.__init__(self, name, scope, default_value, object_type=str, ** kwargs)
 
     def check(self, value):
         if type(value) != str:
@@ -114,7 +136,7 @@ class ButtonGroupStringWidget(SettingWidget):
 
 
 class ComboStringWidget(SettingWidget):
-    def __init__(self, setting, widget, mode: str = 'data'):
+    def __init__(self, setting, widget, mode: ComboMode=ComboMode.Data):
         self.mode = mode
         signal = widget.currentIndexChanged
         SettingWidget.__init__(self, setting, widget, signal)

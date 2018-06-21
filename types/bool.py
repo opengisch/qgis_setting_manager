@@ -35,8 +35,10 @@ from ..setting_widget import SettingWidget
 class Bool(Setting):
 
     def __init__(self, name, scope, default_value, **kwargs):
-        Setting.__init__(self, name, scope, default_value, bool,
-                         QgsProject.instance().readBoolEntry, QgsProject.instance().writeEntryBool, **kwargs)
+        Setting.__init__(self, name, scope, default_value,
+                         object_type=bool,
+                         project_read=QgsProject.instance().readBoolEntry,
+                         project_write=QgsProject.instance().writeEntryBool, **kwargs)
 
     def check(self, value: bool):
         if type(value) != bool:
