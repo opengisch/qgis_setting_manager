@@ -122,7 +122,7 @@ The widgets are automatically detected by the manager. If the type of widget is 
 
 * `QLineEdit`
 * `QComboBox` 
-    * `mode` additional option to define if the current item `text` or [`data`](http://qt-project.org/doc/qt-5/qcombobox.html#itemData) is used to define the setting.
+    * `mode` additional option to define what is used to retrieve the setting. Can be `ComboMode.Text` or [`ComboMode.Data`](http://qt-project.org/doc/qt-5/qcombobox.html#itemData).
 * `QButtonGroup` (the setting is set as the checked widget text in the button group)
 * `QgsMapLayerComboBox` uses layer ID for the setting value
 * `QgsFileWidget`

@@ -39,7 +39,13 @@ class Scope(Enum):
 class Setting(QObject):
     valueChanged = pyqtSignal()
 
-    def __init__(self, name, scope, default_value, object_type, project_read, project_write, value_list: list = None):
+    def __init__(self, name: str, scope: Scope, default_value,
+                 object_type=None,
+                 project_read=QgsProject.instance().readEntry,
+                 project_write=QgsProject.instance().writeEntry,
+                 qsettings_read=QSettings().value,
+                 qsettings_write=QSettings().setValue,
+                 value_list: list = None):
         """
 
         :param name:
@@ -54,8 +60,6 @@ class Setting(QObject):
 
         if not isinstance(scope, Scope):
             raise NameError('Scope of setting {} is not valid: {}'.format(name, scope))
-        if not self.check(default_value):
-            raise NameError('Default value of setting {} is not valid: {}'.format(name, default_value))
 
         # these will determined when set_plugin_name is called
         self.plugin_name = None
@@ -66,7 +70,12 @@ class Setting(QObject):
         self.object_type = object_type
         self.project_read = project_read
         self.project_write = project_write
+        self.qsettings_read = qsettings_read
+        self.qsettings_write = qsettings_write
         self.value_list = value_list
+
+        if not self.check(default_value):
+            raise NameError('Default value of setting {} is not valid: {}'.format(name, default_value))
 
     def read_out(self, value, scope):
         """
@@ -125,7 +134,7 @@ class Setting(QObject):
             return
         value = self.write_in(value, self.scope)
         if self.scope == Scope.Global:
-            QSettings().setValue(self.global_name(), value)
+            self.qsettings_write(self.global_name(), value)
         elif self.scope == Scope.Project:
             self.project_write(self.plugin_name, self.name, value)
         self.valueChanged.emit()
@@ -133,9 +142,9 @@ class Setting(QObject):
     def value(self):
         if self.scope == Scope.Global:
             if self.object_type is not None:
-                value = QSettings().value(self.global_name(), self.write_in(self.default_value, self.scope), type=self.object_type)
+                value = self.qsettings_read(self.global_name(), self.write_in(self.default_value, self.scope), type=self.object_type)
             else:
-                value = QSettings().value(self.global_name(), self.write_in(self.default_value, self.scope))
+                value = self.qsettings_read(self.global_name(), self.write_in(self.default_value, self.scope))
         elif self.scope == Scope.Project:
             value = self.project_read(self.plugin_name, self.name, self.write_in(self.default_value, self.scope))[0]
         value = self.read_out(value, self.scope)

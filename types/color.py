@@ -43,9 +43,10 @@ from ..setting_widget import SettingWidget
 
 class Color(Setting):
 
-    def __init__(self, name, scope, default_value, allow_alpha: bool = False, dialog_tilte: str = False, **kwargs):
-        Setting.__init__(self, name, scope, default_value, None,
-                         QgsProject.instance().readListEntry, QgsProject.instance().writeEntry, **kwargs)
+    def __init__(self, name, scope, default_value, allow_alpha: bool = False, dialog_title: str = False, **kwargs):
+        Setting.__init__(self, name, scope, default_value,
+                         object_type=None,
+                         project_read=QgsProject.instance().readListEntry, **kwargs)
         # compatibility (TODO: remove in next major release)
         if type(allow_alpha) is dict:
             self.allow_alpha = False
@@ -58,7 +59,7 @@ class Color(Setting):
                 self.allow_alpha = allow_alpha['allowAlpha']
         else:
             self.allow_alpha = allow_alpha
-            self.dialog_title = dialog_tilte
+            self.dialog_title = dialog_title
 
     def read_out(self, value, scope):
         if type(value) not in (list, tuple) or len(value) not in (3, 4):

@@ -36,8 +36,10 @@ from ..setting_widget import SettingWidget
 
 class Stringlist(Setting):
     def __init__(self, name, scope, default_value, table_column: int = 0, **kwargs):
-        Setting.__init__(self, name, scope, default_value, None,
-                         QgsProject.instance().readListEntry, QgsProject.instance().writeEntry, **kwargs)
+        Setting.__init__(self, name, scope, default_value,
+                         object_type=None,
+                         project_read=QgsProject.instance().readListEntry,
+                         project_write=QgsProject.instance().writeEntry, **kwargs)
         self.table_column = table_column
 
     def read_out(self, value, scope):
