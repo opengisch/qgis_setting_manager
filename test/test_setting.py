@@ -24,38 +24,49 @@
 # ---------------------------------------------------------------------
 
 import qgis
+import os
+import yaml
 from qgis.testing import unittest
+from PyQt5.QtGui import QColor
 
 import nose2
 
 from .my_settings import MySettings
+from .. import Scope
 
 
 class TestSetting(unittest.TestCase):
     def test_settings(self):
-        for s_name in list(MySettings().settings_cfg.keys()):
-            yield self.check_setting, s_name
+        cur_dir = os.path.dirname(__file__)
+        definition_file = os.path.join(cur_dir, 'setting_config.yaml')
+        with open(definition_file, 'r') as f:
+            definition = yaml.load(f.read())
 
-    def check_setting(self, name):
-        setting_ = MySettings().settings_cfg[name]
+        for _, setting_definition in definition['settings'].items():
+            for scope in Scope:
+                setting_name = '{}_{}_core'.format(setting_definition['setting_class'], scope.name)
+                default_value = eval(str(setting_definition['default_value']))
+                new_value = eval(str(setting_definition['new_value']))
+                yield self.check_setting, setting_name, default_value, new_value
 
+    def check_setting(self, name, default_value, new_value):
         # clean just in case
         MySettings().remove(name)
 
         # default
-        self.assertEqual(MySettings().value(name), setting_['default'])
+        self.assertEqual(MySettings().value(name), default_value)
 
         # set value
-        MySettings().set_value(name, setting_['new_value'])
-        self.assertEqual(MySettings().value(name), setting_['new_value'])
+        MySettings().set_value(name, new_value)
+        self.assertEqual(MySettings().value(name), new_value)
 
         # remove setting
         MySettings().remove(name)
-        self.assertEqual(MySettings().value(name), setting_['default'])
+        self.assertEqual(MySettings().value(name), default_value)
 
-    def test_value_list(self):
-        MySettings().set_value('value_list_str', 'my_invalid_val')
-        self.assertEqual(MySettings().value('value_list_str'), 'my_val_1')
+#    def test_value_list(self):
+#        MySettings().set_value('value_list_str', 'my_invalid_val')
+#        self.assertEqual(MySettings().value('value_list_str'), 'my_val_1')
 
 
 if __name__ == '__main__':
