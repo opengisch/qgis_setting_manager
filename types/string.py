@@ -34,7 +34,7 @@ import warnings
 from enum import Enum
 
 from PyQt5.QtWidgets import QLineEdit, QButtonGroup, QComboBox
-from qgis.core import QgsProject, QgsCoordinateReferenceSystem, Qgis, QgsSettings
+from qgis.core import QgsProject, QgsCoordinateReferenceSystem, Qgis
 from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox, QgsFileWidget, QgsProjectionSelectionWidget
 
 from ..setting import Setting, Scope
@@ -64,14 +64,8 @@ class String(Setting):
                      Enum mode is available for global settings only.
         :param kwargs:
         """
-        # compatibility (TODO: remove in next major release)
-        if type(combo_mode) is dict and 'comboMode' in combo_mode:
-            self.combo_mode = combo_mode['comboMode']
-            warnings.warn('You are using the old API with dictionary based options.'
-                          ' Switch to named arguments instead.', DeprecationWarning)
-        else:
-            assert isinstance(combo_mode, ComboMode)
-            self.combo_mode = combo_mode
+        assert isinstance(combo_mode, ComboMode)
+        self.combo_mode = combo_mode
 
         Setting.__init__(self, name, scope, default_value, object_type=str, ** kwargs)
 

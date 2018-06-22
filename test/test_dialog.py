@@ -24,14 +24,19 @@
 #---------------------------------------------------------------------
 
 import qgis
+import os 
+import yaml
 from qgis.testing import start_app, unittest
+from PyQt5.QtGui import QColor
+from PyQt5.QtWidgets import QCheckBox, QLabel, QPushButton, QDoubleSpinBox, QLineEdit, QSpinBox, QSlider, QComboBox, QListWidget
+from qgis.gui import QgsCollapsibleGroupBox, QgsColorButton, QgsProjectionSelectionWidget
 
 import nose2
 
-from ..setting_dialog import UpdateMode
 from .my_settings import MySettings
 from .my_settings_dialog import MySettingsDialog
 
+from .. import Scope, UpdateMode
 
 
 # TODO: remaining tests:
@@ -39,91 +44,88 @@ from .my_settings_dialog import MySettingsDialog
 # stringlist with QGroupBox
 
 
-def params(settings):
-    params = []
-    for s_name, setting_ in list(settings.items()):
-        for widget_class in setting_['widgets']:
-            params.append(('{}_{}'.format(s_name, widget_class.__name__), s_name, widget_class))
-    return params
-
 
 class TestDialog(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         start_app()
+        
+    def test_dialog(self):
+        cur_dir = os.path.dirname(__file__)
+        definition_file = os.path.join(cur_dir, 'setting_config.yaml')
+        with open(definition_file, 'r') as f:
+            definition = yaml.load(f.read())
 
-    def test_dialog_accept_update(self):
-        for param in params(MySettings().settings_cfg):
-            yield self.check_dialog_accept_update, param[0], param[1], param[2]
+        for _, setting_definition in definition['settings'].items():
+            for scope in Scope:
+                for widget_name, widget in setting_definition['widgets'].items():
+                    setting_name = '{}_{}_{}'.format(setting_definition['setting_class'], scope.name, widget_name)
+                    widget_class = eval(str(widget_name))
+                    default_value = eval(str(setting_definition['default_value']))
+                    new_value = eval(str(setting_definition['new_value']))
+                    
+                    yield self.check_dialog_accept_update, setting_name, widget_class, default_value, new_value
+                    yield self.check_dialog_auto_update, setting_name, widget_class, default_value, new_value
 
-    def check_dialog_accept_update(self, test_name, name, widget_class):
-        # get setting config
-        setting_cfg = MySettings().settings_cfg[name]
-
+    def check_dialog_accept_update(self, setting_name, widget_class, default_value, new_value):
+       
         # this will reset to default with new call of MySettings within MySettingsDialog
-        MySettings().remove(name)
+        MySettings().remove(setting_name)
 
         # create dialog
-        self.dlg = MySettingsDialog(name, widget_class, UpdateMode.DialogAccept)
+        self.dlg = MySettingsDialog(setting_name, widget_class, UpdateMode.DialogAccept)
         self.dlg.show()
 
         # control that the widget is detected
-        self.assertIn(name, self.dlg.widget_list())
+        self.assertIn(setting_name, self.dlg.widget_list())
 
         # get widget
-        setting_widget = self.dlg.setting_widget(name)
+        setting_widget = self.dlg.setting_widget(setting_name)
         self.assertIsNotNone(setting_widget)
 
         # controls that widget is set to default
-        self.assertEqual(setting_widget.widget_value(), setting_cfg['default'])
+        self.assertEqual(setting_widget.widget_value(), default_value)
 
         # set value
-        setting_widget.set_widget_value(setting_cfg['new_value'])
+        setting_widget.set_widget_value(new_value)
 
         # controls that widget has been update
-        self.assertEqual(setting_widget.widget_value(), setting_cfg['new_value'])
+        self.assertEqual(setting_widget.widget_value(), new_value)
 
         # accept dialog
         self.dlg.accept()
 
         # check setting has now new value
-        self.assertEqual(MySettings().value(name), setting_cfg['new_value'])
+        self.assertEqual(MySettings().value(setting_name), new_value)
         self.dlg.close()
 
         # reset setting
-        MySettings().remove(name)
+        MySettings().remove(setting_name)
 
-    def test_dialog_auto_update(self):
-        for param in params(MySettings().settings_cfg):
-            yield self.check_dialog_auto_update, param[0], param[1], param[2]
-
-    def check_dialog_auto_update(self, test_name, name, widget_class):
-        # get setting config
-        setting_cfg = MySettings().settings_cfg[name]
-
+    def check_dialog_auto_update(self, setting_name, widget_class, default_value, new_value):
         # this will reset to default with new call of MySettings within MySettingsDialog
-        MySettings().remove(name)
+        MySettings().remove(setting_name)
 
         # test with direct update
-        self.dlg = MySettingsDialog(name, widget_class, UpdateMode.WidgetUpdate)
+        self.dlg = MySettingsDialog(setting_name, widget_class, UpdateMode.WidgetUpdate)
         self.dlg.show()
 
         # get widget
-        setting_widget = self.dlg.setting_widget(name)
+        setting_widget = self.dlg.setting_widget(setting_name)
 
         # controls that widget is set to default
-        self.assertEqual(setting_widget.widget_value(), setting_cfg['default'])
+        self.assertEqual(setting_widget.widget_value(), default_value)
 
         # set value
-        if setting_widget.widget_test(setting_cfg['new_value']) is not False:
-            self.assertEqual(MySettings().value(name), setting_cfg['new_value'])
+        if setting_widget.widget_test(new_value) is not False:
+            self.assertEqual(MySettings().value(setting_name), new_value)
         else:
             # cannot test UI
-            print(('{} cannot be run for set_value_on_widget_update = True'.format(test_name)))
+            print(('{} cannot be run for set_value_on_widget_update = True'.format(setting_name)))
         self.dlg.close()
 
         # reset setting
-        MySettings().remove(name)
+        MySettings().remove(setting_name)
 
 
 if __name__ == '__main__':

@@ -43,23 +43,14 @@ from ..setting_widget import SettingWidget
 
 class Color(Setting):
 
-    def __init__(self, name, scope, default_value, allow_alpha: bool = False, dialog_title: str = False, **kwargs):
+    def __init__(self, name, scope, default_value, allow_alpha: bool = False, dialog_title: str = '', **kwargs):
         Setting.__init__(self, name, scope, default_value,
                          object_type=None,
                          project_read=QgsProject.instance().readListEntry, **kwargs)
-        # compatibility (TODO: remove in next major release)
-        if type(allow_alpha) is dict:
-            self.allow_alpha = False
-            self.dialog_title = None
-            warnings.warn('You are using the old API with dictionary based options.'
-                          ' Switch to named arguments instead.', DeprecationWarning)
-            if 'dialogTitle' in allow_alpha:
-                self.dialog_title = allow_alpha['dialogTitle']
-            if 'allowAlpha' in allow_alpha:
-                self.allow_alpha = allow_alpha['allowAlpha']
-        else:
-            self.allow_alpha = allow_alpha
-            self.dialog_title = dialog_title
+        assert isinstance(allow_alpha, bool)
+        assert isinstance(dialog_title, str)
+        self.allow_alpha = allow_alpha
+        self.dialog_title = dialog_title
 
     def read_out(self, value, scope):
         if type(value) not in (list, tuple) or len(value) not in (3, 4):
@@ -108,7 +99,8 @@ class QgisColorWidget(SettingWidget):
 
 class StandardColorWidget(SettingWidget):
     def __init__(self, setting, widget, allow_alpha: bool = False, dialog_title: str = None):
-        color_widget = QgsColorButton(widget, dialog_title)
+        color_widget = QgsColorButton(widget)
+        color_widget.setColorDialogTitle(dialog_title)
         signal = color_widget.colorChanged
 
         SettingWidget.__init__(self, setting, color_widget, signal)

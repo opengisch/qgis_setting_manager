@@ -28,6 +28,7 @@
 
 from PyQt5.QtWidgets import QCheckBox
 from qgis.core import QgsProject, Qgis
+from qgis.gui import QgsCollapsibleGroupBox
 from ..setting import Setting
 from ..setting_widget import SettingWidget
 
@@ -49,8 +50,10 @@ class Bool(Setting):
         return True
 
     def config_widget(self, widget):
-        if type(widget) == QCheckBox:
+        if isinstance(widget, QCheckBox):
             return CheckBoxBoolWidget(self, widget)
+        elif isinstance(widget, QgsCollapsibleGroupBox):
+            return QgsCollapsibleGroupBoxBoolWidget(self, widget)
         elif hasattr(widget, "isCheckable") and widget.isCheckable():
             return CheckableBoolWidget(self, widget)
         else:
@@ -62,6 +65,18 @@ class Bool(Setting):
 class CheckBoxBoolWidget(SettingWidget):
     def __init__(self, setting, widget):
         signal = widget.stateChanged
+        SettingWidget.__init__(self, setting, widget, signal)
+
+    def set_widget_value(self, value):
+        self.widget.setChecked(value)
+
+    def widget_value(self):
+        return self.widget.isChecked()
+
+
+class QgsCollapsibleGroupBoxBoolWidget(SettingWidget):
+    def __init__(self, setting, widget):
+        signal = widget.toggled
         SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):

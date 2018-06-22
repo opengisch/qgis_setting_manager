@@ -23,36 +23,56 @@
 #
 #---------------------------------------------------------------------
 
+import os
+import yaml
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QCheckBox, QLabel, QPushButton, QDoubleSpinBox, QLineEdit, QSpinBox, QSlider, QComboBox, QListWidget
 from qgis.gui import QgsCollapsibleGroupBox, QgsColorButton, QgsProjectionSelectionWidget
 
 from .. import *
 
-pluginName = "test_plugin"
+pluginName = "qgis_setting_manager_testing"
 
 
 class MySettings(SettingManager):
     def __init__(self):
         SettingManager.__init__(self, pluginName)
 
-        settings_root = {'bool': {'class': Bool, 'default': True, 'options': {}, 'new_value': False, 'widgets': (QCheckBox, QgsCollapsibleGroupBox)},
-                         'color': {'class': Color, 'default': QColor(100, 100, 100, 100), 'options': {'allowAlpha': True}, 'new_value': QColor(30, 30, 30, 30), 'widgets': (QgsColorButton, QLabel, QPushButton)},
-                         'double': {'class': Double, 'default': 0.12345, 'options': {}, 'new_value': 1.98765, 'widgets': (QDoubleSpinBox, QLineEdit)},
-                         'integer': {'class': Integer, 'default': 1, 'options': {}, 'new_value': 2, 'widgets': (QLineEdit, QSpinBox, QSlider, QComboBox)},
-                         'string': {'class': String, 'default': 'EPSG:2056', 'options': {'comboMode': 'text'}, 'new_value': 'EPSG:21781', 'widgets': (QLineEdit, QComboBox, QgsProjectionSelectionWidget)},
-                         'stringlist': {'class': Stringlist, 'default': ['abc', 'def', 'ghi'], 'options': {}, 'new_value': ['qwe', 'rtz', 'uio'], 'widgets': [QListWidget]}}
+        cur_dir = os.path.dirname(__file__)
+        definition_file = os.path.join(cur_dir, 'setting_config.yaml')
+        with open(definition_file, 'r') as f:
+            definition = yaml.load(f.read())
 
-        self.settings_cfg = {}
-        scopes = {'project': Scope.Project, 'global': Scope.Global}
-        for s_name, setting_ in list(settings_root.items()):
-            for scope_str, scope_val in list(scopes.items()):
-                setting_name = '{}_{}'.format(s_name, scope_str)
-                self.settings_cfg[setting_name] = setting_
-                if setting_['options']:
-                    self.add_setting(setting_['class'](setting_name, scope_val, setting_['default'], setting_['options']))
-                else:
-                    self.add_setting(setting_['class'](setting_name, scope_val, setting_['default']))
+        for _, setting_definition in definition['settings'].items():
+            for scope in Scope:
+                # Add core setting
+                setting_name = '{}_{}_core'.format(setting_definition['setting_class'], scope.name)
+                options = ''
+                if 'options' in setting_definition:
+                    for option in setting_definition['options']:
+                        options += ', {}={}'.format(option, setting_definition['options'][option])
+
+                exec('self.add_setting({setting_class}("{setting_name}", {scope}, {default_value}{options}))'
+                     .format(setting_class=setting_definition['setting_class'],
+                             setting_name=setting_name,
+                             scope=scope,
+                             default_value=setting_definition['default_value'],
+                             options=options))
+
+                # Add widgets settings
+                for widget_name, widget in setting_definition['widgets'].items():
+                    setting_name = '{}_{}_{}'.format(setting_definition['setting_class'], scope.name, widget_name)
+                    options = ''
+                    if widget and 'options' in widget:
+                        for option in widget['options']:
+                            options += ', {}={}'.format(option, widget['options'][option])
+
+                    exec('self.add_setting({setting_class}("{setting_name}", {scope}, {default_value}{options}))'
+                         .format(setting_class=setting_definition['setting_class'],
+                                 setting_name=setting_name,
+                                 scope=scope,
+                                 default_value=setting_definition['default_value'],
+                                 options=options))
 
         self.add_setting(String('value_list_str', Scope.Global, 'my_val_1', value_list= ('my_val_1', 'my_val_2')))
 

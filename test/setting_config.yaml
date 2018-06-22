@@ -1,0 +1,62 @@
+
+
+
+
+
+settings:
+  bool:
+    setting_class: Bool
+    default_value: True
+    new_value: False
+    widgets:
+      QCheckBox:
+      QgsCollapsibleGroupBox:
+        
+  color:
+    setting_class: Color
+    default_value: QColor(100, 100, 100, 100)
+    new_value: QColor(30, 30, 30, 30)
+    options:
+      allow_alpha: True
+    widgets:
+      QgsColorButton:
+      QLabel:
+      QPushButton:
+        
+  double:
+    setting_class: Double
+    default_value: 0.12345
+    new_value: 1.98765
+    widgets:
+      QDoubleSpinBox:
+      QLineEdit:
+      
+  integer:
+    setting_class: Integer
+    default_value: 1
+    new_value: 2
+    widgets:
+      QLineEdit:
+      QSpinBox:
+      QSlider:
+      QComboBox:
+
+  string:
+    setting_class: String
+    default_value: '"EPSG:2056"'
+    new_value: '"EPSG:21781"'
+    widgets:
+      QLineEdit:
+      QComboBox:
+        options:
+          combo_mode: ComboMode.Text
+      QgsProjectionSelectionWidget:
+        options:
+          combo_mode: ComboMode.Data
+
+  stringlist:
+    setting_class: Stringlist
+    default_value: [abc, def, ghi]
+    new_value: [qwe, rtz, uio]
+    widgets:
+      QListWidget:
