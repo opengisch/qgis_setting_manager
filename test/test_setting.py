@@ -28,6 +28,7 @@ import os
 import yaml
 from qgis.testing import unittest
 from PyQt5.QtGui import QColor
+QColor.__repr__ = lambda color: 'QColor: {} a: {}'.format(color.name(), color.alpha())
 
 import nose2
 

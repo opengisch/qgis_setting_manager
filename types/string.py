@@ -136,13 +136,13 @@ class ComboStringWidget(SettingWidget):
         SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
-        if self.mode == 'text':
+        if self.mode is ComboMode.Text:
             self.widget.setCurrentIndex(self.widget.findText(value))
         else:
             self.widget.setCurrentIndex(self.widget.findData(value))
 
     def widget_value(self):
-        if self.mode == 'text':
+        if self.mode is ComboMode.Text:
             return self.widget.currentText()
         else:
             return self.widget.itemData(self.widget.currentIndex()) or ""
