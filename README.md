@@ -12,6 +12,7 @@ This module can:
 * automatically **write settings from their corresponding widgets**
 
 You are looking at the documentation for **QGIS 3**. See the [qgis2](https://github.com/opengisch/qgissettingmanager/tree/qgis2) branch for QGIS 2.
+Current version requires QGIS 3.2 minimum (otherwise projection widgets are not supported).
 
 
 ## The main setting class
