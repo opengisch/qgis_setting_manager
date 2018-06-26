@@ -27,7 +27,7 @@
 #---------------------------------------------------------------------
 
 from PyQt5.QtCore import QObject, pyqtSignal, QSettings
-from qgis.core import QgsProject, QgsMessageLog, Qgis
+from qgis.core import QgsProject, QgsMessageLog, Qgis, QgsSettings
 from enum import Enum
 
 
@@ -43,8 +43,8 @@ class Setting(QObject):
                  object_type=None,
                  project_read=QgsProject.instance().readEntry,
                  project_write=QgsProject.instance().writeEntry,
-                 qsettings_read=QSettings().value,
-                 qsettings_write=QSettings().setValue,
+                 qsettings_read=lambda key, def_val, object_type: QgsSettings().value(key, def_val, type=object_type),
+                 qsettings_write=lambda key, val: QgsSettings().setValue(key, val),
                  value_list: list = None):
         """
 
@@ -142,10 +142,10 @@ class Setting(QObject):
     def value(self):
         if self.scope == Scope.Global:
             if self.object_type is not None:
-                value = self.qsettings_read(self.global_name(), self.write_in(self.default_value, self.scope), type=self.object_type)
+                value = self.qsettings_read(self.global_name(), self.write_in(self.default_value, self.scope), object_type=self.object_type)
             else:
                 value = self.qsettings_read(self.global_name(), self.write_in(self.default_value, self.scope))
-        elif self.scope == Scope.Project:
+        elif self.scope is Scope.Project:
             value = self.project_read(self.plugin_name, self.name, self.write_in(self.default_value, self.scope))[0]
         value = self.read_out(value, self.scope)
         # checking should be made after read_out
@@ -155,7 +155,7 @@ class Setting(QObject):
             return value
 
     def reset_default(self):
-        if self.scope == Scope.Project:
+        if self.scope is Scope.Project:
             QgsProject.instance().removeEntry(self.plugin_name, self.name)
         else:
             QSettings().remove(self.global_name())

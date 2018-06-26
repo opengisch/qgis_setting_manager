@@ -64,7 +64,7 @@ class Bool(Setting):
 
 class CheckBoxBoolWidget(SettingWidget):
     def __init__(self, setting, widget):
-        signal = widget.stateChanged
+        signal = widget.toggled
         SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
@@ -97,6 +97,6 @@ class CheckableBoolWidget(SettingWidget):
     def widget_value(self):
         return self.widget.isChecked()
 
-    def widget_test(self, value):
-        print('cannot test checkable groupbox at the moment')
-        return False
+ #   def widget_test(self, value):
+ #       print('cannot test checkable groupbox at the moment')
+ #       return False
