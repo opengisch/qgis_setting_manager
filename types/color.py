@@ -48,7 +48,8 @@ class Color(Setting):
                          object_type=None,
                          qsettings_read=lambda key, def_val: QgsSettings().value(key, def_val),
                          qsettings_write=lambda key, val: QgsSettings().setValue(key, val),
-                         project_read=QgsProject.instance().readListEntry, **kwargs)
+                         project_read=lambda plugin, key, def_val: QgsProject.instance().readListEntry(plugin, key, def_val)[0],
+                         **kwargs)
         assert isinstance(allow_alpha, bool)
         assert isinstance(dialog_title, str)
         self.allow_alpha = allow_alpha

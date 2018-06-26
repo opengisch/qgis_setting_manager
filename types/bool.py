@@ -38,8 +38,9 @@ class Bool(Setting):
     def __init__(self, name, scope, default_value, **kwargs):
         Setting.__init__(self, name, scope, default_value,
                          object_type=bool,
-                         project_read=QgsProject.instance().readBoolEntry,
-                         project_write=QgsProject.instance().writeEntryBool, **kwargs)
+                         project_read=lambda plugin, key, def_val: QgsProject.instance().readBoolEntry(plugin, key, def_val)[0],
+                         project_write=lambda plugin, key, val: QgsProject.instance().writeEntryBool(plugin, key, val),
+                         **kwargs)
 
     def check(self, value: bool):
         if type(value) != bool:
@@ -57,7 +58,6 @@ class Bool(Setting):
         elif hasattr(widget, "isCheckable") and widget.isCheckable():
             return CheckableBoolWidget(self, widget)
         else:
-            print((type(widget)))
             raise NameError("SettingManager does not handle %s widgets for booleans at the moment (setting: %s)" %
                             (type(widget), self.name))
 

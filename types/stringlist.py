@@ -40,8 +40,8 @@ class Stringlist(Setting):
                          object_type=None,
                          qsettings_read=lambda key, def_val: QgsSettings().value(key, def_val),
                          qsettings_write=lambda key, val: QgsSettings().setValue(key, val),
-                         project_read=QgsProject.instance().readListEntry,
-                         project_write=QgsProject.instance().writeEntry, **kwargs)
+                         project_read=lambda plugin, key, def_val: QgsProject.instance().readListEntry(plugin, key, def_val)[0],
+                         **kwargs)
         self.table_column = table_column
 
     def read_out(self, value, scope):
@@ -74,7 +74,6 @@ class Stringlist(Setting):
         elif type(widget) == QButtonGroup:
             return ButtonGroupStringListWidget(self, widget)
         else:
-            print((type(widget)))
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
 
