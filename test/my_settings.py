@@ -47,22 +47,22 @@ class MySettings(SettingManager):
             for scope in Scope:
                 # Add core setting
                 setting_name = '{}_{}_core'.format(setting_definition_name, scope.name)
-                options = ''
+                options_core = ''
                 if 'options' in setting_definition:
                     for option in setting_definition['options']:
-                        options += ', {}={}'.format(option, setting_definition['options'][option])
+                        options_core += ', {}={}'.format(option, setting_definition['options'][option])
 
                 exec('self.add_setting({setting_class}("{setting_name}", {scope}, {default_value}{options}))'
                      .format(setting_class=setting_definition['setting_class'],
                              setting_name=setting_name,
                              scope=scope,
                              default_value=setting_definition['default_value'],
-                             options=options))
+                             options=options_core))
 
                 # Add widgets settings
                 for widget_name, widget in setting_definition['widgets'].items():
                     setting_name = '{}_{}_{}'.format(setting_definition_name, scope.name, widget_name)
-                    options = ''
+                    options = options_core
                     if widget and 'options' in widget:
                         for option in widget['options']:
                             options += ', {}={}'.format(option, widget['options'][option])

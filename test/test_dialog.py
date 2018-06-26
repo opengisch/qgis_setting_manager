@@ -31,6 +31,7 @@ from qgis.core import QgsMessageLog, Qgis
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QCheckBox, QLabel, QPushButton, QDoubleSpinBox, QLineEdit, QSpinBox, QSlider, QComboBox, QListWidget
 from qgis.gui import QgsCollapsibleGroupBox, QgsColorButton, QgsProjectionSelectionWidget
+QColor.__repr__ = lambda color: 'QColor: {} a: {}'.format(color.name(), color.alpha())
 
 import nose2
 
