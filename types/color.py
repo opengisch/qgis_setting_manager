@@ -34,7 +34,7 @@
 import warnings
 
 from PyQt5.QtGui import QColor
-from qgis.core import QgsProject, Qgis
+from qgis.core import QgsProject, Qgis, QgsSettings
 from qgis.gui import QgsColorButton
 
 from ..setting import Setting
@@ -46,6 +46,8 @@ class Color(Setting):
     def __init__(self, name, scope, default_value, allow_alpha: bool = False, dialog_title: str = '', **kwargs):
         Setting.__init__(self, name, scope, default_value,
                          object_type=None,
+                         qsettings_read=lambda key, def_val: QgsSettings().value(key, def_val),
+                         qsettings_write=lambda key, val: QgsSettings().setValue(key, val),
                          project_read=QgsProject.instance().readListEntry, **kwargs)
         assert isinstance(allow_alpha, bool)
         assert isinstance(dialog_title, str)

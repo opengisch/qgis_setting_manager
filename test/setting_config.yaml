@@ -11,6 +11,8 @@ settings:
     widgets:
       QCheckBox:
       QgsCollapsibleGroupBox:
+        init_widget:
+          - setCheckable(True)
         
   color:
     setting_class: Color
@@ -29,6 +31,8 @@ settings:
     new_value: 1.98765
     widgets:
       QDoubleSpinBox:
+        init_widget:
+          - setDecimals(5)
       QLineEdit:
       
   integer:
@@ -40,6 +44,10 @@ settings:
       QSpinBox:
       QSlider:
       QComboBox:
+        init_widget:
+          - addItem(str(1))
+          - addItem(str(2))
+          - addItem(str(3))
 
   string:
     setting_class: String
@@ -50,9 +58,10 @@ settings:
       QComboBox:
         options:
           combo_mode: ComboMode.Text
+        init_widget:
+          - addItem('EPSG:2056')
+          - addItem('EPSG:21781')
       QgsProjectionSelectionWidget:
-        options:
-          combo_mode: ComboMode.Data
 
   stringlist:
     setting_class: Stringlist
@@ -60,3 +69,5 @@ settings:
     new_value: [qwe, rtz, uio]
     widgets:
       QListWidget:
+        init_widget:
+          - addItems(('abc', 'def', 'ghi', 'random', 'qwe', 'rtz', 'uio'))

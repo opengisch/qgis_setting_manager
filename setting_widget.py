@@ -27,9 +27,13 @@
 #---------------------------------------------------------------------
 
 from PyQt5.QtCore import pyqtSlot, QObject
+from qgis.core import Qgis, QgsMessageLog
 
 
 class SettingWidget(QObject):
+
+    DEBUG = False
+
     def __init__(self, setting, widget, signal):
         QObject.__init__(self)
 
@@ -37,6 +41,9 @@ class SettingWidget(QObject):
         self.widget = widget
         self.signal = signal
         self.connected = False
+
+    def __repr__(self):
+        return 'SettingWidget: {} with value: {}'.format(self.setting.name, self.widget_value())
 
     def connect_widget_auto_update(self):
         """
@@ -76,6 +83,10 @@ class SettingWidget(QObject):
         return True
 
     def set_widget_from_value(self):
+        if self.DEBUG:
+            msg = 'setting {} with value: {}'.format(self.setting.name, self.setting.value())
+            QgsMessageLog.logMessage('{} {}'.format(self.__class__.__name__, msg), 'Setting manager', Qgis.Info)
+
         reconnect = False
         if self.connected:
             reconnect = True

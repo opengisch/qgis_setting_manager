@@ -27,6 +27,7 @@ import qgis
 import os 
 import yaml
 from qgis.testing import start_app, unittest
+from qgis.core import QgsMessageLog, Qgis
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QCheckBox, QLabel, QPushButton, QDoubleSpinBox, QLineEdit, QSpinBox, QSlider, QComboBox, QListWidget
 from qgis.gui import QgsCollapsibleGroupBox, QgsColorButton, QgsProjectionSelectionWidget
@@ -56,24 +57,37 @@ class TestDialog(unittest.TestCase):
         with open(definition_file, 'r') as f:
             definition = yaml.load(f.read())
 
-        for _, setting_definition in definition['settings'].items():
+        for setting_definition_name, setting_definition in definition['settings'].items():
             for scope in Scope:
                 for widget_name, widget in setting_definition['widgets'].items():
-                    setting_name = '{}_{}_{}'.format(setting_definition['setting_class'], scope.name, widget_name)
+                    setting_name = '{}_{}_{}'.format(setting_definition_name, scope.name, widget_name)
                     widget_class = eval(str(widget_name))
                     default_value = eval(str(setting_definition['default_value']))
                     new_value = eval(str(setting_definition['new_value']))
-                    
-                    yield self.check_dialog_accept_update, setting_name, widget_class, default_value, new_value
-                    yield self.check_dialog_auto_update, setting_name, widget_class, default_value, new_value
+                    init_widget = widget['init_widget'] if widget and 'init_widget' in widget else None
 
-    def check_dialog_accept_update(self, setting_name, widget_class, default_value, new_value):
-       
+                    print('testing {} in dialog accept mode'.format(widget_class))
+                    yield self.check_dialog_accept_update, setting_name, widget_class, default_value, new_value, init_widget
+                    print('testing {} in auto update mode'.format(widget_class))
+                    yield self.check_dialog_auto_update, setting_name, widget_class, default_value, new_value, init_widget
+
+    def check_dialog_accept_update(self, setting_name, widget_class, default_value, new_value, init_widget: str):
+
+        print('check_dialog_accept_update')
+        print('setting_name: {}'.format(setting_name))
+        print('widget_class: {}'.format(widget_class))
+        print('default_value: {}'.format(default_value))
+        print('new_value: {}'.format(new_value))
+        print('init_widget: {}'.format(init_widget))
+
         # this will reset to default with new call of MySettings within MySettingsDialog
         MySettings().remove(setting_name)
 
+        print('current setting value: {}'.format(MySettings().value(setting_name)))
+
         # create dialog
-        self.dlg = MySettingsDialog(setting_name, widget_class, UpdateMode.DialogAccept)
+        self.dlg = MySettingsDialog(setting_name, widget_class, UpdateMode.DialogAccept, init_widget)
+        self.dlg.DEBUG = True
         self.dlg.show()
 
         # control that the widget is detected
@@ -84,6 +98,7 @@ class TestDialog(unittest.TestCase):
         self.assertIsNotNone(setting_widget)
 
         # controls that widget is set to default
+        print(setting_widget)
         self.assertEqual(setting_widget.widget_value(), default_value)
 
         # set value
@@ -102,12 +117,16 @@ class TestDialog(unittest.TestCase):
         # reset setting
         MySettings().remove(setting_name)
 
-    def check_dialog_auto_update(self, setting_name, widget_class, default_value, new_value):
+    def check_dialog_auto_update(self, setting_name, widget_class, default_value, new_value, init_widget: str):
+
+        print('check_dialog_auto_update')
+
         # this will reset to default with new call of MySettings within MySettingsDialog
         MySettings().remove(setting_name)
 
         # test with direct update
-        self.dlg = MySettingsDialog(setting_name, widget_class, UpdateMode.WidgetUpdate)
+        self.dlg = MySettingsDialog(setting_name, widget_class, UpdateMode.WidgetUpdate, init_widget)
+        self.dlg.DEBUG = True
         self.dlg.show()
 
         # get widget

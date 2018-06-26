@@ -43,10 +43,10 @@ class MySettings(SettingManager):
         with open(definition_file, 'r') as f:
             definition = yaml.load(f.read())
 
-        for _, setting_definition in definition['settings'].items():
+        for setting_definition_name, setting_definition in definition['settings'].items():
             for scope in Scope:
                 # Add core setting
-                setting_name = '{}_{}_core'.format(setting_definition['setting_class'], scope.name)
+                setting_name = '{}_{}_core'.format(setting_definition_name, scope.name)
                 options = ''
                 if 'options' in setting_definition:
                     for option in setting_definition['options']:
@@ -61,7 +61,7 @@ class MySettings(SettingManager):
 
                 # Add widgets settings
                 for widget_name, widget in setting_definition['widgets'].items():
-                    setting_name = '{}_{}_{}'.format(setting_definition['setting_class'], scope.name, widget_name)
+                    setting_name = '{}_{}_{}'.format(setting_definition_name, scope.name, widget_name)
                     options = ''
                     if widget and 'options' in widget:
                         for option in widget['options']:

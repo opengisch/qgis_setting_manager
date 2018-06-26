@@ -42,9 +42,9 @@ class TestSetting(unittest.TestCase):
         with open(definition_file, 'r') as f:
             definition = yaml.load(f.read())
 
-        for _, setting_definition in definition['settings'].items():
+        for setting_definition_name, setting_definition in definition['settings'].items():
             for scope in Scope:
-                setting_name = '{}_{}_core'.format(setting_definition['setting_class'], scope.name)
+                setting_name = '{}_{}_core'.format(setting_definition_name, scope.name)
                 default_value = eval(str(setting_definition['default_value']))
                 new_value = eval(str(setting_definition['new_value']))
                 yield self.check_setting, setting_name, default_value, new_value

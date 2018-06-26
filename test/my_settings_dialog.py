@@ -30,27 +30,30 @@ from .my_settings import MySettings
 
 
 class MySettingsDialog(QDialog, SettingDialog):
-    def __init__(self, setting_name, widget_class, mode=UpdateMode.DialogAccept):
+    def __init__(self, setting_name, widget_class, mode: UpdateMode=UpdateMode.DialogAccept, init_widget: str=None):
+        """
+
+        :param setting_name:
+        :param widget_class:
+        :param mode:
+        :param init_widget: some initializing code for the widget
+        """
 
         settings = MySettings()
-        super(QDialog, self).__init__(setting_manager=settings, mode=mode)
 
-        self.settings = MySettings()
-        w = widget_class(self)
-        w.setObjectName(setting_name)
+        QDialog.__init__(self, setting_manager=settings, mode=mode)
+        SettingDialog.__init__(self, setting_manager=settings, mode=mode)
 
-        # setup UI
-        if setting_name.startswith('bool_') and widget_class == QgsCollapsibleGroupBox:
-            w.setCheckable(True)
-        if setting_name.startswith('double_') and widget_class == QDoubleSpinBox:
-            w.setDecimals(5)
-        if setting_name.startswith('integer_') and widget_class == QComboBox:
-            for x in (1, 2, 3):
-                w.addItem(str(x))
-        if setting_name.startswith('string_') and widget_class == QComboBox:
-            w.addItem('EPSG:2056')
-            w.addItem('EPSG:21781')
-        if setting_name.startswith('stringlist_') and widget_class == QListWidget:
-            w.addItems(('abc', 'def', 'ghi', 'random', 'qwe', 'rtz', 'uio'))
+        #super(QDialog, self).__init__(setting_manager=settings, mode=mode)
+        self.DEBUG = True
 
+        self.widget = widget_class(self)
+        self.widget.setObjectName(setting_name)
+
+        if init_widget:
+            for cmd in init_widget:
+                print('init widget: {}'.format(cmd))
+                exec('self.widget.{}'.format(cmd))
+
+        self.settings = settings
         self.init_widgets()

@@ -28,7 +28,7 @@
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QListWidget, QButtonGroup, QTableWidget
-from qgis.core import QgsProject, Qgis
+from qgis.core import QgsProject, Qgis, QgsSettings
 
 from ..setting import Setting
 from ..setting_widget import SettingWidget
@@ -38,6 +38,8 @@ class Stringlist(Setting):
     def __init__(self, name, scope, default_value, table_column: int = 0, **kwargs):
         Setting.__init__(self, name, scope, default_value,
                          object_type=None,
+                         qsettings_read=lambda key, def_val: QgsSettings().value(key, def_val),
+                         qsettings_write=lambda key, val: QgsSettings().setValue(key, val),
                          project_read=QgsProject.instance().readListEntry,
                          project_write=QgsProject.instance().writeEntry, **kwargs)
         self.table_column = table_column

@@ -39,6 +39,9 @@ class UpdateMode(object):
 
 
 class SettingDialog:
+
+    DEBUG = False
+
     def __init__(self, setting_manager, mode=UpdateMode.DialogAccept):
 
         if isinstance(self, QDialog) and mode == UpdateMode.DialogAccept:
@@ -59,12 +62,15 @@ class SettingDialog:
                 widget = self.findChild(objectClass, setting_name)
                 if widget is not None:
                     if Debug:
-                        print(("Widget found: {}".format(setting_name)))
+                        print("Widget found: {}".format(setting_name))
 
                     # configure the widget
                     setting_widget = self.setting_manager.setting(setting_name).config_widget(widget)
                     if setting_widget is None:
                         raise NameError('Widget could not be set for setting {}'.format(setting_name))
+
+                    if self.DEBUG:
+                        setting_widget.DEBUG = True
 
                     # TODO
                     # setting_widget.widgetDestroyed.connect(self.widgetDestroyed)
