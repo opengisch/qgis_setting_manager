@@ -41,8 +41,8 @@ class Setting(QObject):
 
     def __init__(self, name: str, scope: Scope, default_value,
                  object_type=None,
-                 project_read=QgsProject.instance().readEntry,
-                 project_write=QgsProject.instance().writeEntry,
+                 project_read=lambda plugin, key, def_val: QgsProject.instance().readEntry(plugin, key, def_val)[0],
+                 project_write=lambda plugin, key, val: QgsProject.instance().writeEntry(plugin, key, val),
                  qsettings_read=lambda key, def_val, object_type: QgsSettings().value(key, def_val, type=object_type),
                  qsettings_write=lambda key, val: QgsSettings().setValue(key, val),
                  value_list: list = None):
@@ -146,7 +146,7 @@ class Setting(QObject):
             else:
                 value = self.qsettings_read(self.global_name(), self.write_in(self.default_value, self.scope))
         elif self.scope is Scope.Project:
-            value = self.project_read(self.plugin_name, self.name, self.write_in(self.default_value, self.scope))[0]
+            value = self.project_read(self.plugin_name, self.name, self.write_in(self.default_value, self.scope))
         value = self.read_out(value, self.scope)
         # checking should be made after read_out
         if not self._check(value):

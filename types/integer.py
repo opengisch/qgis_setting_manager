@@ -40,7 +40,7 @@ class Integer(Setting):
     def __init__(self, name, scope, default_value, **kwargs):
         Setting.__init__(self, name, scope, default_value,
                          object_type=int,
-                         project_read=QgsProject.instance().readNumEntry,
+                         project_read=lambda plugin, key, def_val: QgsProject.instance().readNumEntry(plugin, key, def_val)[0],
                          **kwargs)
 
     def check(self, value):
@@ -59,7 +59,6 @@ class Integer(Setting):
         elif type(widget) == QComboBox:
             return ComboBoxIntegerWidget(self, widget)
         else:
-            print((type(widget)))
             raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
                             (type(widget), self.name))
 
