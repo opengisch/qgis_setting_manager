@@ -71,3 +71,14 @@ settings:
       QListWidget:
         init_widget:
           - addItems(('abc', 'def', 'ghi', 'random', 'qwe', 'rtz', 'uio'))
+
+  enum:
+    setting_class: Enum
+    default_value: QgsTolerance.Pixels
+    new_value: QgsTolerance.LayerUnits
+    scope: Scope.Global
+    widgets:
+      QComboBox:
+        init_widget:
+          - addItem('LayerUnits', QgsTolerance.LayerUnits)
+          - addItem('Pixels', QgsTolerance.Pixels)

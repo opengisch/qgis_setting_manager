@@ -199,6 +199,3 @@ class ProjectionStringWidget(SettingWidget):
     def widget_value(self):
         return self.widget.crs().authid()
 
-#    def widget_test(self, value):
-#        print('cannot test auto update of projection selection at the moment (QGIS 3.0 broken)')
-#        return False

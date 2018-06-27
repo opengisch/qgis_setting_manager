@@ -72,20 +72,10 @@ class SettingWidget(QObject):
         """
         return None
 
-    def widget_test(self, value):
-        """
-        Method to test the UI, might be reimplemented in sub-class
-        Returns True if the test can be run, False otherwise
-        """
-        # this will skip the disconnect/connect
-        # so it should trigger the set_value_from_widget when in auto update mode
-        self.set_widget_value(value)
-        return True
-
     def set_widget_from_value(self):
         if self.DEBUG:
-            msg = 'setting {} with value: {}'.format(self.setting.name, self.setting.value())
-            QgsMessageLog.logMessage('{} {}'.format(self.__class__.__name__, msg), 'Setting manager', Qgis.Info)
+            msg = 'setting {} with value from widget {}'.format(self.setting.name, self.setting.value())
+            QgsMessageLog.logMessage('{}:: {}'.format(self.__class__.__name__, msg), 'Setting manager', Qgis.Info)
 
         reconnect = False
         if self.connected:

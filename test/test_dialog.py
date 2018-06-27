@@ -27,7 +27,7 @@ import qgis
 import os 
 import yaml
 from qgis.testing import start_app, unittest
-from qgis.core import QgsMessageLog, Qgis
+from qgis.core import QgsMessageLog, Qgis, QgsTolerance
 from PyQt5.QtGui import QColor
 from PyQt5.QtWidgets import QCheckBox, QLabel, QPushButton, QDoubleSpinBox, QLineEdit, QSpinBox, QSlider, QComboBox, QListWidget
 from qgis.gui import QgsCollapsibleGroupBox, QgsColorButton, QgsProjectionSelectionWidget
@@ -60,6 +60,10 @@ class TestDialog(unittest.TestCase):
 
         for setting_definition_name, setting_definition in definition['settings'].items():
             for scope in Scope:
+                if 'scope' in setting_definition:
+                    setting_scope = eval(setting_definition['scope'])
+                    if setting_scope is not scope:
+                        continue
                 for widget_name, widget in setting_definition['widgets'].items():
                     setting_name = '{}_{}_{}'.format(setting_definition_name, scope.name, widget_name)
                     widget_class = eval(str(widget_name))
@@ -136,12 +140,12 @@ class TestDialog(unittest.TestCase):
         # controls that widget is set to default
         self.assertEqual(setting_widget.widget_value(), default_value)
 
-        # set value
-        if setting_widget.widget_test(new_value) is not False:
-            self.assertEqual(MySettings().value(setting_name), new_value)
-        else:
-            # cannot test UI
-            print(('{} cannot be run for set_value_on_widget_update = True'.format(setting_name)))
+        # set the widget with new value
+        setting_widget.set_widget_value(new_value)
+
+        # check that setting has been automatically updated
+        self.assertEqual(MySettings().value(setting_name), new_value)
+
         self.dlg.close()
 
         # reset setting
