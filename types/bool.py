@@ -96,7 +96,3 @@ class CheckableBoolWidget(SettingWidget):
 
     def widget_value(self):
         return self.widget.isChecked()
-
- #   def widget_test(self, value):
- #       print('cannot test checkable groupbox at the moment')
- #       return False

@@ -27,6 +27,7 @@ import qgis
 import os
 import yaml
 from qgis.testing import unittest
+from qgis.core import QgsTolerance
 from PyQt5.QtGui import QColor
 QColor.__repr__ = lambda color: 'QColor: {} a: {}'.format(color.name(), color.alpha())
 
@@ -45,6 +46,10 @@ class TestSetting(unittest.TestCase):
 
         for setting_definition_name, setting_definition in definition['settings'].items():
             for scope in Scope:
+                if 'scope' in setting_definition:
+                    setting_scope = eval(setting_definition['scope'])
+                    if setting_scope is not scope:
+                        continue
                 setting_name = '{}_{}_core'.format(setting_definition_name, scope.name)
                 default_value = eval(str(setting_definition['default_value']))
                 new_value = eval(str(setting_definition['new_value']))

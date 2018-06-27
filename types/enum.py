@@ -29,7 +29,7 @@
 from enum import Enum as PyEnum
 
 from PyQt5.QtWidgets import QComboBox
-from qgis.core import Qgis, QgsSettings
+from qgis.core import Qgis, QgsSettings, QgsMessageLog
 
 from ..setting import Setting, Scope
 from ..setting_widget import SettingWidget
@@ -96,10 +96,15 @@ class ComboEnumWidget(SettingWidget):
         SettingWidget.__init__(self, setting, widget, signal)
 
     def set_widget_value(self, value):
+        if self.DEBUG:
+            msg = 'setting {} value {}'.format(self.setting.name, value)
+            QgsMessageLog.logMessage('{}:: {}'.format(self.__class__.__name__, msg), 'Setting manager', Qgis.Info)
         self.widget.setCurrentIndex(self.widget.findData(value))
 
     def widget_value(self):
-        value = self.widget.itemData(self.widget.currentIndex()) or self.setting.default_value
+        value = self.widget.itemData(self.widget.currentIndex())
+        if value is None:
+            value = self.setting.default_value
         value = self.setting.default_value.__class__(value)
         return value
 
