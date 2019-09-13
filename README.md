@@ -34,7 +34,7 @@ You may add as many settings as you want using `add_setting` method:
 add_setting( SettingClass( name, scope, default_value, value_list: list = None, **options ) )
 ```
 
-* `SettingClass`: `Bool`, `String`, `Color`, `Integer`, `Double` or `Stringlist`
+* `SettingClass`: `Bool`, `String`, `Color`, `Integer`, `Double`, `Stringlist` or `Dictionary`
 * `name`: the name of the setting
 * `scope`: `Scope.Global` or `Scope.Project`
 * `default_value`: the default value of the setting (type must correspond)
@@ -158,7 +158,11 @@ Additional options:
 * `QListWidget` (checks items having their _text_ in the list)
 * `QButtonGroup` (checks items having their _name_ in the list)
 * `QTableWidget` (checks items having their _text_ in the list)
-  * `table_column` specifies which column is used
+* `table_column` specifies which column is used
+  
+**Dictionnary**
+
+* No widgets are offered yet.
 
 New types of widget are easily added, if one is missing, do not hesitate to [ask](https://github.com/opengisch/qgissettingmanager/issues)!
 
