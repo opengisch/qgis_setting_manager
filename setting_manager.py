@@ -32,18 +32,15 @@ import inspect
 # to print debug info
 Debug = False
 
-# TODO remove this import used in deprecated method
-from .types import *
 
-
-class SettingManager():
+class SettingManager:
     def __init__(self, plugin_name):
         self.plugin_name = plugin_name
         self.__settings = {}
 
     def add_setting(self, setting):
         if setting.name in self.__settings:
-            raise NameError("%s already exist in settings." % name)
+            raise NameError("{} already exist in settings.".format(name))
         setting.set_plugin_name(self.plugin_name)
         self.__settings[setting.name] = setting
 

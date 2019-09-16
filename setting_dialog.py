@@ -29,18 +29,16 @@
 from PyQt5.QtWidgets import QDialog, QWidget, QButtonGroup
 
 from .setting_manager import Debug
+from enum import Enum
 
 
-# TODO python3 use enum instead
-class UpdateMode(object):
-    NoUpdate = 1
-    DialogAccept = 2
-    WidgetUpdate = 3
+class UpdateMode(Enum):
+    NoUpdate = 'no_update'
+    DialogAccept = 'dialog_accept'
+    WidgetUpdate = 'widget_update'
 
 
 class SettingDialog:
-
-    DEBUG = False
 
     def __init__(self, setting_manager, mode=UpdateMode.DialogAccept):
 
@@ -69,7 +67,7 @@ class SettingDialog:
                     if setting_widget is None:
                         raise NameError('Widget could not be set for setting {}'.format(setting_name))
 
-                    if self.DEBUG:
+                    if Debug:
                         setting_widget.DEBUG = True
 
                     # TODO

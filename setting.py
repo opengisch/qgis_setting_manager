@@ -54,7 +54,7 @@ class Setting(QObject):
         :param object_type:
         :param project_read:
         :param project_write:
-        :param value_list: optional list to limit the authorized values for the settings.
+        :param value_list: optional list to limit the allowed values for the setting.
         """
         QObject.__init__(self)
 

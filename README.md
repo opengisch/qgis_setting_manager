@@ -119,6 +119,25 @@ def showEvent(self, e):
 
 The widgets are automatically detected by the manager. If the type of widget is not handled, an error is raised.
 
+To access widget properties, get the widget after the initilization of setting widgets and set them afterwards.
+For instance:
+
+```python
+class MyDialog(QDialog, Ui_myDialog, SettingDialog):
+    def __init__(self):
+        settings = MySettings()
+        super.__init__(self, setting_manager=settings)
+        self.setupUi(self)
+        self.settings = settings
+        self.init_widgets()
+
+        list_table_widget: TableWidgetStringListWidget = self.setting_widget('my_list')
+        list_table_widget.column = 0  # to modify the column to be checked
+        list_table_widget.userdata = True  # to use UserData instead of Text
+        list_table_widget.invert = True   # to invert the checking 
+```
+
+
 **Strings**
 
 * `QLineEdit`
@@ -157,8 +176,10 @@ Additional options:
 
 * `QListWidget` (checks items having their _text_ in the list)
 * `QButtonGroup` (checks items having their _name_ in the list)
-* `QTableWidget` (checks items having their _text_ in the list)
-* `table_column` specifies which column is used
+* `QTableWidget` checks items having their _text_ or _data_ in the table. Properties of the widget:
+  * `column` specifies which column is used
+  * `invert` if True, unchecked items are saved
+  * `userdata` if True, use the `userData` instead of the `text
   
 **Dictionnary**
 

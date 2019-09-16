@@ -35,14 +35,13 @@ from ..setting_widget import SettingWidget
 
 
 class Stringlist(Setting):
-    def __init__(self, name, scope, default_value, table_column: int = 0, **kwargs):
+    def __init__(self, name, scope, default_value, **kwargs):
         Setting.__init__(self, name, scope, default_value,
                          object_type=None,
                          qsettings_read=lambda key, def_val: QgsSettings().value(key, def_val),
                          qsettings_write=lambda key, val: QgsSettings().setValue(key, val),
                          project_read=lambda plugin, key, def_val: QgsProject.instance().readListEntry(plugin, key, def_val)[0],
                          **kwargs)
-        self.table_column = table_column
 
     def read_out(self, value, scope):
         # always cast to list
@@ -70,7 +69,7 @@ class Stringlist(Setting):
         if type(widget) == QListWidget:
             return ListStringListWidget(self, widget)
         elif type(widget) == QTableWidget:
-            return TableWidgetStringListWidget(self, widget, self.table_column)
+            return TableWidgetStringListWidget(self, widget)
         elif type(widget) == QButtonGroup:
             return ButtonGroupStringListWidget(self, widget)
         else:
@@ -101,15 +100,43 @@ class ListStringListWidget(SettingWidget):
 
 
 class TableWidgetStringListWidget(SettingWidget):
-    def __init__(self, setting, widget: QTableWidget, table_column: int = 0):
-        self.table_column = table_column
+    def __init__(self, setting, widget: QTableWidget):
         signal = widget.itemChanged
         SettingWidget.__init__(self, setting, widget, signal)
+        self._column = 0
+        self._userdata = False
+        self._invert = False
+
+    @property
+    def column(self):
+        return self._column
+
+    @column.setter
+    def column(self, value: int):
+        self._column = value
+
+    @property
+    def userdata(self):
+        return self._userdata
+
+    @userdata.setter
+    def userdata(self, value: bool):
+        self._userdata = value
+
+    @property
+    def invert(self):
+        return self._invert
+
+    @invert.setter
+    def invert(self, value: bool):
+        self._invert = value
 
     def set_widget_value(self, value):
         for r in range(self.widget.rowCount()):
-            item = self.widget.item(r, self.table_column)
-            if item.text() in value:
+            item = self.widget.item(r, self._column)
+            data = item.data(Qt.UserRole) if self._userdata else item.text()
+            if not self._invert and data in value or \
+                   self._invert and data not in value:
                 item.setCheckState(Qt.Checked)
             else:
                 item.setCheckState(Qt.Unchecked)
@@ -117,9 +144,11 @@ class TableWidgetStringListWidget(SettingWidget):
     def widget_value(self):
         value = []
         for i in range(self.widget.rowCount()):
-            item = self.widget.item(i, self.table_column)
-            if item.checkState() == Qt.Checked:
-                value.append(item.text())
+            item = self.widget.item(i, self._column)
+            if not self._invert and item.checkState() == Qt.Checked or \
+                   self._invert and item.checkState() == Qt.Unchecked:
+                data = item.data(Qt.UserRole) if self._userdata else item.text()
+                value.append(data)
         return value
 
 
