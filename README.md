@@ -138,7 +138,7 @@ class MyDialog(QDialog, Ui_myDialog, SettingDialog):
 ```
 
 
-**Strings**
+**String**
 
 * `QLineEdit`
 * `QComboBox` 
@@ -147,12 +147,12 @@ class MyDialog(QDialog, Ui_myDialog, SettingDialog):
 * `QgsMapLayerComboBox` uses layer ID for the setting value
 * `QgsFileWidget`
 
-**Booleans**
+**Boolean**
 
 * `QCheckBox`
 * Any checkable widget (groupbox, etc.)
 
-**Colors**
+**Color**
 
 * Native QGIS widgets (QgsColorButton) or any widget (label or pushbutton are recommended). For standard Qt Widgets, QGIS [color button](http://qgis.org/api/classQgsColorButton.html)) will be used. 
 
@@ -160,19 +160,20 @@ Additional options:
 * `allow_alpha` (boolean) to allow transparent colors
 * `dialog_title` (string) to set the dialog title.
 
-**Integers**
+**Integer**
 
 * `QLineEdit`
 * `QSpinBox`
 * `QSlider`
 * `QComboBox` (setting is set as the combo box index)
 
-**Doubles**
+**Double**
 
 * `QLineEdit`
 * `QDoubleSpinBox`
+* `QgsScaleWidget`
 
-**Stringlist**
+**String list**
 
 * `QListWidget` (checks items having their _text_ in the list)
 * `QButtonGroup` (checks items having their _name_ in the list)
@@ -197,4 +198,5 @@ A more elegant way is to use [git submodule](http://git-scm.com/book/en/Git-Tool
 git submodule add https://github.com/opengisch/qgissettingmanager.git
 ```
 
-A folder _qgissettingmanager_ will be added to your plugin directory. However, git only references the module, and you can `git pull` in this folder to get the last changes.
+A folder _qgissettingmanager_ will be added to your plugin directory. 
+However, git only references the module, and you can `git pull` in this folder to get the last changes.

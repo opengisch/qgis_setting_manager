@@ -28,6 +28,7 @@
 
 from PyQt5.QtWidgets import QLineEdit, QDoubleSpinBox
 from qgis.core import QgsProject, Qgis
+from qgis.gui import QgsScaleWidget
 
 from ..setting import Setting
 from ..setting_widget import SettingWidget
@@ -55,8 +56,10 @@ class Double(Setting):
             return LineEditDoubleWidget(self, widget)
         elif type(widget) == QDoubleSpinBox:
             return DoubleSpinBoxDoubleWidget(self, widget)
+        elif type(widget) == QgsScaleWidget:
+            return DoubleQgsScaleWidget(self, widget)
         else:
-            raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
+            raise NameError("SettingManager does not handle %s widgets for double for the moment (setting: %s)" %
                             (type(widget), self.name))
 
 
@@ -83,5 +86,16 @@ class DoubleSpinBoxDoubleWidget(SettingWidget):
     def widget_value(self):
         return self.widget.value()
 
+
+class DoubleQgsScaleWidget(SettingWidget):
+    def __init__(self, setting, widget: QgsScaleWidget):
+        signal = widget.scaleChanged
+        SettingWidget.__init__(self, setting, widget, signal)
+
+    def set_widget_value(self, value):
+        self.widget.setScale(value)
+
+    def widget_value(self):
+        return self.widget.scale()
 
 
