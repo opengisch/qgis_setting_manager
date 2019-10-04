@@ -26,23 +26,15 @@
 #
 #---------------------------------------------------------------------
 
-
-
-import warnings
-from enum import Enum
-
-from qgis.PyQt.QtWidgets import QLineEdit, QButtonGroup, QComboBox
-from qgis.core import QgsProject, QgsCoordinateReferenceSystem, Qgis
+from qgis.PyQt.QtWidgets import QLineEdit, QComboBox, QButtonGroup
+from qgis.core import Qgis
 from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox, QgsFileWidget, QgsProjectionSelectionWidget,\
     QgsAuthConfigSelect
 
 from ..setting import Setting, Scope
-from ..setting_widget import SettingWidget
+from ..widgets import LineEditStringWidget, ButtonGroupStringWidget, ComboStringWidget,\
+    MapLayerComboStringWidget, FieldComboStringWidget, FileStringWidget, AuthConfigSelectStringWidget, ProjectionStringWidget
 
-
-class ComboMode(Enum):
-    Text = 1
-    Data = 2
 
 
 class String(Setting):
@@ -76,147 +68,17 @@ class String(Setting):
             return False
         return True
 
-    def config_widget(self, widget):
-        if type(widget) == QLineEdit:
-            return LineEditStringWidget(self, widget)
-        elif type(widget) == QButtonGroup:
-            return ButtonGroupStringWidget(self, widget)
-        elif type(widget) == QComboBox:
-            return ComboStringWidget(self, widget)
-        elif type(widget) == QgsMapLayerComboBox:
-            return MapLayerComboStringWidget(self, widget)
-        elif type(widget) == QgsFieldComboBox:
-            return FieldComboStringWidget(self, widget)
-        elif type(widget) == QgsFileWidget:
-            return FileStringWidget(self, widget)
-        elif type(widget) == QgsProjectionSelectionWidget:
-            return ProjectionStringWidget(self, widget)
-        elif type(widget) == QgsAuthConfigSelect:
-            return AuthConfigSelectStringWidget(self, widget)
-        else:
-            raise NameError("SettingManager does not handle {t} widgets "
-                            "for strings at the moment (setting: {s})".format(t=type(widget), s=self.name))
+    @staticmethod
+    def supported_widgets():
+        return {
+            QgsMapLayerComboBox: MapLayerComboStringWidget,
+            QgsFieldComboBox: FieldComboStringWidget,
+            QgsFileWidget: FileStringWidget,
+            QgsProjectionSelectionWidget: ProjectionStringWidget,
+            QgsAuthConfigSelect: AuthConfigSelectStringWidget,
+            QLineEdit: LineEditStringWidget,
+            QButtonGroup: ButtonGroupStringWidget,
+            QComboBox: ComboStringWidget,
+        }
 
 
-class LineEditStringWidget(SettingWidget):
-    def __init__(self, setting, widget):
-        signal = widget.textChanged
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    def set_widget_value(self, value):
-        self.widget.setText(value)
-
-    def widget_value(self):
-        return self.widget.text()
-
-
-class ButtonGroupStringWidget(SettingWidget):
-    def __init__(self, setting, widget):
-        signal = widget.buttonClicked
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    def set_widget_value(self, value):
-        for button in self.widget.buttons():
-            if value == button.objectName():
-                button.setChecked(True)
-                break
-
-    def widget_value(self):
-        value = ""
-        for button in self.widget.buttons():
-            if button.isChecked():
-                value = button.objectName()
-                break
-        return value
-
-
-class ComboStringWidget(SettingWidget):
-    def __init__(self, setting, widget):
-        self._mode = ComboMode.Data
-        signal = widget.currentIndexChanged
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    @property
-    def mode(self) -> ComboMode:
-        """Defines if setting is found directly in combobox text or rather in the userData."""
-        return self._mode
-
-    @mode.setter
-    def column(self, value: ComboMode):
-        self._mode = value
-
-    def set_widget_value(self, value):
-        if self._mode is ComboMode.Text:
-            self.widget.setCurrentIndex(self.widget.findText(value))
-        else:
-            self.widget.setCurrentIndex(self.widget.findData(value))
-
-    def widget_value(self):
-        if self._mode is ComboMode.Text:
-            return self.widget.currentText()
-        else:
-            return self.widget.itemData(self.widget.currentIndex()) or ""
-
-
-class MapLayerComboStringWidget(SettingWidget):
-    def __init__(self, setting, widget):
-        signal = widget.layerChanged
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    def set_widget_value(self, value):
-        self.widget.setLayer(QgsProject.instance().mapLayer(value))
-
-    def widget_value(self):
-        layer = self.widget.currentLayer()
-        if layer is not None:
-            return layer.id()
-        else:
-            return ""
-
-
-class FieldComboStringWidget(SettingWidget):
-    def __init__(self, setting, widget):
-        signal = widget.currentIndexChanged
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    def set_widget_value(self, value):
-        self.widget.setField(value)
-
-    def widget_value(self):
-        return self.widget.currentField()
-
-
-class FileStringWidget(SettingWidget):
-    def __init__(self, setting, widget):
-        signal = widget.fileChanged
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    def set_widget_value(self, value):
-        self.widget.setFilePath(value)
-
-    def widget_value(self):
-        return self.widget.filePath()
-
-
-class ProjectionStringWidget(SettingWidget):
-    def __init__(self, setting, widget):
-        signal = widget.crsChanged
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    def set_widget_value(self, value):
-        self.widget.setCrs(QgsCoordinateReferenceSystem(value))
-
-    def widget_value(self):
-        return self.widget.crs().authid()
-
-
-class AuthConfigSelectStringWidget(SettingWidget):
-    def __init__(self, setting, widget):
-        signal = widget.selectedConfigIdChanged
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    def set_widget_value(self, value):
-        self.widget.setConfigId(value)
-
-    def widget_value(self):
-        return self.widget.configId()

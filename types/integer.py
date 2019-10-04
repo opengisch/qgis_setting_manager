@@ -33,7 +33,7 @@ from PyQt5.QtWidgets import QLineEdit, QSpinBox, QSlider, QComboBox
 from qgis.core import QgsProject, Qgis
 
 from ..setting import Setting
-from ..setting_widget import SettingWidget
+from ..widgets import LineEditIntegerWidget, SpinBoxIntegerWidget, ComboBoxIntegerWidget
 
 
 class Integer(Setting):
@@ -51,57 +51,13 @@ class Integer(Setting):
             return False
         return True
 
-    def config_widget(self, widget):
-        if type(widget) == QLineEdit:
-            return LineEditIntegerWidget(self, widget)
-        elif type(widget) in (QSpinBox, QSlider):
-            return SpinBoxIntegerWidget(self, widget)
-        elif type(widget) == QComboBox:
-            return ComboBoxIntegerWidget(self, widget)
-        else:
-            raise NameError("SettingManager does not handle %s widgets for integers for the moment (setting: %s)" %
-                            (type(widget), self.name))
-
-
-class LineEditIntegerWidget(SettingWidget):
-    def __init__(self, setting, widget):
-        signal = widget.textChanged
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    def set_widget_value(self, value):
-        self.widget.setText('{}'.format(value))
-
-    def widget_value(self):
-        try:
-            value = int(self.widget.text())
-        except ValueError:
-            value = None
-        return value
-
-
-
-class SpinBoxIntegerWidget(SettingWidget):
-    def __init__(self, setting, widget):
-        signal = widget.valueChanged
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    def set_widget_value(self, value):
-        self.widget.setValue(value)
-
-    def widget_value(self):
-        return self.widget.value()
-
-
-class ComboBoxIntegerWidget(SettingWidget):
-    def __init__(self, setting, widget):
-        signal = widget.currentIndexChanged
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    def set_widget_value(self, value):
-        self.widget.setCurrentIndex(value)
-
-    def widget_value(self):
-        return self.widget.currentIndex()
-
+    @staticmethod
+    def supported_widgets():
+        return {
+            QLineEdit: LineEditIntegerWidget,
+            QSpinBox: SpinBoxIntegerWidget,
+            QSlider: SpinBoxIntegerWidget,
+            QComboBox: ComboBoxIntegerWidget
+        }
 
 

@@ -3,8 +3,8 @@
 # QGIS setting manager is a python module to easily manage read/write
 # settings and set/get corresponding widgets.
 #
-# Copyright    : (C) 2013 Denis Rouzaud
-# Email        : denis.rouzaud@gmail.com
+# Copyright    : (C) 2019 Denis Rouzaud
+# Email        : denis@opengis.ch
 #
 #-----------------------------------------------------------
 #
@@ -26,40 +26,36 @@
 #
 #---------------------------------------------------------------------
 
-import json
 
-from qgis.core import Qgis
+from qgis.gui import QgsColorButton
 
-from ..setting import Setting
+from ..setting_widget import SettingWidget
 
 
-class Dictionary(Setting):
-    def __init__(self, name, scope, default_value, **kwargs):
-        Setting.__init__(
-            self, name, scope, default_value,
-            object_type=str,
-            **kwargs)
+class QgisColorWidget(SettingWidget):
+    def __init__(self, setting, widget):
+        signal = widget.colorChanged
+        SettingWidget.__init__(self, setting, widget, signal)
+        self.widget.setAllowOpacity(setting.allow_alpha)
 
-    def read_out(self, value, scope):
-        # always cast to dict
-        if value is None:
-            value = {}
-        return json.loads(value)
+    def set_widget_value(self, value):
+        self.widget.setColor(value)
 
-    def write_in(self, value, scope):
-        # always cast to list
-        if value is None:
-            value = {}
-        return json.dumps(value)
+    def widget_value(self):
+        return self.widget.color()
 
-    def check(self, value):
-        if value is not None and type(value) is not dict:
-            self.info('{}:: Invalid value for setting {}: {}. It must be a dictionary.'
-                      .format(self.plugin_name, self.name, value),
-                      Qgis.Warning)
-            return False
-        return True
 
-    @staticmethod
-    def supported_widgets():
-        return {}
+class StandardColorWidget(SettingWidget):
+    def __init__(self, setting, widget):
+        color_widget = QgsColorButton(widget)
+        color_widget.setColorDialogTitle(setting.dialog_title)
+        signal = color_widget.colorChanged
+
+        SettingWidget.__init__(self, setting, color_widget, signal)
+        self.widget.setAllowOpacity(setting.allow_alpha)
+
+    def set_widget_value(self, value):
+        self.widget.setColor(value)
+
+    def widget_value(self):
+        return self.widget.color()

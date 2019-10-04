@@ -3,8 +3,8 @@
 # QGIS setting manager is a python module to easily manage read/write
 # settings and set/get corresponding widgets.
 #
-# Copyright    : (C) 2013 Denis Rouzaud
-# Email        : denis.rouzaud@gmail.com
+# Copyright    : (C) 2019 Denis Rouzaud
+# Email        : denis@opengis.ch
 #
 #-----------------------------------------------------------
 #
@@ -26,40 +26,25 @@
 #
 #---------------------------------------------------------------------
 
-import json
 
-from qgis.core import Qgis
-
-from ..setting import Setting
+from ..setting_widget import SettingWidget
 
 
-class Dictionary(Setting):
-    def __init__(self, name, scope, default_value, **kwargs):
-        Setting.__init__(
-            self, name, scope, default_value,
-            object_type=str,
-            **kwargs)
+class ComboEnumWidget(SettingWidget):
+    def __init__(self, setting, widget):
+        signal = widget.currentIndexChanged
+        SettingWidget.__init__(self, setting, widget, signal)
 
-    def read_out(self, value, scope):
-        # always cast to dict
+    def set_widget_value(self, value):
+        self.widget.setCurrentIndex(self.widget.findData(value))
+
+    def widget_value(self):
+        value = self.widget.itemData(self.widget.currentIndex())
         if value is None:
-            value = {}
-        return json.loads(value)
+            value = self.setting.default_value
+        value = self.setting.default_value.__class__(value)
+        return value
 
-    def write_in(self, value, scope):
-        # always cast to list
-        if value is None:
-            value = {}
-        return json.dumps(value)
 
-    def check(self, value):
-        if value is not None and type(value) is not dict:
-            self.info('{}:: Invalid value for setting {}: {}. It must be a dictionary.'
-                      .format(self.plugin_name, self.name, value),
-                      Qgis.Warning)
-            return False
-        return True
 
-    @staticmethod
-    def supported_widgets():
-        return {}
+

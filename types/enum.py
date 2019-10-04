@@ -29,10 +29,10 @@
 from enum import Enum as PyEnum
 
 from PyQt5.QtWidgets import QComboBox
-from qgis.core import Qgis, QgsSettings, QgsMessageLog
+from qgis.core import Qgis, QgsSettings
 
 from ..setting import Setting, Scope
-from ..setting_widget import SettingWidget
+from ..widgets import ComboEnumWidget
 
 
 class EnumMode(PyEnum):
@@ -82,31 +82,10 @@ class Enum(Setting):
                 return False
         return True
 
-    def config_widget(self, widget):
-        if type(widget) == QComboBox:
-            return ComboEnumWidget(self, widget)
-        else:
-            raise NameError("SettingManager does not handle %s widgets for strings at the moment (setting: %s)" %
-                            (type(widget), self.name))
-
-
-class ComboEnumWidget(SettingWidget):
-    def __init__(self, setting, widget):
-        signal = widget.currentIndexChanged
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    def set_widget_value(self, value):
-        if self.DEBUG:
-            msg = 'setting {} value {}'.format(self.setting.name, value)
-            QgsMessageLog.logMessage('{}:: {}'.format(self.__class__.__name__, msg), 'Setting manager', Qgis.Info)
-        self.widget.setCurrentIndex(self.widget.findData(value))
-
-    def widget_value(self):
-        value = self.widget.itemData(self.widget.currentIndex())
-        if value is None:
-            value = self.setting.default_value
-        value = self.setting.default_value.__class__(value)
-        return value
-
+    @staticmethod
+    def supported_widgets():
+        return {
+            QComboBox: ComboEnumWidget
+        }
 
 

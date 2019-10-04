@@ -53,28 +53,19 @@ class TestDialog(unittest.TestCase):
         start_app()
         
     def test_dialog(self):
-        cur_dir = os.path.dirname(__file__)
-        definition_file = os.path.join(cur_dir, 'setting_config.yaml')
-        with open(definition_file, 'r') as f:
-            definition = yaml.load(f.read())
 
-        for setting_definition_name, setting_definition in definition['settings'].items():
-            for scope in Scope:
-                if 'scope' in setting_definition:
-                    setting_scope = eval(setting_definition['scope'])
-                    if setting_scope is not scope:
-                        continue
-                for widget_name, widget in setting_definition['widgets'].items():
-                    setting_name = '{}_{}_{}'.format(setting_definition_name, scope.name, widget_name)
-                    widget_class = eval(str(widget_name))
-                    default_value = eval(str(setting_definition['default_value']))
-                    new_value = eval(str(setting_definition['new_value']))
-                    init_widget = widget['init_widget'] if widget and 'init_widget' in widget else None
+        my_settings = MySettings()
+        for setting_name in my_settings.settings_list():
+            setting = my_settings.setting(setting_name)
+            new_value = my_settings.new_values[setting_name]
+            init_widget = my_settings.init_widget[setting_name]
 
-                    print('testing {} in dialog accept mode'.format(widget_class))
-                    yield self.check_dialog_accept_update, setting_name, widget_class, default_value, new_value, init_widget
-                    print('testing {} in auto update mode'.format(widget_class))
-                    yield self.check_dialog_auto_update, setting_name, widget_class, default_value, new_value, init_widget
+            for widget_class in setting.supported_widgets().keys():
+                print('testing {} in dialog accept mode'.format(widget_class))
+
+                yield self.check_dialog_accept_update, setting_name, widget_class, setting.default_value, new_value, init_widget.get(widget_class, None)
+                print('testing {} in auto update mode'.format(widget_class))
+                yield self.check_dialog_auto_update, setting_name, widget_class, setting.default_value, new_value, init_widget.get(widget_class, None)
 
     def check_dialog_accept_update(self, setting_name, widget_class, default_value, new_value, init_widget: str):
 

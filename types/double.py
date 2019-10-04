@@ -31,7 +31,7 @@ from qgis.core import QgsProject, Qgis
 from qgis.gui import QgsScaleWidget
 
 from ..setting import Setting
-from ..setting_widget import SettingWidget
+from ..widgets import LineEditDoubleWidget, DoubleQgsScaleWidget, DoubleSpinBoxDoubleWidget
 
 
 class Double(Setting):
@@ -51,51 +51,16 @@ class Double(Setting):
             return False
         return True
 
-    def config_widget(self, widget):
-        if type(widget) == QLineEdit:
-            return LineEditDoubleWidget(self, widget)
-        elif type(widget) == QDoubleSpinBox:
-            return DoubleSpinBoxDoubleWidget(self, widget)
-        elif type(widget) == QgsScaleWidget:
-            return DoubleQgsScaleWidget(self, widget)
-        else:
-            raise NameError("SettingManager does not handle %s widgets for double for the moment (setting: %s)" %
-                            (type(widget), self.name))
+    @staticmethod
+    def supported_widgets():
+        return {
+            QgsScaleWidget: DoubleQgsScaleWidget,
+            QLineEdit: LineEditDoubleWidget,
+            QDoubleSpinBox: DoubleSpinBoxDoubleWidget
+        }
 
 
-class LineEditDoubleWidget(SettingWidget):
-    def __init__(self, setting, widget):
-        signal = widget.textChanged
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    def set_widget_value(self, value):
-        self.widget.setText('{}'.format(value))
-
-    def widget_value(self):
-        return float(self.widget.text())
 
 
-class DoubleSpinBoxDoubleWidget(SettingWidget):
-    def __init__(self, setting, widget):
-        signal = widget.valueChanged
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    def set_widget_value(self, value):
-        self.widget.setValue(value)
-
-    def widget_value(self):
-        return self.widget.value()
-
-
-class DoubleQgsScaleWidget(SettingWidget):
-    def __init__(self, setting, widget: QgsScaleWidget):
-        signal = widget.scaleChanged
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    def set_widget_value(self, value):
-        self.widget.setScale(value)
-
-    def widget_value(self):
-        return self.widget.scale()
 
 

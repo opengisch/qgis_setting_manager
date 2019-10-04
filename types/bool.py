@@ -31,6 +31,7 @@ from qgis.core import QgsProject, Qgis
 from qgis.gui import QgsCollapsibleGroupBox
 from ..setting import Setting
 from ..setting_widget import SettingWidget
+from ..widgets import CheckBoxBoolWidget, QgsCollapsibleGroupBoxBoolWidget, CheckableBoolWidget
 
 
 class Bool(Setting):
@@ -42,57 +43,24 @@ class Bool(Setting):
                          project_write=lambda plugin, key, val: QgsProject.instance().writeEntryBool(plugin, key, val),
                          **kwargs)
 
-    def check(self, value: bool):
-        if type(value) != bool:
+    def check(self, value):
+        if type(value) != type(True):
             self.info('{}:: Invalid value for setting {}: {}. It must be a boolean.'
                       .format(self.plugin_name, self.name, value),
                       Qgis.Warning)
             return False
         return True
 
-    def config_widget(self, widget):
-        if isinstance(widget, QCheckBox):
-            return CheckBoxBoolWidget(self, widget)
-        elif isinstance(widget, QgsCollapsibleGroupBox):
-            return QgsCollapsibleGroupBoxBoolWidget(self, widget)
-        elif hasattr(widget, "isCheckable") and widget.isCheckable():
+    @staticmethod
+    def supported_widgets():
+        return {
+            QCheckBox: CheckBoxBoolWidget,
+            QgsCollapsibleGroupBox: QgsCollapsibleGroupBoxBoolWidget
+        }
+
+    def fallback_widget(self, widget) -> SettingWidget:
+        if hasattr(widget, "isCheckable") and widget.isCheckable():
             return CheckableBoolWidget(self, widget)
-        else:
-            raise NameError("SettingManager does not handle %s widgets for booleans at the moment (setting: %s)" %
-                            (type(widget), self.name))
+        return None
 
 
-class CheckBoxBoolWidget(SettingWidget):
-    def __init__(self, setting, widget):
-        signal = widget.toggled
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    def set_widget_value(self, value):
-        self.widget.setChecked(value)
-
-    def widget_value(self):
-        return self.widget.isChecked()
-
-
-class QgsCollapsibleGroupBoxBoolWidget(SettingWidget):
-    def __init__(self, setting, widget):
-        signal = widget.toggled
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    def set_widget_value(self, value):
-        self.widget.setChecked(value)
-
-    def widget_value(self):
-        return self.widget.isChecked()
-
-
-class CheckableBoolWidget(SettingWidget):
-    def __init__(self, setting, widget):
-        signal = widget.clicked
-        SettingWidget.__init__(self, setting, widget, signal)
-
-    def set_widget_value(self, value):
-        self.widget.setChecked(value)
-
-    def widget_value(self):
-        return self.widget.isChecked()

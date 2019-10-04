@@ -31,14 +31,12 @@
 # dialog_title: show in color dialog
 # allow_alpha: use or not alpha channel
 
-import warnings
-
 from PyQt5.QtGui import QColor
 from qgis.core import QgsProject, Qgis, QgsSettings
 from qgis.gui import QgsColorButton
 
 from ..setting import Setting
-from ..setting_widget import SettingWidget
+from ..widgets import QgisColorWidget, StandardColorWidget
 
 
 class Color(Setting):
@@ -50,7 +48,7 @@ class Color(Setting):
                          qsettings_write=lambda key, val: QgsSettings().setValue(key, val),
                          project_read=lambda plugin, key, def_val: QgsProject.instance().readListEntry(plugin, key, def_val)[0],
                          **kwargs)
-        assert isinstance(allow_alpha, bool)
+        assert isinstance(allow_alpha, type(True))
         assert isinstance(dialog_title, str)
         self.allow_alpha = allow_alpha
         self.dialog_title = dialog_title
@@ -80,37 +78,15 @@ class Color(Setting):
             return False
         return True
 
-    def config_widget(self, widget):
-        if type(widget) == QgsColorButton:
-            return QgisColorWidget(self, widget, allow_alpha=self.allow_alpha)
-        else:
-            return StandardColorWidget(self, widget, allow_alpha=self.allow_alpha, dialog_title=self.dialog_title)
+    @staticmethod
+    def supported_widgets():
+        return {
+            QgsColorButton: QgisColorWidget
+        }
+
+    def fallback_widget(self, widget):
+        return StandardColorWidget
 
 
-class QgisColorWidget(SettingWidget):
-    def __init__(self, setting, widget, allow_alpha: bool = False):
-        signal = widget.colorChanged
-        SettingWidget.__init__(self, setting, widget, signal)
-        self.widget.setAllowOpacity(allow_alpha)
-
-    def set_widget_value(self, value):
-        self.widget.setColor(value)
-
-    def widget_value(self):
-        return self.widget.color()
 
 
-class StandardColorWidget(SettingWidget):
-    def __init__(self, setting, widget, allow_alpha: bool = False, dialog_title: str = None):
-        color_widget = QgsColorButton(widget)
-        color_widget.setColorDialogTitle(dialog_title)
-        signal = color_widget.colorChanged
-
-        SettingWidget.__init__(self, setting, color_widget, signal)
-        self.widget.setAllowOpacity(allow_alpha)
-
-    def set_widget_value(self, value):
-        self.widget.setColor(value)
-
-    def widget_value(self):
-        return self.widget.color()

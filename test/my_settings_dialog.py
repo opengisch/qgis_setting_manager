@@ -31,7 +31,7 @@ from .my_settings import MySettings
 
 
 class MySettingsDialog(QDialog, SettingDialog):
-    def __init__(self, setting_name, widget_class, mode: UpdateMode=UpdateMode.DialogAccept, init_widget: str=None):
+    def __init__(self, setting_name, widget_class, mode: UpdateMode=UpdateMode.DialogAccept, init_widget=None):
         """
 
         :param setting_name:
@@ -52,9 +52,8 @@ class MySettingsDialog(QDialog, SettingDialog):
         self.widget.setObjectName(setting_name)
 
         if init_widget:
-            for cmd in init_widget:
-                print('init widget: {}'.format(cmd))
-                exec('self.widget.{}'.format(cmd))
+            print("runnning init_widget lambda")
+            init_widget(self.widget)
 
         self.settings = settings
         self.init_widgets()

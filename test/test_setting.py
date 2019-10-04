@@ -23,39 +23,28 @@
 #
 # ---------------------------------------------------------------------
 
-import qgis
-import os
-import yaml
+
 from qgis.testing import unittest
-from qgis.core import QgsTolerance
-from PyQt5.QtGui import QColor
-QColor.__repr__ = lambda color: 'QColor: {} a: {}'.format(color.name(), color.alpha())
+from qgis.PyQt.QtGui import QColor
 
 import nose2
 
 from .my_settings import MySettings
-from .. import Scope
+
+QColor.__repr__ = lambda color: 'QColor: {} a: {}'.format(color.name(), color.alpha())
 
 
 class TestSetting(unittest.TestCase):
+
     def test_settings(self):
-        cur_dir = os.path.dirname(__file__)
-        definition_file = os.path.join(cur_dir, 'setting_config.yaml')
-        with open(definition_file, 'r') as f:
-            definition = yaml.load(f.read())
+        my_settings = MySettings()
+        for setting_name in my_settings.settings_list():
+            setting = my_settings.setting(setting_name)
+            new_value = my_settings.new_values[setting_name]
+            bad_values = my_settings.bad_values[setting_name]
+            yield self.check_setting, setting_name, setting.default_value, new_value, bad_values
 
-        for setting_definition_name, setting_definition in definition['settings'].items():
-            for scope in Scope:
-                if 'scope' in setting_definition:
-                    setting_scope = eval(setting_definition['scope'])
-                    if setting_scope is not scope:
-                        continue
-                setting_name = '{}_{}_core'.format(setting_definition_name, scope.name)
-                default_value = eval(str(setting_definition['default_value']))
-                new_value = eval(str(setting_definition['new_value']))
-                yield self.check_setting, setting_name, default_value, new_value
-
-    def check_setting(self, name, default_value, new_value):
+    def check_setting(self, name, default_value, new_value, bad_values):
         # clean just in case
         MySettings().remove(name)
 
@@ -70,9 +59,9 @@ class TestSetting(unittest.TestCase):
         MySettings().remove(name)
         self.assertEqual(MySettings().value(name), default_value)
 
-#    def test_value_list(self):
-#        MySettings().set_value('value_list_str', 'my_invalid_val')
-#        self.assertEqual(MySettings().value('value_list_str'), 'my_val_1')
+        # bad values
+        for bad_value in bad_values:
+           self.assertFalse(MySettings().set_value(name, bad_value))
 
 
 if __name__ == '__main__':

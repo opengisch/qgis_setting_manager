@@ -23,14 +23,12 @@
 #
 #---------------------------------------------------------------------
 
-import os
-import yaml
-from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import QCheckBox, QLabel, QPushButton, QDoubleSpinBox, QLineEdit, QSpinBox, QSlider, QComboBox, QListWidget
+from qgis.PyQt.QtGui import QColor
+from qgis.PyQt.QtWidgets import QDoubleSpinBox, QComboBox
 from qgis.core import QgsTolerance
-from qgis.gui import QgsCollapsibleGroupBox, QgsColorButton, QgsProjectionSelectionWidget
+from qgis.gui import QgsCollapsibleGroupBox, QgsProjectionSelectionWidget
 
-from .. import *
+from .. import Bool, Color, Double, Integer, String, Stringlist, Enum, Dictionary, SettingManager, Scope
 
 pluginName = "qgis_setting_manager_testing"
 
@@ -38,44 +36,58 @@ pluginName = "qgis_setting_manager_testing"
 class MySettings(SettingManager):
     def __init__(self):
         SettingManager.__init__(self, pluginName)
+        
+        self.bad_values = {}
+        self.new_values = {}
+        self.init_widget = {}
 
-        cur_dir = os.path.dirname(__file__)
-        definition_file = os.path.join(cur_dir, 'setting_config.yaml')
-        with open(definition_file, 'r') as f:
-            definition = yaml.load(f.read())
+        bool_collapse_init = lambda widget: widget.setCheckable(True)
+        self.add_testing_setting(Bool, 'bool', True, False, init_widget={QgsCollapsibleGroupBox: bool_collapse_init})
+        self.add_testing_setting(Color, 'color_alpha', QColor(100, 100, 100, 100), QColor(30, 30, 30, 30), allow_alpha=True)
+        self.add_testing_setting(Color, 'color_no_alpha', QColor(100, 100, 100), QColor(30, 30, 30), allow_alpha=False, bad_values=[QColor(30, 30, 30, 30)])
+        double_spin_init = lambda widget: widget.setDecimals(5)
+        self.add_testing_setting(Double, 'double', 0.12345, 9.87654, init_widget={QDoubleSpinBox: double_spin_init})
+        integer_combo_init = lambda widget: widget.addItems(['1', '2', '3'])
+        self.add_testing_setting(Integer, 'integer', 1, 2, init_widget={QComboBox: integer_combo_init})
+        string_crs_init = lambda widget: widget.addItems(['EPSG:2056', 'EPSG:21781'])
+        self.add_testing_setting(String, 'string', 'EPSG:2056', 'EPSG:21781', init_widget={QgsProjectionSelectionWidget: string_crs_init})
+        self.add_testing_setting(Stringlist, 'stringlist', ['abc', 'def', 'ghi'], ['qwe', 'rtz', 'uio'])
+        self.add_testing_setting(Enum, 'enum', QgsTolerance.Pixels, QgsTolerance.LayerUnits, scopes=[Scope.Global])
+        self.add_testing_setting(Dictionary, 'dictionary', {'my_key_1': 1, 'my_key_2': 2}, {'my_key_1': 1, 'my_key_2': 2})
 
-        for setting_definition_name, setting_definition in definition['settings'].items():
-            for scope in Scope:
-                if 'scope' in setting_definition:
-                    setting_scope = eval(setting_definition['scope'])
-                    if setting_scope is not scope:
-                        continue
-                # Add core setting
-                setting_name = '{}_{}_core'.format(setting_definition_name, scope.name)
-                options_core = ''
-                if 'options' in setting_definition:
-                    for option in setting_definition['options']:
-                        options_core += ', {}={}'.format(option, setting_definition['options'][option])
+    def add_testing_setting(self, _type, name, default_value, new_value,
+                            bad_values: list = [],
+                            scopes=(Scope.Project, Scope.Global),
+                            init_widget={},
+                            **kwargs):
+        for _scope in scopes:
+            setting_name = '{}_{}'.format(name, _scope)
+            self.add_setting(_type(setting_name, _scope, default_value, **kwargs))
+            self.new_values[setting_name] = new_value
+            self.bad_values[setting_name] = bad_values
+            self.init_widget[setting_name] = init_widget
+            
+ 
 
-                exec('self.add_setting({setting_class}("{setting_name}", {scope}, {default_value}{options}))'
-                     .format(setting_class=setting_definition['setting_class'],
-                             setting_name=setting_name,
-                             scope=scope,
-                             default_value=setting_definition['default_value'],
-                             options=options_core))
+"""
+double:
+QDoubleSpinBox:
+init_widget:
+- setDecimals(5)
+QLineEdit:
 
-                # Add widgets settings
-                for widget_name, widget in setting_definition['widgets'].items():
-                    setting_name = '{}_{}_{}'.format(setting_definition_name, scope.name, widget_name)
-                    options = options_core
-                    exec('self.add_setting({setting_class}("{setting_name}", {scope}, {default_value}{options}))'
-                         .format(setting_class=setting_definition['setting_class'],
-                                 setting_name=setting_name,
-                                 scope=scope,
-                                 default_value=setting_definition['default_value'],
-                                 options=options))
+integer:
+QComboBox:
+init_widget:
+- addItem(str(1))
+- addItem(str(2))
+- addItem(str(3))
 
-        self.add_setting(String('value_list_str', Scope.Global, 'my_val_1', value_list= ('my_val_1', 'my_val_2')))
+QListWidget:
+init_widget:
+- addItems(('abc', 'def', 'ghi', 'random', 'qwe', 'rtz', 'uio'))
+
+"""
 
 
 

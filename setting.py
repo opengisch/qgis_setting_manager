@@ -26,6 +26,8 @@
 #
 #---------------------------------------------------------------------
 
+import abc
+
 from PyQt5.QtCore import QObject, pyqtSignal, QSettings
 from qgis.core import QgsProject, QgsMessageLog, Qgis, QgsSettings
 from enum import Enum
@@ -36,9 +38,7 @@ class Scope(Enum):
     Global = 2
 
 
-class Setting(QObject):
-    valueChanged = pyqtSignal()
-
+class Setting():
     def __init__(self, name: str, scope: Scope, default_value,
                  object_type=None,
                  project_read=lambda plugin, key, def_val: QgsProject.instance().readEntry(plugin, key, def_val)[0],
@@ -56,7 +56,6 @@ class Setting(QObject):
         :param project_write:
         :param value_list: optional list to limit the allowed values for the setting.
         """
-        QObject.__init__(self)
 
         if not isinstance(scope, Scope):
             raise NameError('Scope of setting {} is not valid: {}'.format(name, scope))
@@ -93,7 +92,7 @@ class Setting(QObject):
         """
         return value
 
-    def check(self, value) -> bool:
+    def check(self, value):
         """
         This method shall be reimplemented in type subclasses
         to check the validity of the value
@@ -101,11 +100,36 @@ class Setting(QObject):
         """
         return True
 
-    def config_widget(self, widget):
+    @staticmethod
+    def supported_widgets() -> dict:
         """
-        This method must be reimplemented in subclasses
+        This method shall be reimplemented in type subclasses
+        :return: a dictionary of widget_class => setting_widget_class
+        """
+        pass
+
+    def fallback_widget(self, widget):
+        """
+        Optional virtual method to
+        :param widget: the input widget
+        :return: a SettingWidget implementation
         """
         return None
+
+    def config_widget(self, widget):
+        """
+        Returns the SettingWidget implementation for a given widget
+        :raise NameError if the widget is not supported
+        """
+        for widget_type, setting_widget_class in self.supported_widgets().items():
+            if isinstance(widget, widget_type):
+                return setting_widget_class(self, widget)
+        additional_widget = self.additional_widgets(widget)
+        if additional_widget:
+            return additional_widget
+        raise NameError("SettingManager does not handle {w} widgets for {t} at the moment (setting: {s})".format(
+            w=type(widget), t=type(self).__name__, s=self.name)
+        )
 
     def _check(self, value) -> bool:
         """
@@ -128,16 +152,20 @@ class Setting(QObject):
     def global_name(self):
         return 'plugins/{}/{}'.format(self.plugin_name, self.name)
 
-    def set_value(self, value):
+    def set_value(self, value) -> bool:
+        """
+        Sets the value for the setting
+        :return: True if the setting was written
+        """
         # checking should be made before write_in
         if not self._check(value):
-            return
+            return False
         value = self.write_in(value, self.scope)
         if self.scope == Scope.Global:
             self.qsettings_write(self.global_name(), value)
         elif self.scope == Scope.Project:
             self.project_write(self.plugin_name, self.name, value)
-        self.valueChanged.emit()
+        return True
 
     def value(self):
         if self.scope == Scope.Global:
