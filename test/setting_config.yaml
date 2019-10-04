@@ -56,8 +56,6 @@ settings:
     widgets:
       QLineEdit:
       QComboBox:
-        options:
-          combo_mode: ComboMode.Text
         init_widget:
           - addItem('EPSG:2056')
           - addItem('EPSG:21781')
