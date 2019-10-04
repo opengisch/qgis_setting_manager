@@ -108,7 +108,7 @@ class TableWidgetStringListWidget(SettingWidget):
         self._invert = False
 
     @property
-    def column(self):
+    def column(self) -> int:
         return self._column
 
     @column.setter
@@ -116,7 +116,7 @@ class TableWidgetStringListWidget(SettingWidget):
         self._column = value
 
     @property
-    def userdata(self):
+    def userdata(self) -> bool:
         return self._userdata
 
     @userdata.setter
@@ -124,7 +124,7 @@ class TableWidgetStringListWidget(SettingWidget):
         self._userdata = value
 
     @property
-    def invert(self):
+    def invert(self) -> bool:
         return self._invert
 
     @invert.setter

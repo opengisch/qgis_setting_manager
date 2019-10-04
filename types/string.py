@@ -27,13 +27,11 @@
 #---------------------------------------------------------------------
 
 
-# options:
-# combo_mode: can be data or text. It defines if setting is found directly in combobox text or rather in the userData.
 
 import warnings
 from enum import Enum
 
-from PyQt5.QtWidgets import QLineEdit, QButtonGroup, QComboBox
+from qgis.PyQt.QtWidgets import QLineEdit, QButtonGroup, QComboBox
 from qgis.core import QgsProject, QgsCoordinateReferenceSystem, Qgis
 from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox, QgsFileWidget, QgsProjectionSelectionWidget,\
     QgsAuthConfigSelect
@@ -52,7 +50,6 @@ class String(Setting):
                  name,
                  scope: Scope,
                  default_value,
-                 combo_mode: ComboMode=ComboMode.Data,
                  **kwargs):
         """
 
@@ -65,8 +62,9 @@ class String(Setting):
                      Enum mode is available for global settings only.
         :param kwargs:
         """
-        assert isinstance(combo_mode, ComboMode)
-        self.combo_mode = combo_mode
+
+        # prevent bad usage (from older version)
+        assert 'combo_mode' not in kwargs
 
         Setting.__init__(self, name, scope, default_value, object_type=str, ** kwargs)
 
@@ -84,7 +82,7 @@ class String(Setting):
         elif type(widget) == QButtonGroup:
             return ButtonGroupStringWidget(self, widget)
         elif type(widget) == QComboBox:
-            return ComboStringWidget(self, widget, self.combo_mode)
+            return ComboStringWidget(self, widget)
         elif type(widget) == QgsMapLayerComboBox:
             return MapLayerComboStringWidget(self, widget)
         elif type(widget) == QgsFieldComboBox:
@@ -133,19 +131,28 @@ class ButtonGroupStringWidget(SettingWidget):
 
 
 class ComboStringWidget(SettingWidget):
-    def __init__(self, setting, widget, mode: ComboMode=ComboMode.Data):
-        self.mode = mode
+    def __init__(self, setting, widget):
+        self._mode = ComboMode.Data
         signal = widget.currentIndexChanged
         SettingWidget.__init__(self, setting, widget, signal)
 
+    @property
+    def mode(self) -> ComboMode:
+        """Defines if setting is found directly in combobox text or rather in the userData."""
+        return self._mode
+
+    @mode.setter
+    def column(self, value: ComboMode):
+        self._mode = value
+
     def set_widget_value(self, value):
-        if self.mode is ComboMode.Text:
+        if self._mode is ComboMode.Text:
             self.widget.setCurrentIndex(self.widget.findText(value))
         else:
             self.widget.setCurrentIndex(self.widget.findData(value))
 
     def widget_value(self):
-        if self.mode is ComboMode.Text:
+        if self._mode is ComboMode.Text:
             return self.widget.currentText()
         else:
             return self.widget.itemData(self.widget.currentIndex()) or ""
