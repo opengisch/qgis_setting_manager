@@ -146,6 +146,7 @@ class MyDialog(QDialog, Ui_myDialog, SettingDialog):
 * `QButtonGroup` (the setting is set as the checked widget text in the button group)
 * `QgsMapLayerComboBox` uses layer ID for the setting value
 * `QgsFileWidget`
+* `QgsAuthConfigSelect`
 
 **Boolean**
 

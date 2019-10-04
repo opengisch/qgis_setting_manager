@@ -35,7 +35,8 @@ from enum import Enum
 
 from PyQt5.QtWidgets import QLineEdit, QButtonGroup, QComboBox
 from qgis.core import QgsProject, QgsCoordinateReferenceSystem, Qgis
-from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox, QgsFileWidget, QgsProjectionSelectionWidget
+from qgis.gui import QgsMapLayerComboBox, QgsFieldComboBox, QgsFileWidget, QgsProjectionSelectionWidget,\
+    QgsAuthConfigSelect
 
 from ..setting import Setting, Scope
 from ..setting_widget import SettingWidget
@@ -70,7 +71,7 @@ class String(Setting):
         Setting.__init__(self, name, scope, default_value, object_type=str, ** kwargs)
 
     def check(self, value):
-        if type(value) != str:
+        if value is not None and type(value) != str:
             self.info('{}:: Invalid value for setting {}: {}. It must be a string.'
                       .format(self.plugin_name, self.name, value),
                       Qgis.Warning)
@@ -92,9 +93,11 @@ class String(Setting):
             return FileStringWidget(self, widget)
         elif type(widget) == QgsProjectionSelectionWidget:
             return ProjectionStringWidget(self, widget)
+        elif type(widget) == QgsAuthConfigSelect:
+            return AuthConfigSelectStringWidget(self, widget)
         else:
-            raise NameError("SettingManager does not handle %s widgets for strings at the moment (setting: %s)" %
-                (type(widget), self.name))
+            raise NameError("SettingManager does not handle {t} widgets "
+                            "for strings at the moment (setting: {s})".format(t=type(widget), s=self.name))
 
 
 class LineEditStringWidget(SettingWidget):
@@ -199,3 +202,14 @@ class ProjectionStringWidget(SettingWidget):
     def widget_value(self):
         return self.widget.crs().authid()
 
+
+class AuthConfigSelectStringWidget(SettingWidget):
+    def __init__(self, setting, widget):
+        signal = widget.selectedConfigIdChanged
+        SettingWidget.__init__(self, setting, widget, signal)
+
+    def set_widget_value(self, value):
+        self.widget.setConfigId(value)
+
+    def widget_value(self):
+        return self.widget.configId()
