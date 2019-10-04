@@ -40,8 +40,8 @@ class TestSetting(unittest.TestCase):
         my_settings = MySettings()
         for setting_name in my_settings.settings_list():
             setting = my_settings.setting(setting_name)
-            new_value = my_settings.new_values[setting_name]
-            bad_values = my_settings.bad_values[setting_name]
+            new_value = my_settings.testing_settings[setting_name]['new_value']
+            bad_values = my_settings.testing_settings[setting_name]['bad_values']
             yield self.check_setting, setting_name, setting.default_value, new_value, bad_values
 
     def check_setting(self, name, default_value, new_value, bad_values):

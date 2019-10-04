@@ -40,7 +40,7 @@ class SettingManager:
 
     def add_setting(self, setting):
         if setting.name in self.__settings:
-            raise NameError("{} already exist in settings.".format(name))
+            raise NameError("{} already exist in settings.".format(setting.name))
         setting.set_plugin_name(self.plugin_name)
         self.__settings[setting.name] = setting
 

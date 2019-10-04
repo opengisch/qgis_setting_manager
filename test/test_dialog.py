@@ -57,10 +57,10 @@ class TestDialog(unittest.TestCase):
         my_settings = MySettings()
         for setting_name in my_settings.settings_list():
             setting = my_settings.setting(setting_name)
-            new_value = my_settings.new_values[setting_name]
-            init_widget = my_settings.init_widget[setting_name]
+            new_value = my_settings.testing_settings[setting_name]['new_value']
+            init_widget = my_settings.testing_settings[setting_name]['init_widget']
 
-            for widget_class in setting.supported_widgets().keys():
+            for widget_class in my_settings.testing_settings[setting_name]['widgets']:
                 print('testing {} in dialog accept mode'.format(widget_class))
 
                 yield self.check_dialog_accept_update, setting_name, widget_class, setting.default_value, new_value, init_widget.get(widget_class, None)
