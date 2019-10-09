@@ -26,8 +26,6 @@
 #
 #---------------------------------------------------------------------
 
-from .setting import Scope
-import inspect
 
 # to print debug info
 Debug = False

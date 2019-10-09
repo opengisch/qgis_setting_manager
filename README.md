@@ -31,14 +31,14 @@ class MySettings(SettingManager):
 You may add as many settings as you want using `add_setting` method:
 
 ```python
-add_setting( SettingClass( name, scope, default_value, value_list: list = None, **options ) )
+add_setting( SettingClass( name, scope, default_value, allowed_values: list = None, **options ) )
 ```
 
 * `SettingClass`: `Bool`, `String`, `Color`, `Integer`, `Double`, `Stringlist` or `Dictionary`
 * `name`: the name of the setting
 * `scope`: `Scope.Global` or `Scope.Project`
 * `default_value`: the default value of the setting (type must correspond)
-* `value_list`: a list of authorized values. 
+* `allowed_values`: a list of authorized values. 
 If specified, the setting will fall back to `default_value` if an unauthorized value is provided.
 * `options`: additional options (see [possible widgets](#possiblewidgets))
 
@@ -142,7 +142,8 @@ class MyDialog(QDialog, Ui_myDialog, SettingDialog):
 
 * `QLineEdit`
 * `QComboBox` 
-    * `mode` additional option to define what is used to retrieve the setting. Can be `ComboMode.Text` or [`ComboMode.Data`](http://qt-project.org/doc/qt-5/qcombobox.html#itemData).
+    * `mode`: additional option to define what is used to retrieve the setting. Can be `ComboMode.Text` or [`ComboMode.Data`](http://qt-project.org/doc/qt-5/qcombobox.html#itemData).
+    * `auto_populate()`: auto populates the combo box from the possible values (need to be defined). Mode will be set to `ComboMode.Data`.
 * `QButtonGroup` (the setting is set as the checked widget text in the button group)
 * `QgsMapLayerComboBox` uses layer ID for the setting value
 * `QgsFileWidget`

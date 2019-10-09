@@ -45,7 +45,7 @@ class Setting():
                  project_write=lambda plugin, key, val: QgsProject.instance().writeEntry(plugin, key, val),
                  qsettings_read=lambda key, def_val, object_type: QgsSettings().value(key, def_val, type=object_type),
                  qsettings_write=lambda key, val: QgsSettings().setValue(key, val),
-                 value_list: list = None):
+                 allowed_values: list = None):
         """
 
         :param name:
@@ -54,7 +54,7 @@ class Setting():
         :param object_type:
         :param project_read:
         :param project_write:
-        :param value_list: optional list to limit the allowed values for the setting.
+        :param allowed_values: optional list to limit the allowed values for the setting.
         """
 
         if not isinstance(scope, Scope):
@@ -71,7 +71,7 @@ class Setting():
         self.project_write = project_write
         self.qsettings_read = qsettings_read
         self.qsettings_write = qsettings_write
-        self.value_list = value_list
+        self.allowed_values = allowed_values
 
         if not self.check(default_value):
             raise NameError('Default value of setting {} is not valid: {}'.format(name, default_value))
@@ -108,7 +108,8 @@ class Setting():
         """
         pass
 
-    def fallback_widget(self, widget):
+    @staticmethod
+    def fallback_widget(widget):
         """
         Optional virtual method to
         :param widget: the input widget
@@ -139,9 +140,9 @@ class Setting():
         """
         if not self.check(value):
             return False
-        if self.value_list and value not in self.value_list:
+        if self.allowed_values and value not in self.allowed_values:
             self.info('{}:: Invalid value for setting {}: {}. It should be within the list of values: {}.'
-                      .format(self.plugin_name, self.name, value, self.value_list),
+                      .format(self.plugin_name, self.name, value, self.allowed_values),
                       Qgis.Warning)
             return False
         return True

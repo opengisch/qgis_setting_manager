@@ -82,8 +82,14 @@ class ComboStringWidget(SettingWidget):
         return self._mode
 
     @mode.setter
-    def column(self, value: ComboMode):
+    def mode(self, value: ComboMode):
         self._mode = value
+
+    def auto_populate(self):
+        for v in self.setting.allowed_values:
+            self.widget.addItem(v)
+        self.mode = ComboMode.Text
+        self.set_widget_from_value()
 
     def set_widget_value(self, value):
         if self._mode is ComboMode.Text:

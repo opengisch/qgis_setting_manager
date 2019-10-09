@@ -84,7 +84,8 @@ class Color(Setting):
             QgsColorButton: QgisColorWidget
         }
 
-    def fallback_widget(self, widget):
+    @staticmethod
+    def fallback_widget(widget):
         return StandardColorWidget
 
 
