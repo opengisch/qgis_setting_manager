@@ -28,6 +28,7 @@
 
 
 from ..setting_widget import SettingWidget
+from ..types.enum import EnumType
 
 
 class ComboEnumWidget(SettingWidget):
@@ -44,6 +45,12 @@ class ComboEnumWidget(SettingWidget):
             value = self.setting.default_value
         value = self.setting.default_value.__class__(value)
         return value
+
+    def auto_populate(self):
+        assert self.setting.enum_type == EnumType.Python
+        for e in list(self.setting.default_value.__class__):
+            self.widget.addItem(str(e), e)
+
 
 
 

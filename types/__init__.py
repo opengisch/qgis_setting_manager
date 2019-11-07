@@ -5,4 +5,4 @@ from .dictionnary import Dictionary
 from .integer import Integer
 from .stringlist import Stringlist
 from .string import String
-from .enum import Enum, EnumMode
+from .enum import Enum, EnumType

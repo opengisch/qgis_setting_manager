@@ -184,12 +184,17 @@ Additional options:
   * `invert` if True, unchecked items are saved
   * `userdata` if True, use the `userData` instead of the `text
   
+** Enums (from QGIS API or as Python Enum) **
+
+* ComboEnumWidget`
+  * `auto_populate()`: auto populates the combo box from the possible enum entries (only for Python)
+
+  
 **Dictionnary**
 
 * No widgets are offered yet.
 
 New types of widget are easily added, if one is missing, do not hesitate to [ask](https://github.com/opengisch/qgissettingmanager/issues)!
-
 
 ## Using git submodules
 

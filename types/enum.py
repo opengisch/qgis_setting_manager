@@ -32,13 +32,12 @@ from PyQt5.QtWidgets import QComboBox
 from qgis.core import Qgis, QgsSettings
 
 from ..setting import Setting, Scope
-from ..widgets import ComboEnumWidget
 
 
-class EnumMode(PyEnum):
+class EnumType(PyEnum):
     NoEnum = 1
     QGIS = 2
-    Python = 3  # TODO: still to be implemented
+    Python = 3
 
 
 class Enum(Setting):
@@ -46,44 +45,52 @@ class Enum(Setting):
                  name,
                  scope: Scope,
                  default_value,
-                 mode: EnumMode = EnumMode.QGIS,
+                 enum_type: EnumType,
                  **kwargs):
         """
 
         :param name: the name of the setting
         :param scope: at the moment only Global scope is supported for Enum
         :param default_value: the default value given as enum
-        :param mode: if given, the setting will be associated to the enum as given by the default value.
+        :param enum_type: if not , the setting will be associated to the enum as given by the default value.
                      Can be QGIS for a QGIS enum. Enum must have been declared using Qt Q_ENUM macro.
                      Enum mode is available for global settings only.
         :param kwargs:
         """
 
         assert scope is Scope.Global
-        assert mode is EnumMode.QGIS
 
-        self.mode = mode
+        self.enum_type = enum_type
 
-        Setting.__init__(self, name, scope, default_value,
-                         object_type=None,
-                         qsettings_read=QgsSettings().enumValue,
-                         qsettings_write=QgsSettings().setEnumValue,
-                         **kwargs)
+        if enum_type == EnumType.Python:
+            Setting.__init__(self, name, scope, default_value,
+                             object_type=None,
+                             qsettings_read=lambda key, def_val: QgsSettings().value(key, def_val),
+                             **kwargs)
+        else:
+            Setting.__init__(self, name, scope, default_value,
+                             object_type=None,
+                             qsettings_read=QgsSettings().enumValue,
+                             qsettings_write=QgsSettings().setEnumValue,
+                             **kwargs)
 
     def check(self, value):
-        if self.mode is EnumMode.QGIS:
-            if not isinstance(value, self.default_value.__class__):
-                raise NameError('xxxx')
-                self.info('{plugin}:: Invalid value for setting {name}: {value} ({vclass}). It must be a {type}.'
-                          .format(plugin=self.plugin_name, name=self.name,
-                                  value=value, vclass=value.__class__,
-                                  type=self.default_value.__class__),
-                          Qgis.Warning)
-                return False
+        if self.enum_type is EnumType.QGIS and not isinstance(value, self.default_value.__class__) or \
+                self.enum_type is EnumType.Python and value not in list(self.default_value.__class__):
+            message = '{plugin}:: Invalid value for setting {name}: {value} ({vclass}). ' \
+                      'It must be a {type}.'.format(
+                plugin=self.plugin_name, name=self.name,
+                value=value, vclass=value.__class__,
+                type=self.default_value.__class__
+            )
+            raise NameError(message)
+            self.info(message, Qgis.Warning)
+            return False
         return True
 
     @staticmethod
     def supported_widgets():
+        from ..widgets import ComboEnumWidget
         return {
             QComboBox: ComboEnumWidget
         }
