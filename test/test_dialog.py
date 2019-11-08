@@ -59,27 +59,28 @@ class TestDialog(unittest.TestCase):
             setting = my_settings.setting(setting_name)
             new_value = my_settings.testing_settings[setting_name]['new_value']
             init_widget = my_settings.testing_settings[setting_name]['init_widget']
+            init_setting_widget = my_settings.testing_settings[setting_name]['init_setting_widget']
 
             for widget_class in my_settings.testing_settings[setting_name]['widgets']:
-                print('testing {} in dialog accept mode'.format(widget_class))
+                # print('testing {} in dialog accept mode'.format(widget_class))
+                yield self.check_dialog_accept_update, setting_name, widget_class, setting.default_value, new_value, init_widget.get(widget_class, None), init_setting_widget.get(widget_class, None)
+                # print('testing {} in auto update mode'.format(widget_class))
+                yield self.check_dialog_auto_update, setting_name, widget_class, setting.default_value, new_value, init_widget.get(widget_class, None), init_setting_widget.get(widget_class, None)
 
-                yield self.check_dialog_accept_update, setting_name, widget_class, setting.default_value, new_value, init_widget.get(widget_class, None)
-                print('testing {} in auto update mode'.format(widget_class))
-                yield self.check_dialog_auto_update, setting_name, widget_class, setting.default_value, new_value, init_widget.get(widget_class, None)
+    def check_dialog_accept_update(self, setting_name, widget_class, default_value, new_value, init_widget: str, init_setting_widget: str):
 
-    def check_dialog_accept_update(self, setting_name, widget_class, default_value, new_value, init_widget: str):
-
-        print('check_dialog_accept_update')
-        print('setting_name: {}'.format(setting_name))
-        print('widget_class: {}'.format(widget_class))
-        print('default_value: {}'.format(default_value))
-        print('new_value: {}'.format(new_value))
-        print('init_widget: {}'.format(init_widget))
+        # print('check_dialog_accept_update')
+        # print('setting_name: {}'.format(setting_name))
+        # print('widget_class: {}'.format(widget_class))
+        # print('default_value: {}'.format(default_value))
+        # print('new_value: {}'.format(new_value))
+        # print('init_widget: {}'.format(init_widget))
+        # print('init_setting_widget: {}'.format(init_setting_widget))
 
         # this will reset to default with new call of MySettings within MySettingsDialog
         MySettings().remove(setting_name)
 
-        print('current setting value: {}'.format(MySettings().value(setting_name)))
+        # print('current setting value: {}'.format(MySettings().value(setting_name)))
 
         # create dialog
         self.dlg = MySettingsDialog(setting_name, widget_class, UpdateMode.DialogAccept, init_widget)
@@ -94,8 +95,12 @@ class TestDialog(unittest.TestCase):
         self.assertIsNotNone(setting_widget)
 
         # controls that widget is set to default
-        print(setting_widget)
+        # print(setting_widget)
         self.assertEqual(setting_widget.widget_value(), default_value)
+
+        # init setting widget
+        if init_setting_widget:
+            init_setting_widget(setting_widget)
 
         # set value
         setting_widget.set_widget_value(new_value)
@@ -113,9 +118,9 @@ class TestDialog(unittest.TestCase):
         # reset setting
         MySettings().remove(setting_name)
 
-    def check_dialog_auto_update(self, setting_name, widget_class, default_value, new_value, init_widget: str):
+    def check_dialog_auto_update(self, setting_name, widget_class, default_value, new_value, init_widget: str, init_setting_widget: str):
 
-        print('check_dialog_auto_update')
+        # print('check_dialog_auto_update')
 
         # this will reset to default with new call of MySettings within MySettingsDialog
         MySettings().remove(setting_name)
@@ -127,6 +132,10 @@ class TestDialog(unittest.TestCase):
 
         # get widget
         setting_widget = self.dlg.setting_widget(setting_name)
+
+        # init setting widget
+        if init_setting_widget:
+            init_setting_widget(setting_widget)
 
         # controls that widget is set to default
         self.assertEqual(setting_widget.widget_value(), default_value)

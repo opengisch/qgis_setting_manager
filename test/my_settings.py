@@ -23,14 +23,21 @@
 #
 # ---------------------------------------------------------------------
 
+from enum import Enum as PyEnum
+
 from qgis.PyQt.QtGui import QColor
 from qgis.PyQt.QtWidgets import QDoubleSpinBox, QComboBox, QListWidget, QTableWidgetItem, QTableWidget, QButtonGroup
 from qgis.core import QgsTolerance
 from qgis.gui import QgsCollapsibleGroupBox, QgsScaleWidget, QgsMapLayerComboBox, QgsFieldComboBox, QgsAuthConfigSelect
 
-from .. import Bool, Color, Double, Integer, String, Stringlist, Enum, Dictionary, SettingManager, Scope
+from .. import Bool, Color, Double, Integer, String, Stringlist, Enum, Dictionary, SettingManager, Scope, EnumType
 
 pluginName = "qgis_setting_manager_testing"
+
+
+class MyEnum(PyEnum):
+    Something = 1
+    Somewhere = 2
 
 
 class MySettings(SettingManager):
@@ -94,11 +101,19 @@ class MySettings(SettingManager):
         )
 
         # enum
-        enum_combo_init = lambda widget: (widget.addItem('LayerUnits', QgsTolerance.LayerUnits),
-                                          widget.addItem('Pixels', QgsTolerance.Pixels))
+        enum_qgs_combo_init = lambda widget: (widget.addItem('LayerUnits', QgsTolerance.LayerUnits),
+                                              widget.addItem('Pixels', QgsTolerance.Pixels))
+        enum_py_combo_init = lambda setting_widget: setting_widget.auto_populate()
+
         self.add_testing_setting(
-            Enum, 'enum', QgsTolerance.Pixels, QgsTolerance.LayerUnits, scopes=[Scope.Global],
-            init_widget={QComboBox: enum_combo_init}
+            Enum, 'qgs_enum', QgsTolerance.Pixels, QgsTolerance.LayerUnits,
+            scopes=[Scope.Global], init_widget={QComboBox: enum_qgs_combo_init},
+            enum_type=EnumType.QGIS
+        )
+        self.add_testing_setting(
+            Enum, 'py_enum', MyEnum.Something, MyEnum.Somewhere,
+            scopes=[Scope.Global], init_setting_widget={QComboBox: enum_py_combo_init},
+            enum_type=EnumType.Python
         )
 
         # dictionary
@@ -110,9 +125,25 @@ class MySettings(SettingManager):
                             bad_values: list = [],
                             scopes=(Scope.Project, Scope.Global),
                             init_widget={},
+                            init_setting_widget={},
                             skip_widgets=[],
                             only_widgets=[],
                             **kwargs):
+        """
+
+        :param _type:
+        :param name:
+        :param default_value:
+        :param new_value:
+        :param bad_values:
+        :param scopes:
+        :param init_widget: this will happen on the Qt/QGIS widget
+        :param init_setting_widget:  this will happend on the setting widget
+        :param skip_widgets:
+        :param only_widgets:
+        :param kwargs:
+        :return:
+        """
         for _scope in scopes:
             setting_name = '{}_{}'.format(name, _scope)
             setting = _type(setting_name, _scope, default_value, **kwargs)
@@ -121,8 +152,8 @@ class MySettings(SettingManager):
             self.testing_settings[setting_name]['new_value'] = new_value
             self.testing_settings[setting_name]['bad_values'] = bad_values
             self.testing_settings[setting_name]['init_widget'] = init_widget
+            self.testing_settings[setting_name]['init_setting_widget'] = init_setting_widget
             if only_widgets:
                 self.testing_settings[setting_name]['widgets'] = only_widgets
             else:
                 self.testing_settings[setting_name]['widgets'] = [w for w in setting.supported_widgets().keys() if w not in skip_widgets]
-

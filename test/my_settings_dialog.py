@@ -52,7 +52,7 @@ class MySettingsDialog(QDialog, SettingDialog):
         self.widget.setObjectName(setting_name)
 
         if init_widget:
-            print("runnning init_widget lambda")
+            # print("running init_widget lambda")
             init_widget(self.widget)
 
         self.settings = settings
