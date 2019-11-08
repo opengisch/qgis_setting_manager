@@ -45,7 +45,7 @@ class Enum(Setting):
                  name,
                  scope: Scope,
                  default_value,
-                 enum_type: EnumType,
+                 enum_type: EnumType = EnumType.NoEnum,
                  **kwargs):
         """
 
