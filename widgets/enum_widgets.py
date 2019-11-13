@@ -48,8 +48,11 @@ class ComboEnumWidget(SettingWidget):
 
     def auto_populate(self):
         assert self.setting.enum_type == EnumType.Python
+        self.disconnect_widget_auto_update()
         for e in list(self.setting.default_value.__class__):
             self.widget.addItem(str(e), e)
+        self.connect_widget_auto_update()
+
 
 
 
