@@ -64,9 +64,7 @@ class Enum(Setting):
 
         if enum_type == EnumType.Python:
             Setting.__init__(self, name, scope, default_value,
-                             object_type=None,
-                             qsettings_read=lambda key, def_val: default_value.__class__(QgsSettings().value(key, def_val)),
-                             qsettings_write=lambda key, val: QgsSettings().setValue(key, val.value),
+                             object_type=int, # for Python enum and global, force conversion to int
                              **kwargs)
         else:
             Setting.__init__(self, name, scope, default_value,
@@ -77,7 +75,7 @@ class Enum(Setting):
 
     def check(self, value):
         if self.enum_type is EnumType.QGIS and not isinstance(value, self.default_value.__class__) or \
-                self.enum_type is EnumType.Python and value not in list(self.default_value.__class__):
+                self.enum_type is EnumType.Python and value.__class__ not in (int, self.default_value.__class__):
             message = '{plugin}:: Invalid value for setting {name}: {value} ({vclass}). ' \
                       'It must be a {type}.'.format(
                 plugin=self.plugin_name, name=self.name,
@@ -88,6 +86,20 @@ class Enum(Setting):
             self.info(message, Qgis.Warning)
             return False
         return True
+
+    def read_out(self, value, scope):
+        # for Python enum and global, force conversion to int
+        if self.enum_type == EnumType.Python and self.scope == Scope.Global:
+            return self.default_value.__class__(value)
+        else:
+            return value
+
+    def write_in(self, value, scope):
+        # for Python enum and global, force conversion to int
+        if self.enum_type == EnumType.Python and self.scope == Scope.Global:
+            return value.value
+        else:
+            return value
 
     @staticmethod
     def supported_widgets():
