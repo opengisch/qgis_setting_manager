@@ -65,7 +65,8 @@ class Enum(Setting):
         if enum_type == EnumType.Python:
             Setting.__init__(self, name, scope, default_value,
                              object_type=None,
-                             qsettings_read=lambda key, def_val: QgsSettings().value(key, def_val),
+                             qsettings_read=lambda key, def_val: default_value.__class__(QgsSettings().value(key, def_val)),
+                             qsettings_write=lambda key, val: QgsSettings().setValue(key, val.value),
                              **kwargs)
         else:
             Setting.__init__(self, name, scope, default_value,
