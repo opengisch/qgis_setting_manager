@@ -37,7 +37,7 @@ class Dictionary(Setting):
     def __init__(self, name, scope, default_value, **kwargs):
         Setting.__init__(
             self, name, scope, default_value,
-            object_type=str,
+            object_type=dict,
             **kwargs)
 
     def read_out(self, value, scope):
