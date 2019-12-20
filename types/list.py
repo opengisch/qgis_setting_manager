@@ -33,37 +33,25 @@ from qgis.core import Qgis
 from ..setting import Setting, Scope
 
 
-class Dictionary(Setting):
+class List(Setting):
     def __init__(self, name, scope, default_value, **kwargs):
-        if scope == Scope.Global:
-            Setting.__init__(
-                self, name, scope, default_value,
-                object_type=dict,
-                **kwargs)
-        else:
-            # for project use json as text
-            Setting.__init__(
-                self, name, scope, default_value,
-                object_type=str,
-                **kwargs)
+        assert scope == Scope.Global
+        Setting.__init__(
+            self, name, scope, default_value,
+            object_type=list,
+            **kwargs)
 
     def read_out(self, value, scope):
-        if scope == Scope.Global:
-            return value
-        else:
-            # always cast to dict
-            if value is None:
-                value = {}
-            return json.loads(value)
+        # always cast to dict
+        if value is None:
+            value = {}
+        return json.loads(value)
 
     def write_in(self, value, scope):
-        if scope == Scope.Global:
-            return value
-        else:
-            # always cast to list
-            if value is None:
-                value = {}
-            return json.dumps(value)
+        # always cast to list
+        if value is None:
+            value = {}
+        return json.dumps(value)
 
     def check(self, value):
         if value is not None and type(value) is not dict:
