@@ -123,7 +123,8 @@ class MySettings(SettingManager):
 
         # list
         self.add_testing_setting(
-            List, 'list', [1, 'SuperList', {'my_key': 'my_value'}], [2, 'MegaList', {'my_key': 123, 'my_sec_key': 'hello'}]
+            List, 'list', [1, 'SuperList', {'my_key': 'my_value'}], [2, 'MegaList', {'my_key': 123, 'my_sec_key': 'hello'}],
+            scopes=[Scope.Global]
         )
 
     def add_testing_setting(self, _type, name, default_value, new_value,
