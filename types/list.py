@@ -41,21 +41,9 @@ class List(Setting):
             object_type=list,
             **kwargs)
 
-    def read_out(self, value, scope):
-        # always cast to dict
-        if value is None:
-            value = {}
-        return json.loads(value)
-
-    def write_in(self, value, scope):
-        # always cast to list
-        if value is None:
-            value = {}
-        return json.dumps(value)
-
     def check(self, value):
-        if value is not None and type(value) is not dict:
-            self.info('{}:: Invalid value for setting {}: {}. It must be a dictionary.'
+        if value is not None and type(value) is not list:
+            self.info('{}:: Invalid value for setting {}: {}. It must be a list.'
                       .format(self.plugin_name, self.name, value),
                       Qgis.Warning)
             return False

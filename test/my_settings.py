@@ -30,7 +30,7 @@ from qgis.PyQt.QtWidgets import QDoubleSpinBox, QComboBox, QListWidget, QTableWi
 from qgis.core import QgsTolerance
 from qgis.gui import QgsCollapsibleGroupBox, QgsScaleWidget, QgsMapLayerComboBox, QgsFieldComboBox, QgsAuthConfigSelect
 
-from .. import Bool, Color, Double, Integer, String, Stringlist, Enum, Dictionary, SettingManager, Scope, EnumType
+from .. import Bool, Color, Double, Integer, String, Stringlist, Enum, Dictionary, SettingManager, Scope, EnumType, List
 
 pluginName = "qgis_setting_manager_testing"
 
@@ -119,6 +119,11 @@ class MySettings(SettingManager):
         # dictionary
         self.add_testing_setting(
             Dictionary, 'dictionary', {'my_key_1': 1, 'my_key_2': 2}, {'my_key_1': 1, 'my_key_2': 2}
+        )
+
+        # list
+        self.add_testing_setting(
+            List, 'list', [1, 'SuperList', {'my_key': 'my_value'}], [2, 'MegaList', {'my_key': 123, 'my_sec_key': 'hello'}]
         )
 
     def add_testing_setting(self, _type, name, default_value, new_value,
