@@ -194,6 +194,12 @@ Additional options:
 
 * No widgets are offered yet.
 
+**List**
+
+* No widgets are offered yet.
+* Works only for global settings
+
+
 New types of widget are easily added, if one is missing, do not hesitate to [ask](https://github.com/opengisch/qgissettingmanager/issues)!
 
 ## Using git submodules
