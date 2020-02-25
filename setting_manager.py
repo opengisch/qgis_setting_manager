@@ -32,14 +32,20 @@ Debug = False
 
 
 class SettingManager:
-    def __init__(self, plugin_name):
+    def __init__(self, plugin_name, save_under_plugins: bool = True):
+        """
+        :param plugin_name: the plugin name
+        :param save_under_plugins: determines if global settings are grouped under "plugins" or at the top level
+        """
         self.plugin_name = plugin_name
+        self.save_under_plugins = save_under_plugins
         self.__settings = {}
 
     def add_setting(self, setting):
         if setting.name in self.__settings:
             raise NameError("{} already exist in settings.".format(setting.name))
         setting.set_plugin_name(self.plugin_name)
+        setting.save_under_plugins = self.save_under_plugins
         self.__settings[setting.name] = setting
 
     def value(self, setting_name):

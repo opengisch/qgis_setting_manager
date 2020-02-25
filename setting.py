@@ -63,6 +63,8 @@ class Setting():
         # these will determined when set_plugin_name is called
         self.plugin_name = None
 
+        self._save_under_plugins = True
+
         self.name = name
         self.scope = scope
         self.default_value = default_value
@@ -150,8 +152,19 @@ class Setting():
     def set_plugin_name(self, plugin_name):
         self.plugin_name = plugin_name
 
+    @property
+    def save_under_plugins(self):
+        return self._save_under_plugins
+
+    @save_under_plugins.setter
+    def save_under_plugins(self, value: bool):
+        self._save_under_plugins = value
+
     def global_name(self):
-        return 'plugins/{}/{}'.format(self.plugin_name, self.name)
+        if self.save_under_plugins:
+            return 'plugins/{}/{}'.format(self.plugin_name, self.name)
+        else:
+            return '{}/{}'.format(self.plugin_name, self.name)
 
     def set_value(self, value) -> bool:
         """
