@@ -26,12 +26,12 @@
 #
 #---------------------------------------------------------------------
 
-from PyQt5.QtWidgets import QCheckBox
+from PyQt5.QtWidgets import QCheckBox, QGroupBox
 from qgis.core import QgsProject, Qgis
 from qgis.gui import QgsCollapsibleGroupBox
 from ..setting import Setting
 from ..setting_widget import SettingWidget
-from ..widgets import CheckBoxBoolWidget, QgsCollapsibleGroupBoxBoolWidget, CheckableBoolWidget
+from ..widgets import CheckBoxBoolWidget, GroupBoxBoolWidget, CheckableBoolWidget
 
 
 class Bool(Setting):
@@ -55,7 +55,8 @@ class Bool(Setting):
     def supported_widgets():
         return {
             QCheckBox: CheckBoxBoolWidget,
-            QgsCollapsibleGroupBox: QgsCollapsibleGroupBoxBoolWidget
+            QGroupBox: GroupBoxBoolWidget,
+            QgsCollapsibleGroupBox: GroupBoxBoolWidget
         }
 
     def fallback_widget(self, widget) -> SettingWidget:

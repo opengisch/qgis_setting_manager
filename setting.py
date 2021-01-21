@@ -127,9 +127,6 @@ class Setting():
         for widget_type, setting_widget_class in self.supported_widgets().items():
             if isinstance(widget, widget_type):
                 return setting_widget_class(self, widget)
-        additional_widget = self.additional_widgets(widget)
-        if additional_widget:
-            return additional_widget
         raise NameError("SettingManager does not handle {w} widgets for {t} at the moment (setting: {s})".format(
             w=type(widget), t=type(self).__name__, s=self.name)
         )

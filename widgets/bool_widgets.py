@@ -42,7 +42,7 @@ class CheckBoxBoolWidget(SettingWidget):
         return self.widget.isChecked()
 
 
-class QgsCollapsibleGroupBoxBoolWidget(SettingWidget):
+class GroupBoxBoolWidget(SettingWidget):
     def __init__(self, setting, widget):
         signal = widget.toggled
         SettingWidget.__init__(self, setting, widget, signal)

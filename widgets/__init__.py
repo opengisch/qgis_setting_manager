@@ -1,4 +1,4 @@
-from .bool_widgets import CheckBoxBoolWidget, QgsCollapsibleGroupBoxBoolWidget, CheckableBoolWidget
+from .bool_widgets import CheckBoxBoolWidget, GroupBoxBoolWidget, CheckableBoolWidget
 from .color_widgets import QgisColorWidget, StandardColorWidget
 from .double_widgets import LineEditDoubleWidget, DoubleQgsScaleWidget, DoubleSpinBoxDoubleWidget
 from .integer_widgets import LineEditIntegerWidget, SpinBoxIntegerWidget, ComboBoxIntegerWidget
