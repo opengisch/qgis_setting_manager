@@ -28,8 +28,8 @@ import os
 import yaml
 from qgis.testing import start_app, unittest
 from qgis.core import QgsMessageLog, Qgis, QgsTolerance
-from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import QCheckBox, QLabel, QPushButton, QDoubleSpinBox, QLineEdit, QSpinBox, QSlider, QComboBox, QListWidget
+from qgis.PyQt.QtGui import QColor
+from qgis.PyQt.QtWidgets import QCheckBox, QLabel, QPushButton, QDoubleSpinBox, QLineEdit, QSpinBox, QSlider, QComboBox, QListWidget
 from qgis.gui import QgsCollapsibleGroupBox, QgsColorButton, QgsProjectionSelectionWidget
 QColor.__repr__ = lambda color: 'QColor: {} a: {}'.format(color.name(), color.alpha())
 

@@ -26,7 +26,7 @@
 #
 # ---------------------------------------------------------------------
 
-from PyQt5.QtWidgets import QDialog, QWidget, QButtonGroup
+from qgis.PyQt.QtWidgets import QDialog, QWidget, QButtonGroup
 
 from .setting_manager import Debug
 from enum import Enum

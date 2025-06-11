@@ -26,7 +26,7 @@
 #
 #---------------------------------------------------------------------
 
-from PyQt5.QtWidgets import QCheckBox, QGroupBox
+from qgis.PyQt.QtWidgets import QCheckBox, QGroupBox
 from qgis.core import QgsProject, Qgis
 from qgis.gui import QgsCollapsibleGroupBox
 from ..setting import Setting

@@ -31,7 +31,7 @@
 # dialog_title: show in color dialog
 # allow_alpha: use or not alpha channel
 
-from PyQt5.QtGui import QColor
+from qgis.PyQt.QtGui import QColor
 from qgis.core import QgsProject, Qgis, QgsSettings
 from qgis.gui import QgsColorButton
 
