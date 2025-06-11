@@ -28,7 +28,7 @@
 
 from enum import Enum as PyEnum
 
-from PyQt5.QtWidgets import QComboBox
+from qgis.PyQt.QtWidgets import QComboBox
 from qgis.core import Qgis, QgsSettings
 
 from ..setting import Setting, Scope

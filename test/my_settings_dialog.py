@@ -23,7 +23,7 @@
 #
 #---------------------------------------------------------------------
 
-from PyQt5.QtWidgets import QDialog, QDoubleSpinBox, QComboBox, QListWidget, QGridLayout
+from qgis.PyQt.QtWidgets import QDialog, QDoubleSpinBox, QComboBox, QListWidget, QGridLayout
 from qgis.core import QgsTolerance
 from qgis.gui import QgsCollapsibleGroupBox
 from ..setting_dialog import SettingDialog, UpdateMode

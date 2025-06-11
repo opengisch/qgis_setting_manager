@@ -28,7 +28,7 @@
 
 import abc
 
-from PyQt5.QtCore import QObject, pyqtSignal, QSettings
+from qgis.PyQt.QtCore import QObject, pyqtSignal, QSettings
 from qgis.core import QgsProject, QgsMessageLog, Qgis, QgsSettings
 from enum import Enum
 

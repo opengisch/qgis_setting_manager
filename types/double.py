@@ -26,7 +26,7 @@
 #
 #---------------------------------------------------------------------
 
-from PyQt5.QtWidgets import QLineEdit, QDoubleSpinBox
+from qgis.PyQt.QtWidgets import QLineEdit, QDoubleSpinBox
 from qgis.core import QgsProject, Qgis
 from qgis.gui import QgsScaleWidget
 
